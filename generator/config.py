@@ -113,7 +113,13 @@ def evidence_strength_for(count: int) -> str:
 
 INSTRUCTIONAL_DAYS_TARGET = 180
 MARKING_PERIODS_PER_YEAR = 4
-UNITS_PER_MARKING_PERIOD = 2
+
+# One unit per marking period. The standards catalog is a curated subset (~8-14
+# standards per subject per grade), so splitting further would produce units
+# carrying a single standard, which is not a unit any teacher would recognize.
+# Quarter-aligned units are also common practice and keep every date window
+# unambiguous for the pacing and correlation narratives.
+UNITS_PER_MARKING_PERIOD = 1
 
 # School year runs late August through early June.
 SCHOOL_YEAR_START = (8, 26)  # (month, day) of the first instructional day
