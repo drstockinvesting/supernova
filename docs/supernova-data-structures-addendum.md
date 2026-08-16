@@ -81,6 +81,64 @@ Section
 **Integrity rule:** every Student must belong to at least one Section per school year. In
 secondary schools, a student belongs to exactly one Section per subject taught that year.
 
+### Course Model
+
+`Standard.gradeLevel` alone is sufficient through grade 8, where standards are published
+grade by grade. High school is different: CCSS mathematics is organized by *conceptual
+category* rather than grade, NCAS arts uses proficiency levels, and students take named
+courses. To keep grade-level comparison working across the district — the administrator and
+board dashboards both depend on it — **Supernova models one fixed course per subject per
+grade.** Every 10th grader takes Geometry; there are no divergent pathways.
+
+This is a deliberate simplification of real high school scheduling, made so that "which grades
+are strongest in mathematics" stays an answerable question. The course sequences themselves
+follow the predominant US pattern.
+
+```
+Course
+├── id (unique identifier)
+├── name (e.g., "Algebra I", "American Literature")
+├── subject
+├── gradeLevel (the single grade at which this course is taken)
+├── standardIds (array of Standard IDs this course covers)
+├── framework (which standards framework supplies its standards)
+└── description
+```
+
+| Grade | Math | ELA | Science | Social Studies | Arts | PE |
+|---|---|---|---|---|---|---|
+| 9 | Algebra I | Literature & Composition | Biology | World Geography | Art I | Physical Education 9 |
+| 10 | Geometry | World Literature | Chemistry | World History | Art II | Physical Education 10 |
+| 11 | Algebra II | American Literature | Physics | United States History | Art III | Fitness & Wellness |
+| 12 | Pre-Calculus | British Literature | Environmental Science | US Government & Economics | Art IV | Lifetime Fitness |
+
+**How each framework maps onto the courses:**
+
+- **Math (CCSS)** — high school standards carry conceptual-category codes (`HSA-REI`, `HSG-CO`,
+  `HSF-TF`) rather than grade numbers. Algebra I draws from Algebra and Functions, Geometry from
+  the Geometry category, Algebra II from advanced Algebra plus Complex Numbers, and Pre-Calculus
+  from the standards CCSS marks with `(+)` as beyond the college-ready threshold — which is
+  exactly what a Pre-Calculus course is for.
+- **ELA (CCSS)** — published in 9–10 and 11–12 grade bands. English 9 and 10 share the 9–10
+  band; English 11 and 12 share 11–12. The band is shared; the course content and its evidence
+  artifacts are not.
+- **Science (NGSS)** — high school performance expectations are banded 9–12 and organized by
+  domain, which maps cleanly onto the Biology→Chemistry→Physics sequence: Biology to `HS-LS`,
+  Chemistry to `HS-PS1`, Physics to `HS-PS2`/`PS3`/`PS4`, Environmental Science to `HS-ESS`
+  and `HS-LS2`.
+- **Social Studies (C3)** — banded 9–12 across four dimensions. Each course draws its
+  disciplinary standards from the matching strand (`D2.Geo`, `D2.His`, `D2.Civ`, `D2.Eco`) plus
+  the inquiry dimensions `D1`, `D3`, and `D4` that apply to all four courses.
+- **Arts (NCAS)** — uses proficiency levels, not grades. Art I and II map to HS Proficient
+  (`HSI`), Art III to Accomplished (`HSII`), Art IV to Advanced (`HSIII`).
+- **PE (SHAPE America)** — high school outcomes come at Level 1 and Level 2. PE 9 and 10 use
+  Level 1; Fitness & Wellness and Lifetime Fitness use Level 2.
+
+**Middle school note:** NGSS and C3 are also banded (6–8) rather than grade-specific. Science
+follows the common Earth (6) → Life (7) → Physical (8) rotation so each grade has a distinct
+standard set; social studies distributes its 6–8 band the same way. CCSS math and ELA remain
+grade-specific through grade 8 and are used as published.
+
 ### Guardian
 
 Enables the parent dashboard's "see only their own child" permission boundary. A guardian may
