@@ -243,14 +243,14 @@ def _mastery_record(
     quality_flags: list[str],
     re_demonstration: bool = False,
 ) -> dict:
-    return {
+    # Boilerplate is omitted rather than repeated on every record: metadata,
+    # empty evidence lists, and false flags carried ~150 bytes each across
+    # 112,000 records for no information. Absent means the default.
+    record = {
         "id": f"mst-{student.id}-{school_year}-{standard.id}",
-        "studentId": student.id,
         "standardId": standard.id,
-        "standardCode": standard.code,
         "subject": standard.subject,
         "schoolYear": school_year,
-        "gradeLevel": standard.grade_level,
         "curriculumUnitId": unit.id,
         "sectionId": unit.section_id,
         "status": status,
@@ -259,13 +259,12 @@ def _mastery_record(
         "firstEvidenceDate": first_date.isoformat() if first_date else None,
         "mostRecentEvidenceDate": last_date.isoformat() if last_date else None,
         "evidence": [],
-        "isReDemonstration": re_demonstration,
-        "metadata": {
-            "dataSource": "supernova-generator",
-            "isApproximate": False,
-            "qualityFlags": quality_flags,
-        },
     }
+    if re_demonstration:
+        record["isReDemonstration"] = True
+    if quality_flags:
+        record["metadata"] = {"qualityFlags": quality_flags}
+    return record
 
 
 def _evidence_record(
@@ -287,9 +286,6 @@ def _evidence_record(
         "dataSourceId": f"{source_name.lower().replace(' ', '-')}-{stable_digits(mastery_id, 5)}",
         "dataSourceName": source_name,
         "title": title,
-        "description": (
-            f"{title} addressing {standard.code} during {unit.name}."
-        ),
         "evidenceDate": day.isoformat(),
         "studentArtifactLink": (
             f"https://classroom.example.edu/artifacts/{student.student_id}/{mastery_id}/{index + 1}"
@@ -297,14 +293,10 @@ def _evidence_record(
         "analysis": {
             "demonstratesStandard": demonstrates,
             "contextNotes": rng.choice(CONTEXT_NOTES[demonstrates]),
-            "artifact": f"{source_type} submission on {day.isoformat()}",
         },
         "metadata": {
-            "retrievedDate": day.isoformat(),
-            "dataSource": source_name,
             "sourceAuthenticity": "api_integrated",
             "isApproximate": False,
-            "qualityFlags": [],
         },
     }
 
@@ -318,6 +310,11 @@ ASSIGNMENT_TITLES = [
     "Reflection", "Review Packet", "Skills Practice", "Journal Entry",
 ]
 
+# How many individual assignments to retain per section. Metrics are computed over
+# all of them; only this many are stored. Enough to populate a "recent work" panel
+# without carrying a full gradebook the UI never renders.
+RECENT_ASSIGNMENT_WINDOW = 12
+
 
 def build_participation(
     student,
@@ -327,6 +324,7 @@ def build_participation(
     absences: set[dt.date],
     school_year: str,
     as_of: dt.date | None = None,
+    retain_assignments: bool = True,
 ) -> dict:
     """Homework and assignment completion, tracked per marking period.
 
@@ -386,12 +384,20 @@ def build_participation(
     completed = [a for a in graded if a["completionStatus"].startswith("completed")]
     on_time = [a for a in graded if a["completionStatus"] == "completed_on_time"]
 
+    # Store the metrics plus a recent window of assignments rather than every one.
+    # The dashboards read completion RATES ("dropped from 88% to 74%"); a full
+    # ledger of 240 individual assignments per secondary student is data no view
+    # ever surfaces, and it dominates the dataset's size.
+    recent = assignments[-RECENT_ASSIGNMENT_WINDOW:] if retain_assignments else []
+
     return {
         "id": f"part-{student.id}-{school_year}-{section.id}",
         "studentId": student.id,
         "sectionId": section.id,
         "schoolYear": school_year,
-        "assignments": assignments,
+        "recentAssignments": recent,
+        "assignmentsRetained": len(recent),
+        "assignmentsTotal": len(assignments),
         "participationObservations": [],
         "metrics": {
             "assignmentsAssigned": len(graded),

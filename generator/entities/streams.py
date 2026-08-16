@@ -84,6 +84,11 @@ def build_attendance(
         spread_across(rng, [d for d in active_days if d not in absent_set], tardy_target)
     )
 
+    # Only non-present days are stored. A year is ~180 rows of "present" otherwise,
+    # which is 90 percent of the attendance stream carrying no information: the
+    # default is recoverable from the school calendar minus these exceptions. The
+    # UI needs absence dates aligned to the instructional timeline, and that is
+    # exactly what this is.
     events = []
     days_present = days_absent = days_excused = tardy_count = 0
 
@@ -105,9 +110,10 @@ def build_attendance(
             reason = None
             days_present += 1
 
-        events.append(
-            {"date": day.isoformat(), "status": status, "notes": reason}
-        )
+        if status != "present":
+            events.append(
+                {"date": day.isoformat(), "status": status, "notes": reason}
+            )
 
     total = len(active_days)
     rate = round(100 * days_present / total, 1) if total else 0.0
@@ -116,7 +122,8 @@ def build_attendance(
         "id": f"att-{student.id}-{school_year}",
         "studentId": student.id,
         "schoolYear": school_year,
-        "attendanceEvents": events,
+        "attendanceExceptions": events,
+        "attendanceModel": "exceptions_only",
         "metrics": {
             "daysEnrolled": total,
             "daysPresent": days_present,
@@ -137,7 +144,7 @@ def build_attendance(
 def absent_dates(attendance: dict) -> set[dt.date]:
     return {
         dt.date.fromisoformat(e["date"])
-        for e in attendance["attendanceEvents"]
+        for e in attendance["attendanceExceptions"]
         if e["status"] in ("absent", "excused_absent")
     }
 

@@ -292,7 +292,8 @@ def _build_profile(
 
             participation.append(
                 build_participation(
-                    student, archetype, section, units, absences, year, as_of=as_of
+                    student, archetype, section, units, absences, year, as_of=as_of,
+                    retain_assignments=full_evidence,
                 )
             )
 
@@ -365,7 +366,7 @@ def _link_iep_goals(iep_status: dict, mastery: list[dict]) -> None:
 
 
 def _not_yet_taught(record: dict) -> bool:
-    return "unit_not_yet_taught" in record["metadata"]["qualityFlags"]
+    return "unit_not_yet_taught" in record.get("metadata", {}).get("qualityFlags", [])
 
 
 def _year_summary(mastery, attendance, behavior, participation) -> dict:
