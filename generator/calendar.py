@@ -71,6 +71,18 @@ class SchoolCalendar:
     def is_instructional(self, date: dt.date) -> bool:
         return date in self._instructional_set
 
+    def days_through(self, as_of: dt.date | None) -> list[dt.date]:
+        """Instructional days that have actually happened as of a given date.
+
+        Every current-year stream generates against this rather than the full year.
+        A dataset viewed in February must not contain March attendance, behavior
+        incidents, or nurse visits -- future-dated records are the clearest tell
+        that data is synthetic, and they make the dashboards incoherent besides.
+        """
+        if as_of is None:
+            return self.instructional_days
+        return [d for d in self.instructional_days if d <= as_of]
+
     def __post_init__(self) -> None:
         self._instructional_set = set(self.instructional_days)
 

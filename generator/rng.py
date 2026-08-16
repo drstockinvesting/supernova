@@ -31,6 +31,18 @@ def derive_seed(*parts: str) -> int:
     return int.from_bytes(digest[:8], "big")
 
 
+def stable_digits(value: str, width: int) -> str:
+    """A reproducible numeric string derived from `value`.
+
+    Used for synthetic external-system IDs. Python's built-in ``hash()`` is salted
+    per process, so using it here would silently make every regeneration produce
+    a different dataset.
+    """
+    digest = hashlib.sha256(value.encode("utf-8")).digest()
+    number = int.from_bytes(digest[:8], "big") % (10**width)
+    return str(number).zfill(width)
+
+
 def stream(*parts: str) -> random.Random:
     """An independent RNG for one entity and one purpose.
 
