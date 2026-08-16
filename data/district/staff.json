@@ -1,0 +1,2164 @@
+[
+  {
+    "districtId": "dist-constellation",
+    "email": "dahmed1@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Dimitri",
+    "gradeLevelsTaught": [
+      "K",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "hireDate": "2020-08-28",
+    "id": "staff-nova-elementary-001",
+    "lastName": "Ahmed",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "building_administrator",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0001",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "slafferty2@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Sydney",
+    "gradeLevelsTaught": [
+      "K"
+    ],
+    "hireDate": "2022-08-19",
+    "id": "staff-nova-elementary-002",
+    "lastName": "Lafferty",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0002",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "dlam3@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Daphne",
+    "gradeLevelsTaught": [
+      "K"
+    ],
+    "hireDate": "2011-08-22",
+    "id": "staff-nova-elementary-003",
+    "lastName": "Lam",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0003",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "msoto4@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Mackenzie",
+    "gradeLevelsTaught": [
+      "K"
+    ],
+    "hireDate": "2013-08-23",
+    "id": "staff-nova-elementary-004",
+    "lastName": "Soto",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0004",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "epadilla5@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Eleanor",
+    "gradeLevelsTaught": [
+      "1"
+    ],
+    "hireDate": "2009-08-12",
+    "id": "staff-nova-elementary-005",
+    "lastName": "Padilla",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0005",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "nosei6@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Nathaniel",
+    "gradeLevelsTaught": [
+      "1"
+    ],
+    "hireDate": "2016-08-14",
+    "id": "staff-nova-elementary-006",
+    "lastName": "Osei",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0006",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "ocrawford7@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Olivia",
+    "gradeLevelsTaught": [
+      "1"
+    ],
+    "hireDate": "2012-08-14",
+    "id": "staff-nova-elementary-007",
+    "lastName": "Crawford",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0007",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "mgreenwood8@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Mariam",
+    "gradeLevelsTaught": [
+      "2"
+    ],
+    "hireDate": "2013-08-13",
+    "id": "staff-nova-elementary-008",
+    "lastName": "Greenwood",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0008",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "sarroyo9@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Sienna",
+    "gradeLevelsTaught": [
+      "2"
+    ],
+    "hireDate": "2018-08-14",
+    "id": "staff-nova-elementary-009",
+    "lastName": "Arroyo",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0009",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "ysantiago10@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Yosef",
+    "gradeLevelsTaught": [
+      "2"
+    ],
+    "hireDate": "2011-08-17",
+    "id": "staff-nova-elementary-010",
+    "lastName": "Santiago",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0010",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "rcontreras11@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Rafael",
+    "gradeLevelsTaught": [
+      "3"
+    ],
+    "hireDate": "2019-08-24",
+    "id": "staff-nova-elementary-011",
+    "lastName": "Contreras",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0011",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "skendrick12@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Selena",
+    "gradeLevelsTaught": [
+      "3"
+    ],
+    "hireDate": "2010-08-20",
+    "id": "staff-nova-elementary-012",
+    "lastName": "Kendrick",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0012",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "ebonilla13@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Eamon",
+    "gradeLevelsTaught": [
+      "3"
+    ],
+    "hireDate": "2008-08-25",
+    "id": "staff-nova-elementary-013",
+    "lastName": "Bonilla",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0013",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "aledbetter14@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Amara",
+    "gradeLevelsTaught": [
+      "4"
+    ],
+    "hireDate": "2011-08-11",
+    "id": "staff-nova-elementary-014",
+    "lastName": "Ledbetter",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0014",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "pdelgado15@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Pablo",
+    "gradeLevelsTaught": [
+      "4"
+    ],
+    "hireDate": "2015-08-20",
+    "id": "staff-nova-elementary-015",
+    "lastName": "Delgado",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0015",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "bfitzgerald16@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Brandon",
+    "gradeLevelsTaught": [
+      "4"
+    ],
+    "hireDate": "2022-08-26",
+    "id": "staff-nova-elementary-016",
+    "lastName": "Fitzgerald",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0016",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "rnovak17@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Renata",
+    "gradeLevelsTaught": [
+      "5"
+    ],
+    "hireDate": "2005-08-20",
+    "id": "staff-nova-elementary-017",
+    "lastName": "Novak",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0017",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "ycardenas18@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Yosef",
+    "gradeLevelsTaught": [
+      "5"
+    ],
+    "hireDate": "2009-08-20",
+    "id": "staff-nova-elementary-018",
+    "lastName": "Cardenas",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0018",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "vmerrick19@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Victor",
+    "gradeLevelsTaught": [
+      "5"
+    ],
+    "hireDate": "2004-08-15",
+    "id": "staff-nova-elementary-019",
+    "lastName": "Merrick",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0019",
+    "subjectsTaught": [
+      "Math",
+      "ELA",
+      "Science",
+      "Social Studies",
+      "Arts",
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "karroyo20@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Keisha",
+    "gradeLevelsTaught": [
+      "K",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "hireDate": "2006-08-22",
+    "id": "staff-nova-elementary-020",
+    "lastName": "Arroyo",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "counselor",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0020",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "aalvarez21@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Ayana",
+    "gradeLevelsTaught": [
+      "K",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "hireDate": "2016-08-26",
+    "id": "staff-nova-elementary-021",
+    "lastName": "Alvarez",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "nurse",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0021",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "smcallister22@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Sarah",
+    "gradeLevelsTaught": [
+      "K",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "hireDate": "2017-08-23",
+    "id": "staff-nova-elementary-022",
+    "lastName": "McAllister",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "special_education_teacher",
+    "schoolId": "nova-elementary",
+    "staffId": "NOV0022",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "dodom1@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Deja",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2018-08-19",
+    "id": "staff-meridian-middle-001",
+    "lastName": "Odom",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "building_administrator",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0001",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "jduarte2@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Jeremiah",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2022-08-23",
+    "id": "staff-meridian-middle-002",
+    "lastName": "Duarte",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0002",
+    "subjectsTaught": [
+      "Math"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "wholloway3@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Willa",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2014-08-28",
+    "id": "staff-meridian-middle-003",
+    "lastName": "Holloway",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0003",
+    "subjectsTaught": [
+      "Math"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "agomez4@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Aisha",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2014-08-14",
+    "id": "staff-meridian-middle-004",
+    "lastName": "Gomez",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0004",
+    "subjectsTaught": [
+      "Math"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "dsilva5@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Deandre",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2020-08-22",
+    "id": "staff-meridian-middle-005",
+    "lastName": "Silva",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0005",
+    "subjectsTaught": [
+      "ELA"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "gtorres6@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Genevieve",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2020-08-17",
+    "id": "staff-meridian-middle-006",
+    "lastName": "Torres",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0006",
+    "subjectsTaught": [
+      "ELA"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "bchavez7@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Brianna",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2006-08-13",
+    "id": "staff-meridian-middle-007",
+    "lastName": "Chavez",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0007",
+    "subjectsTaught": [
+      "ELA"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "asinclair8@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Adrian",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2007-08-23",
+    "id": "staff-meridian-middle-008",
+    "lastName": "Sinclair",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0008",
+    "subjectsTaught": [
+      "Science"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "rsandoval9@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Ramona",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2004-08-14",
+    "id": "staff-meridian-middle-009",
+    "lastName": "Sandoval",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0009",
+    "subjectsTaught": [
+      "Science"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "calvarez10@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Charlotte",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2017-08-22",
+    "id": "staff-meridian-middle-010",
+    "lastName": "Alvarez",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0010",
+    "subjectsTaught": [
+      "Science"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "hbagley11@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Hannah",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2019-08-28",
+    "id": "staff-meridian-middle-011",
+    "lastName": "Bagley",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0011",
+    "subjectsTaught": [
+      "Social Studies"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "mgonzalez12@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Mariam",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2016-08-21",
+    "id": "staff-meridian-middle-012",
+    "lastName": "Gonzalez",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0012",
+    "subjectsTaught": [
+      "Social Studies"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "chenderson13@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Cole",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2021-08-15",
+    "id": "staff-meridian-middle-013",
+    "lastName": "Henderson",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0013",
+    "subjectsTaught": [
+      "Social Studies"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "drosales14@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Desmond",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2018-08-15",
+    "id": "staff-meridian-middle-014",
+    "lastName": "Rosales",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0014",
+    "subjectsTaught": [
+      "Arts"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "hpetrov15@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Hassan",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2015-08-28",
+    "id": "staff-meridian-middle-015",
+    "lastName": "Petrov",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0015",
+    "subjectsTaught": [
+      "Arts"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "smehta16@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Sydney",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2004-08-22",
+    "id": "staff-meridian-middle-016",
+    "lastName": "Mehta",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0016",
+    "subjectsTaught": [
+      "Arts"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "msilva17@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Miguel",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2015-08-22",
+    "id": "staff-meridian-middle-017",
+    "lastName": "Silva",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0017",
+    "subjectsTaught": [
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "ivargas18@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Isabella",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2010-08-26",
+    "id": "staff-meridian-middle-018",
+    "lastName": "Vargas",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0018",
+    "subjectsTaught": [
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "jbanerjee19@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Javier",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2015-08-12",
+    "id": "staff-meridian-middle-019",
+    "lastName": "Banerjee",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0019",
+    "subjectsTaught": [
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "ncruz20@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Nia",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2009-08-21",
+    "id": "staff-meridian-middle-020",
+    "lastName": "Cruz",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "counselor",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0020",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "bzamora21@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Brianna",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2012-08-14",
+    "id": "staff-meridian-middle-021",
+    "lastName": "Zamora",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "nurse",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0021",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "rzamora22@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Ricardo",
+    "gradeLevelsTaught": [
+      "6",
+      "7",
+      "8"
+    ],
+    "hireDate": "2020-08-19",
+    "id": "staff-meridian-middle-022",
+    "lastName": "Zamora",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "special_education_teacher",
+    "schoolId": "meridian-middle",
+    "staffId": "MER0022",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "jgibson1@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Joshua",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2009-08-19",
+    "id": "staff-constellation-high-001",
+    "lastName": "Gibson",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "building_administrator",
+    "schoolId": "constellation-high",
+    "staffId": "CON0001",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "mwhitfield2@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Miguel",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2004-08-13",
+    "id": "staff-constellation-high-002",
+    "lastName": "Whitfield",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0002",
+    "subjectsTaught": [
+      "Math"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "vpadilla3@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Vincent",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2021-08-16",
+    "id": "staff-constellation-high-003",
+    "lastName": "Padilla",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0003",
+    "subjectsTaught": [
+      "Math"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "mwinslow4@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Mariam",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2007-08-14",
+    "id": "staff-constellation-high-004",
+    "lastName": "Winslow",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0004",
+    "subjectsTaught": [
+      "Math"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "crasmussen5@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Chidi",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2018-08-14",
+    "id": "staff-constellation-high-005",
+    "lastName": "Rasmussen",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0005",
+    "subjectsTaught": [
+      "Math"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "jwinslow6@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Jamal",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2009-08-27",
+    "id": "staff-constellation-high-006",
+    "lastName": "Winslow",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0006",
+    "subjectsTaught": [
+      "Math"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "lashford7@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Liam",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2016-08-14",
+    "id": "staff-constellation-high-007",
+    "lastName": "Ashford",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0007",
+    "subjectsTaught": [
+      "Math"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "bnolan8@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Beatriz",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2020-08-21",
+    "id": "staff-constellation-high-008",
+    "lastName": "Nolan",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0008",
+    "subjectsTaught": [
+      "ELA"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "rgibson9@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Rahul",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2006-08-13",
+    "id": "staff-constellation-high-009",
+    "lastName": "Gibson",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0009",
+    "subjectsTaught": [
+      "ELA"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "dsantiago10@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Daniel",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2007-08-10",
+    "id": "staff-constellation-high-010",
+    "lastName": "Santiago",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0010",
+    "subjectsTaught": [
+      "ELA"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "dwebster11@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Diego",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2015-08-13",
+    "id": "staff-constellation-high-011",
+    "lastName": "Webster",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0011",
+    "subjectsTaught": [
+      "ELA"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "cruiz12@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Chidi",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2018-08-25",
+    "id": "staff-constellation-high-012",
+    "lastName": "Ruiz",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0012",
+    "subjectsTaught": [
+      "ELA"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "storres13@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Shreya",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2016-08-19",
+    "id": "staff-constellation-high-013",
+    "lastName": "Torres",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0013",
+    "subjectsTaught": [
+      "ELA"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "kpalmer14@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Kamala",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2019-08-22",
+    "id": "staff-constellation-high-014",
+    "lastName": "Palmer",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0014",
+    "subjectsTaught": [
+      "Science"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "mlopez15@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Mei",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2022-08-12",
+    "id": "staff-constellation-high-015",
+    "lastName": "Lopez",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0015",
+    "subjectsTaught": [
+      "Science"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "bcardenas16@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Beatriz",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2022-08-15",
+    "id": "staff-constellation-high-016",
+    "lastName": "Cardenas",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0016",
+    "subjectsTaught": [
+      "Science"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "gfranco17@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Gabriel",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2005-08-23",
+    "id": "staff-constellation-high-017",
+    "lastName": "Franco",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0017",
+    "subjectsTaught": [
+      "Science"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "vnolan18@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Valeria",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2021-08-12",
+    "id": "staff-constellation-high-018",
+    "lastName": "Nolan",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0018",
+    "subjectsTaught": [
+      "Science"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "ezamora19@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Elena",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2009-08-12",
+    "id": "staff-constellation-high-019",
+    "lastName": "Zamora",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0019",
+    "subjectsTaught": [
+      "Science"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "ryamamoto20@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "River",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2016-08-21",
+    "id": "staff-constellation-high-020",
+    "lastName": "Yamamoto",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0020",
+    "subjectsTaught": [
+      "Social Studies"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "bgiordano21@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Blake",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2018-08-14",
+    "id": "staff-constellation-high-021",
+    "lastName": "Giordano",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0021",
+    "subjectsTaught": [
+      "Social Studies"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "jkowalski22@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Jeremiah",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2022-08-11",
+    "id": "staff-constellation-high-022",
+    "lastName": "Kowalski",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0022",
+    "subjectsTaught": [
+      "Social Studies"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "opatel23@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Omar",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2021-08-14",
+    "id": "staff-constellation-high-023",
+    "lastName": "Patel",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0023",
+    "subjectsTaught": [
+      "Social Studies"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "mledbetter24@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Maya",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2004-08-15",
+    "id": "staff-constellation-high-024",
+    "lastName": "Ledbetter",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0024",
+    "subjectsTaught": [
+      "Social Studies"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "mstanton25@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Mohammed",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2007-08-16",
+    "id": "staff-constellation-high-025",
+    "lastName": "Stanton",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0025",
+    "subjectsTaught": [
+      "Social Studies"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "lnkemelu26@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Lucia",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2018-08-15",
+    "id": "staff-constellation-high-026",
+    "lastName": "Nkemelu",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0026",
+    "subjectsTaught": [
+      "Arts"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "crivera27@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Claudia",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2011-08-27",
+    "id": "staff-constellation-high-027",
+    "lastName": "Rivera",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0027",
+    "subjectsTaught": [
+      "Arts"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "wkingsley28@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "William",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2008-08-19",
+    "id": "staff-constellation-high-028",
+    "lastName": "Kingsley",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0028",
+    "subjectsTaught": [
+      "Arts"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "kbarnes29@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Kamala",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2021-08-24",
+    "id": "staff-constellation-high-029",
+    "lastName": "Barnes",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0029",
+    "subjectsTaught": [
+      "Arts"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "czamora30@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Chidi",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2020-08-22",
+    "id": "staff-constellation-high-030",
+    "lastName": "Zamora",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0030",
+    "subjectsTaught": [
+      "Arts"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "pnguyen31@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Patrick",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2021-08-20",
+    "id": "staff-constellation-high-031",
+    "lastName": "Nguyen",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0031",
+    "subjectsTaught": [
+      "Arts"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "mmontgomery32@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Maya",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2004-08-15",
+    "id": "staff-constellation-high-032",
+    "lastName": "Montgomery",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0032",
+    "subjectsTaught": [
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "epemberton33@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Elena",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2022-08-14",
+    "id": "staff-constellation-high-033",
+    "lastName": "Pemberton",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0033",
+    "subjectsTaught": [
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "browntree34@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Brianna",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2017-08-21",
+    "id": "staff-constellation-high-034",
+    "lastName": "Rowntree",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0034",
+    "subjectsTaught": [
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "sdonnelly35@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Stella",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2005-08-19",
+    "id": "staff-constellation-high-035",
+    "lastName": "Donnelly",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0035",
+    "subjectsTaught": [
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "mruiz36@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Maria",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2020-08-10",
+    "id": "staff-constellation-high-036",
+    "lastName": "Ruiz",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0036",
+    "subjectsTaught": [
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "fshepherd37@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Francisco",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2020-08-25",
+    "id": "staff-constellation-high-037",
+    "lastName": "Shepherd",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0037",
+    "subjectsTaught": [
+      "Physical Education"
+    ]
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "rcastellanos38@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Reginald",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2022-08-28",
+    "id": "staff-constellation-high-038",
+    "lastName": "Castellanos",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "counselor",
+    "schoolId": "constellation-high",
+    "staffId": "CON0038",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "mcrawford39@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Miranda",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2011-08-23",
+    "id": "staff-constellation-high-039",
+    "lastName": "Crawford",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "nurse",
+    "schoolId": "constellation-high",
+    "staffId": "CON0039",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "tgiordano40@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Thomas",
+    "gradeLevelsTaught": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2013-08-24",
+    "id": "staff-constellation-high-040",
+    "lastName": "Giordano",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "special_education_teacher",
+    "schoolId": "constellation-high",
+    "staffId": "CON0040",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "mmartinezd1@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Miranda",
+    "gradeLevelsTaught": [
+      "K",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2017-07-01",
+    "id": "staff-district-001",
+    "lastName": "Martinez",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "district_administrator",
+    "schoolId": null,
+    "staffId": "DIS0001",
+    "subjectsTaught": []
+  },
+  {
+    "districtId": "dist-constellation",
+    "email": "lchod2@constellation.k12.pa.us",
+    "employmentStatus": "active",
+    "firstName": "Liam",
+    "gradeLevelsTaught": [
+      "K",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "hireDate": "2013-07-01",
+    "id": "staff-district-002",
+    "lastName": "Cho",
+    "metadata": {
+      "dataSource": "supernova-generator",
+      "isApproximate": false
+    },
+    "role": "district_administrator",
+    "schoolId": null,
+    "staffId": "DIS0002",
+    "subjectsTaught": []
+  }
+]

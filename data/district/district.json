@@ -1,0 +1,33 @@
+{
+  "configuration": {
+    "dataSourcesConnected": [
+      "District Attendance System",
+      "Google Classroom",
+      "District Assessment Platform",
+      "Student Information System",
+      "Behavior Tracking System",
+      "Health Office Records"
+    ],
+    "standardsFrameworksInUse": [
+      "College, Career, and Civic Life (C3) Framework for Social Studies State Standards",
+      "Common Core State Standards for English Language Arts",
+      "Common Core State Standards for Mathematics",
+      "National Core Arts Standards - Visual Arts",
+      "Next Generation Science Standards",
+      "SHAPE America National Standards and Grade-Level Outcomes for K-12 Physical Education"
+    ]
+  },
+  "id": "dist-constellation",
+  "metadata": {
+    "dataSource": "supernova-generator",
+    "isApproximate": false
+  },
+  "name": "Constellation Area School District",
+  "schools": [
+    "nova-elementary",
+    "meridian-middle",
+    "constellation-high"
+  ],
+  "state": "Pennsylvania",
+  "superintendent": "Dr. Rosalind Achebe"
+}
