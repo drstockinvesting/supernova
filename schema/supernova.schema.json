@@ -1,0 +1,524 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://supernova.example/schema/supernova.schema.json",
+  "title": "Supernova LMS Record Types",
+  "description": "Schema for every record type in the Supernova synthetic dataset. Covers the core entities from docs/supernova-data-structures.md and the additions in docs/supernova-data-structures-addendum.md. Records omit fields whose value is the default: absent metadata means no quality flags, absent isReDemonstration means false.",
+  "$defs": {
+    "Student": {
+      "type": "object",
+      "required": ["id", "firstName", "lastName", "dateOfBirth", "studentId", "currentGradeLevel", "enrollmentStatus", "enrollmentDate", "schoolId", "districtId"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^stu-"},
+        "firstName": {"type": "string", "minLength": 1},
+        "lastName": {"type": "string", "minLength": 1},
+        "dateOfBirth": {"type": "string", "format": "date"},
+        "studentId": {"type": "string"},
+        "currentGradeLevel": {"$ref": "#/$defs/GradeLevel"},
+        "enrollmentStatus": {"enum": ["active", "inactive", "transferred"]},
+        "enrollmentDate": {"type": "string", "format": "date"},
+        "schoolId": {"type": "string"},
+        "districtId": {"type": "string"},
+        "metadata": {"$ref": "#/$defs/Metadata"}
+      }
+    },
+
+    "GradeLevel": {
+      "enum": ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+    },
+
+    "Subject": {
+      "enum": ["Math", "ELA", "Science", "Social Studies", "Arts", "Physical Education", "all"]
+    },
+
+    "Metadata": {
+      "type": "object",
+      "properties": {
+        "dataSource": {"type": "string"},
+        "isApproximate": {"type": "boolean"},
+        "qualityFlags": {"type": "array", "items": {"type": "string"}},
+        "confidentialityLevel": {"enum": ["public", "internal", "restricted"]},
+        "lastSyncDate": {"type": "string", "format": "date"}
+      }
+    },
+
+    "Standard": {
+      "type": "object",
+      "required": ["id", "framework", "subject", "gradeLevel", "standardCode", "standardText", "domainOrCluster"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^std-"},
+        "framework": {"type": "string"},
+        "subject": {"$ref": "#/$defs/Subject"},
+        "gradeLevel": {"$ref": "#/$defs/GradeLevel"},
+        "course": {"type": "string", "description": "The single course at this grade that covers this standard."},
+        "standardCode": {"type": "string"},
+        "standardText": {"type": "string"},
+        "domainOrCluster": {"type": "string"},
+        "cluster": {"type": "string"},
+        "advanced": {"type": "boolean", "description": "CCSS (+) standards, beyond the college-ready threshold."},
+        "proficiencyLevel": {"type": "string", "description": "NCAS and SHAPE use levels rather than grades."},
+        "metadata": {"type": "object"}
+      }
+    },
+
+    "MasteryRecord": {
+      "type": "object",
+      "required": ["id", "standardId", "subject", "schoolYear", "status", "evidenceStrength", "evidenceCount"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^mst-"},
+        "standardId": {"type": "string", "pattern": "^std-"},
+        "subject": {"$ref": "#/$defs/Subject"},
+        "schoolYear": {"$ref": "#/$defs/SchoolYear"},
+        "curriculumUnitId": {"type": "string"},
+        "sectionId": {"type": "string"},
+        "status": {"enum": ["mastered", "not_mastered", "in_progress"]},
+        "evidenceStrength": {
+          "enum": ["none", "insubstantial", "moderate", "substantial"],
+          "description": "Derived from evidenceCount: 0 none, 1-2 insubstantial, 3-5 moderate, 6+ substantial."
+        },
+        "evidenceCount": {"type": "integer", "minimum": 0},
+        "firstEvidenceDate": {"type": ["string", "null"], "format": "date"},
+        "mostRecentEvidenceDate": {"type": ["string", "null"], "format": "date"},
+        "evidence": {"type": "array", "items": {"type": "string"}},
+        "isReDemonstration": {"type": "boolean"},
+        "metadata": {"$ref": "#/$defs/Metadata"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"evidenceCount": {"const": 0}}, "required": ["evidenceCount"]},
+          "then": {"properties": {"evidenceStrength": {"const": "none"}}}
+        },
+        {
+          "if": {"properties": {"evidenceCount": {"minimum": 6}}, "required": ["evidenceCount"]},
+          "then": {"properties": {"evidenceStrength": {"const": "substantial"}}}
+        }
+      ]
+    },
+
+    "Evidence": {
+      "type": "object",
+      "required": ["id", "masteryRecordId", "studentId", "standardId", "dataSourceType", "dataSourceName", "title", "evidenceDate", "analysis"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^evd-"},
+        "masteryRecordId": {"type": "string", "pattern": "^mst-"},
+        "studentId": {"type": "string"},
+        "standardId": {"type": "string"},
+        "dataSourceType": {
+          "enum": ["assessment", "assignment", "observation", "studentArtifact", "quiz", "performanceTask", "project", "discussion", "other"]
+        },
+        "dataSourceId": {"type": "string"},
+        "dataSourceName": {"type": "string"},
+        "title": {"type": "string"},
+        "evidenceDate": {"type": "string", "format": "date"},
+        "studentArtifactLink": {"type": "string"},
+        "analysis": {
+          "type": "object",
+          "required": ["demonstratesStandard", "contextNotes"],
+          "properties": {
+            "demonstratesStandard": {"type": "boolean"},
+            "contextNotes": {"type": "string"}
+          }
+        },
+        "metadata": {"type": "object"}
+      }
+    },
+
+    "SchoolYear": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{4}$"},
+
+    "AttendanceRecord": {
+      "type": "object",
+      "required": ["id", "studentId", "schoolYear", "attendanceExceptions", "attendanceModel", "metrics"],
+      "properties": {
+        "id": {"type": "string"},
+        "studentId": {"type": "string"},
+        "schoolYear": {"$ref": "#/$defs/SchoolYear"},
+        "attendanceModel": {
+          "const": "exceptions_only",
+          "description": "Only non-present days are stored. Present days are recoverable from the school calendar minus these exceptions."
+        },
+        "attendanceExceptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["date", "status"],
+            "properties": {
+              "date": {"type": "string", "format": "date"},
+              "status": {"enum": ["absent", "excused_absent", "tardy", "excused_tardy", "partial_day"]},
+              "notes": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "required": ["daysEnrolled", "daysPresent", "daysAbsent", "attendanceRate", "chronicAbsenteeismFlag"],
+          "properties": {
+            "daysEnrolled": {"type": "integer", "minimum": 0},
+            "daysPresent": {"type": "integer", "minimum": 0},
+            "daysAbsent": {"type": "integer", "minimum": 0},
+            "daysExcusedAbsent": {"type": "integer", "minimum": 0},
+            "tardyCount": {"type": "integer", "minimum": 0},
+            "attendanceRate": {"type": "number", "minimum": 0, "maximum": 100},
+            "chronicAbsenteeismFlag": {"type": "boolean"}
+          }
+        },
+        "metadata": {"$ref": "#/$defs/Metadata"}
+      }
+    },
+
+    "BehaviorRecord": {
+      "type": "object",
+      "required": ["id", "studentId", "schoolYear", "incidents", "metrics"],
+      "properties": {
+        "id": {"type": "string"},
+        "studentId": {"type": "string"},
+        "schoolYear": {"$ref": "#/$defs/SchoolYear"},
+        "incidents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "date", "incidentType", "description"],
+            "properties": {
+              "id": {"type": "string"},
+              "date": {"type": "string", "format": "date"},
+              "incidentType": {
+                "enum": ["discipline_referral", "office_visit", "detention", "suspension", "expulsion", "positive_recognition"]
+              },
+              "severity": {"enum": ["low", "medium", "high", null]},
+              "description": {"type": "string"},
+              "staff": {"type": "string"},
+              "location": {"type": "string"},
+              "subject": {"type": ["string", "null"], "description": "Set when incidents localize to one class."},
+              "outcome": {"type": "string"}
+            }
+          }
+        },
+        "metrics": {"type": "object"},
+        "metadata": {"$ref": "#/$defs/Metadata"}
+      }
+    },
+
+    "HealthRecord": {
+      "type": "object",
+      "required": ["id", "studentId", "schoolYear", "healthEvents", "flags"],
+      "properties": {
+        "id": {"type": "string"},
+        "studentId": {"type": "string"},
+        "schoolYear": {"$ref": "#/$defs/SchoolYear"},
+        "healthEvents": {"type": "array", "items": {"type": "object"}},
+        "flags": {
+          "type": "object",
+          "properties": {
+            "chronicHealthCondition": {"type": "boolean"},
+            "mentalHealthConcern": {"type": "boolean"},
+            "foodInsecurityRisk": {"type": "boolean"},
+            "housingInstability": {"type": "boolean"},
+            "otherWellnessFactors": {"type": "array"}
+          }
+        },
+        "metadata": {
+          "allOf": [{"$ref": "#/$defs/Metadata"}],
+          "description": "confidentialityLevel is always restricted; viewing requires view_health_detail."
+        }
+      }
+    },
+
+    "Staff": {
+      "type": "object",
+      "required": ["id", "firstName", "lastName", "staffId", "role", "districtId"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^staff-"},
+        "firstName": {"type": "string"},
+        "lastName": {"type": "string"},
+        "staffId": {"type": "string"},
+        "role": {
+          "enum": ["teacher", "building_administrator", "district_administrator", "counselor", "nurse", "special_education_teacher", "support_staff"]
+        },
+        "schoolId": {"type": ["string", "null"], "description": "Null for district-level roles."},
+        "districtId": {"type": "string"},
+        "subjectsTaught": {"type": "array", "items": {"type": "string"}},
+        "gradeLevelsTaught": {"type": "array", "items": {"$ref": "#/$defs/GradeLevel"}},
+        "email": {"type": "string"},
+        "hireDate": {"type": "string", "format": "date"},
+        "employmentStatus": {"enum": ["active", "inactive", "former"]},
+        "metadata": {"$ref": "#/$defs/Metadata"}
+      }
+    },
+
+    "Section": {
+      "type": "object",
+      "required": ["id", "schoolId", "schoolYear", "name", "gradeLevel", "subject", "teacherId", "instructionalModel", "roster"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^sec-"},
+        "schoolId": {"type": "string"},
+        "schoolYear": {"$ref": "#/$defs/SchoolYear"},
+        "name": {"type": "string"},
+        "gradeLevel": {"$ref": "#/$defs/GradeLevel"},
+        "subject": {
+          "$ref": "#/$defs/Subject",
+          "description": "'all' for self-contained elementary sections."
+        },
+        "teacherId": {"type": "string"},
+        "coTeacherIds": {"type": "array", "items": {"type": "string"}},
+        "period": {"type": ["string", "null"]},
+        "roomNumber": {"type": "string"},
+        "instructionalModel": {"enum": ["self_contained", "departmentalized"]},
+        "roster": {"type": "array", "items": {"type": "string"}},
+        "enrollmentCount": {"type": "integer", "minimum": 0},
+        "metadata": {"$ref": "#/$defs/Metadata"}
+      }
+    },
+
+    "CurriculumUnit": {
+      "type": "object",
+      "required": ["id", "sectionId", "schoolYear", "subject", "name", "sequence", "startDate", "endDate", "standardIds", "pacing", "status"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^unit-"},
+        "sectionId": {"type": "string"},
+        "schoolYear": {"$ref": "#/$defs/SchoolYear"},
+        "subject": {"$ref": "#/$defs/Subject"},
+        "name": {"type": "string"},
+        "sequence": {"type": "integer", "minimum": 1},
+        "markingPeriodId": {"type": "string"},
+        "startDate": {"type": "string", "format": "date"},
+        "endDate": {"type": "string", "format": "date"},
+        "plannedInstructionalDays": {"type": "integer", "minimum": 1},
+        "standardIds": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "keyInstructionDates": {
+          "type": "array",
+          "description": "Days whose absence carries more weight than a review day. This is what turns absence counts into absence impact.",
+          "items": {
+            "type": "object",
+            "required": ["date", "description"],
+            "properties": {
+              "date": {"type": "string", "format": "date"},
+              "description": {"type": "string"},
+              "standardIds": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "pacing": {
+          "type": "object",
+          "required": ["percentContentCovered", "percentTimeElapsed", "pacingStatus"],
+          "properties": {
+            "percentContentCovered": {"type": "integer", "minimum": 0, "maximum": 100},
+            "percentTimeElapsed": {"type": "integer", "minimum": 0, "maximum": 100},
+            "pacingStatus": {"enum": ["ahead", "on_track", "slightly_behind", "behind"]}
+          }
+        },
+        "status": {"enum": ["not_started", "in_progress", "completed"]},
+        "metadata": {"$ref": "#/$defs/Metadata"}
+      }
+    },
+
+    "InterruptionRecord": {
+      "type": "object",
+      "required": ["id", "sectionId", "schoolYear", "interruptions", "metrics"],
+      "properties": {
+        "id": {"type": "string"},
+        "sectionId": {"type": "string"},
+        "schoolYear": {"$ref": "#/$defs/SchoolYear"},
+        "interruptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "date", "interruptionType", "minutesLost", "wasPlanned"],
+            "properties": {
+              "id": {"type": "string"},
+              "date": {"type": "string", "format": "date"},
+              "interruptionType": {
+                "enum": ["assembly", "fire_drill", "lockdown_drill", "schedule_change", "early_dismissal", "pull_out", "testing_window", "technology_failure", "substitute_coverage", "other"]
+              },
+              "description": {"type": "string"},
+              "minutesLost": {"type": "integer", "minimum": 0},
+              "wasPlanned": {"type": "boolean"},
+              "curriculumUnitId": {"type": ["string", "null"]},
+              "loggedBy": {"type": "string"}
+            }
+          }
+        },
+        "metrics": {"type": "object"},
+        "metadata": {"$ref": "#/$defs/Metadata"}
+      }
+    },
+
+    "ParticipationRecord": {
+      "type": "object",
+      "required": ["id", "studentId", "sectionId", "schoolYear", "metrics"],
+      "properties": {
+        "id": {"type": "string"},
+        "studentId": {"type": "string"},
+        "sectionId": {"type": "string"},
+        "schoolYear": {"$ref": "#/$defs/SchoolYear"},
+        "recentAssignments": {
+          "type": "array",
+          "description": "A recent window only. Metrics are computed over every assignment; storing them all is a gradebook the dashboards never render.",
+          "items": {
+            "type": "object",
+            "required": ["id", "assignmentTitle", "assignedDate", "dueDate", "completionStatus"],
+            "properties": {
+              "id": {"type": "string"},
+              "assignmentTitle": {"type": "string"},
+              "curriculumUnitId": {"type": "string"},
+              "assignedDate": {"type": "string", "format": "date"},
+              "dueDate": {"type": "string", "format": "date"},
+              "submittedDate": {"type": ["string", "null"], "format": "date"},
+              "completionStatus": {
+                "enum": ["completed_on_time", "completed_late", "incomplete", "missing", "excused"]
+              },
+              "standardIds": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "assignmentsRetained": {"type": "integer", "minimum": 0},
+        "assignmentsTotal": {"type": "integer", "minimum": 0},
+        "metrics": {
+          "type": "object",
+          "required": ["assignmentsAssigned", "assignmentsCompleted", "completionRate"],
+          "properties": {
+            "assignmentsAssigned": {"type": "integer", "minimum": 0},
+            "assignmentsCompleted": {"type": "integer", "minimum": 0},
+            "completionRate": {"type": "number", "minimum": 0, "maximum": 100},
+            "onTimeRate": {"type": "number", "minimum": 0, "maximum": 100},
+            "completionRateByMarkingPeriod": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "markingPeriod": {"type": "integer", "minimum": 1, "maximum": 4},
+                  "completionRate": {"type": "number"}
+                }
+              }
+            }
+          }
+        },
+        "metadata": {"$ref": "#/$defs/Metadata"}
+      }
+    },
+
+    "Guardian": {
+      "type": "object",
+      "required": ["id", "firstName", "lastName", "relationship", "studentLinks"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^grd-"},
+        "firstName": {"type": "string"},
+        "lastName": {"type": "string"},
+        "relationship": {
+          "enum": ["mother", "father", "stepparent", "grandparent", "foster_parent", "legal_guardian", "other"]
+        },
+        "email": {"type": "string"},
+        "phone": {"type": "string"},
+        "preferredContactMethod": {"enum": ["email", "phone", "text", "mail"]},
+        "preferredLanguage": {"type": "string"},
+        "studentLinks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["studentId", "custodyStatus", "hasEducationalRights"],
+            "properties": {
+              "studentId": {"type": "string"},
+              "custodyStatus": {"enum": ["primary", "secondary", "joint", "none"]},
+              "hasEducationalRights": {
+                "type": "boolean",
+                "description": "Per-link, not per-guardian: custody arrangements are frequently asymmetric. This is the enforcement point for the parent dashboard."
+              }
+            }
+          }
+        },
+        "metadata": {"$ref": "#/$defs/Metadata"}
+      }
+    },
+
+    "User": {
+      "type": "object",
+      "required": ["id", "username", "displayName", "principalType", "roleAssignments", "accountStatus"],
+      "description": "Carries identity and authorization only. No credential material appears anywhere in this dataset.",
+      "properties": {
+        "id": {"type": "string", "pattern": "^usr-"},
+        "username": {"type": "string"},
+        "email": {"type": "string"},
+        "displayName": {"type": "string"},
+        "principalType": {"enum": ["staff", "guardian", "student", "community_member"]},
+        "principalId": {"type": ["string", "null"]},
+        "roleAssignments": {"type": "array", "items": {"$ref": "#/$defs/RoleAssignment"}},
+        "accountStatus": {"enum": ["active", "inactive", "locked", "pending"]},
+        "lastLoginDate": {"type": ["string", "null"]},
+        "metadata": {"type": "object"}
+      }
+    },
+
+    "RoleAssignment": {
+      "type": "object",
+      "required": ["id", "userId", "role", "scopeType", "scopeIds", "permissions"],
+      "description": "Authorization is a role PLUS a scope. Building and district administrators share a role and differ only in scope.",
+      "properties": {
+        "id": {"type": "string"},
+        "userId": {"type": "string"},
+        "role": {
+          "enum": ["teacher", "building_administrator", "district_administrator", "school_board_member", "guardian", "student", "community_member", "counselor", "nurse", "special_education_teacher"]
+        },
+        "scopeType": {"enum": ["section", "school", "district", "student", "public"]},
+        "scopeIds": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "An empty array is valid: a guardian without educational rights sees nothing, rather than being blocked."
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "view_aggregate_mastery", "view_individual_students", "view_student_names",
+              "view_attendance_detail", "view_behavior_detail", "view_health_detail",
+              "view_special_services_detail", "view_evidence_artifacts", "record_mastery",
+              "log_interruptions", "add_intervention_notes"
+            ]
+          }
+        },
+        "effectiveDate": {"type": "string", "format": "date"},
+        "expirationDate": {"type": ["string", "null"]},
+        "metadata": {"type": "object"}
+      }
+    },
+
+    "ResearchCitation": {
+      "type": "object",
+      "required": ["id", "claim", "topic", "source", "confidenceNote", "metadata"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^cite-"},
+        "claim": {"type": "string"},
+        "topic": {
+          "enum": ["attendance", "behavior", "engagement", "mastery_progression", "family_involvement", "interruptions", "special_services", "prior_achievement"]
+        },
+        "source": {
+          "type": "object",
+          "required": ["authorOrOrganization", "title", "publicationYear", "url", "sourceType"],
+          "properties": {
+            "authorOrOrganization": {"type": "string"},
+            "title": {"type": "string"},
+            "publicationYear": {"type": "integer"},
+            "url": {"type": "string"},
+            "sourceType": {
+              "enum": ["peer_reviewed", "government_report", "research_organization", "meta_analysis", "other"]
+            }
+          }
+        },
+        "applicableRoles": {"type": "array", "items": {"type": "string"}},
+        "triggerConditions": {"type": "object"},
+        "confidenceNote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Required. A citation library that presented correlation as causation would undercut the project's research-grounded and accountable-not-punitive commitments."
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["reviewStatus"],
+          "properties": {
+            "addedDate": {"type": "string", "format": "date"},
+            "reviewStatus": {
+              "enum": ["needs_human_review", "verified"],
+              "description": "Nothing marked needs_human_review should reach a stakeholder-facing view."
+            }
+          }
+        }
+      }
+    }
+  }
+}

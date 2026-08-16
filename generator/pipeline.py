@@ -307,6 +307,7 @@ def _build_profile(
                     standards_by_id, absences, calendar, carried_forward,
                     full_evidence,
                     as_of=AS_OF_DATE if year == CURRENT_SCHOOL_YEAR else None,
+                    enrolled_from=dt.date.fromisoformat(student.enrollment_date),
                 )
                 mastery.extend(records)
                 evidence.extend(artifacts)

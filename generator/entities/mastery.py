@@ -72,6 +72,7 @@ def build_mastery_for_subject(
     carried_forward: set[str],
     full_evidence: bool,
     as_of: dt.date | None = None,
+    enrolled_from: dt.date | None = None,
 ) -> tuple[list[dict], list[dict]]:
     """Generate mastery records and evidence for one student in one subject.
 
@@ -95,6 +96,12 @@ def build_mastery_for_subject(
 
     for unit in units:
         quarter_index = min(3, max(0, unit.sequence - 1))
+
+        # A student who enrolled mid-year was not present for earlier units. They
+        # get no record for them at all rather than a not_mastered record implying
+        # they were taught the content and failed to demonstrate it.
+        if enrolled_from is not None and unit.end_date < enrolled_from:
+            continue
 
         if as_of is not None and unit.start_date > as_of:
             # Not taught yet. Record the standards as tracked-but-unevidenced so
@@ -162,12 +169,20 @@ def build_mastery_for_subject(
                 count = max(1, round(count * progress))
 
             # --- Does it reach mastery? ----------------------------------------
+            # Penalties are MULTIPLICATIVE, not subtractive. Subtracting flat
+            # amounts drove low-tier students with heavy absence straight to the
+            # floor: an underachiever on a rising trajectory who missed a third of
+            # a unit mastered literally nothing all year, which is neither
+            # believable nor useful -- the guidelines call for "early signs of
+            # mastery catching up", and a student pinned at zero shows none.
+            # Scaling proportionally keeps the penalty real while leaving the
+            # recovery visible.
             mastery_probability = archetype.mastery_rate
             mastery_probability *= quarter_strength(archetype, quarter_index)
-            mastery_probability -= missed_ratio * 0.75
-            mastery_probability -= key_penalty
+            mastery_probability *= 1 - min(0.62, missed_ratio * 0.85)
+            mastery_probability *= 1 - min(0.45, key_penalty)
             if archetype.situation.behavior_localized and subject == archetype.focus_subject:
-                mastery_probability -= 0.30
+                mastery_probability *= 0.45
 
             # A standard cannot be broadly mastered in a unit that is only partway
             # taught. This is what makes "68% mastery with three weeks remaining"
@@ -187,11 +202,15 @@ def build_mastery_for_subject(
             # clearest possible tell that a dataset is synthetic.
             teachable = [
                 d for d in unit.instructional_days
-                if as_of is None or d <= as_of
+                if (as_of is None or d <= as_of)
+                and (enrolled_from is None or d >= enrolled_from)
             ]
-            available = [d for d in teachable if d not in absences]
-            if not available:
-                available = teachable or list(unit.instructional_days)
+            if not teachable:
+                # Enrolled after this unit ended, or the unit had not begun by the
+                # viewing date. No evidence is possible; falling back to the full
+                # unit would date artifacts before the student was even enrolled.
+                continue
+            available = [d for d in teachable if d not in absences] or teachable
             evidence_days = sorted(
                 rng.sample(available, min(count, len(available)))
             ) if available else []

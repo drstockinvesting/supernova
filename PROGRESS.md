@@ -9,7 +9,7 @@ rewriting it, so the reasoning behind the build stays legible.
 
 | Phase | Status | Session |
 |---|---|---|
-| **1. Synthetic data generation** | In progress | 2026-08-16 |
+| **1. Synthetic data generation** | Complete | 2026-08-16 |
 | 2. UI / UX build | Not started | — |
 | 3. Permissions enforcement | Not started | — |
 | 4. Visual design system | Not started | — |
@@ -20,16 +20,16 @@ rewriting it, so the reasoning behind the build stays legible.
 ## Phase 1 Checklist
 
 - [x] Repo initialized, docs organized
-- [ ] Data structures addendum written
-- [ ] Standards catalog built (~500 real standards, 6 frameworks)
-- [ ] Generator core (config, rng, calendar, archetypes)
-- [ ] Organization + curriculum entities
-- [ ] Seven student data streams
-- [ ] Longitudinal years + aggregates
-- [ ] JSON schemas + validation suite
-- [ ] Full generation passing validation
-- [ ] Determinism verified (regen produces empty git diff)
-- [ ] Pushed to GitHub, tagged `v0.1-data`
+- [x] Data structures addendum written
+- [x] Standards catalog built (593 real standards, 6 frameworks)
+- [x] Generator core (config, rng, calendar, archetypes)
+- [x] Organization + curriculum entities
+- [x] Seven student data streams
+- [x] Longitudinal years + aggregates
+- [x] JSON schemas + validation suite
+- [x] Full generation passing validation
+- [x] Determinism verified (two runs, byte-identical)
+- [x] Pushed to GitHub, tagged `v0.1-data`
 
 ---
 
@@ -80,6 +80,66 @@ Achiever with severe chronic absenteeism) don't occur.
 evidence counts plus benchmark and screener results — which is what `PriorAchievementRecord`
 specifies, not a shortcut. Keeps the dataset around 60MB rather than several hundred.
 
+### 2026-08-16 — Session 1, later decisions
+
+**High school uses one fixed course per subject per grade.** Algebra I / Geometry /
+Algebra II / Pre-Calculus, Biology / Chemistry / Physics / Environmental Science, and
+so on. Real high schools branch into pathways, but branching would make "which grade
+is strongest in mathematics" unanswerable, and both the administrator and board
+dashboards depend on that comparison.
+
+**Grade-banded frameworks are split across their grades.** CCSS ELA (9-10, 11-12),
+NGSS middle and high, C3, NCAS, and SHAPE all publish in bands rather than by grade.
+Assigning a whole band to both its grades would leave every 10th and 12th grader with
+a pre-mastered standard set, because mastery is permanent. Each band is split by
+strand or domain instead.
+
+**The dataset is viewed as of 10 February 2025, not end of year.** Everything stops
+there: no evidence, attendance, or incidents are dated later. Units not yet reached
+are recorded as tracked-but-unevidenced; the in-progress unit accumulates evidence
+and mastery scaled by how far through it actually is. Mastery rates are computed over
+standards *taught to date* — counting untaught fourth-quarter content against a
+student makes every mid-year rate meaninglessly low and identical across students.
+
+**Attendance stores exceptions only.** A year is ~180 rows, 90% of them "present".
+The default is recoverable from the school calendar, and absence dates aligned to the
+instructional timeline is what the UI actually needs.
+
+**Evidence artifacts live in a companion file per student.** They are roughly three
+quarters of a student's data but are only needed when drilling into a specific
+standard. Splitting them keeps the profile loadable on its own.
+
+**Mastery penalties are multiplicative, not subtractive.** Found by hand-inspecting a
+generated student: subtracting flat penalties drove an underachieving chronic absentee
+to zero mastery across all 41 standards. That is neither believable nor useful — the
+guidelines call for "early signs of mastery catching up", and a student pinned at zero
+shows none.
+
+**Research citations all carry `needs_human_review`.** The claims are stated
+correlationally with explicit confidence notes. None should appear in a
+stakeholder-facing view until someone verifies the source says what the claim says.
+
+---
+
+## Phase 1 Results
+
+- **593 standards** across CCSS Math, CCSS ELA, NGSS, C3, NCAS, and SHAPE America
+- **1,102 students**, 86 staff, 1,271 guardians, 2,101 user accounts
+- **252 sections**, 1,368 curriculum units, 252 interruption records
+- **112,325 mastery records**, 99,402 evidence artifacts across three school years
+- **178 MB** total; profiles average 98 KB with a 62 KB evidence companion
+- Generation runs in about 5 seconds; validation passes with zero errors
+- Determinism verified: two consecutive runs produce byte-identical output
+
+Measured correlations (see `data/validation-report.md`):
+
+| Check | Result |
+|---|---|
+| Absence-to-mastery | 25.8% → 16.7% → 11.7% → 5.1% mastery as unit absences rise |
+| Behavioral localization | focus subject 21.6 pts below the student's own other subjects |
+| Rising trajectory | back-half engagement 28.2 pts above front-half |
+| Transfer honesty | 73 of 73 flagged, 0 given an invented full history |
+
 ---
 
 ## Open Questions
@@ -105,6 +165,24 @@ Raised during Phase 1:
 
 ## Notes for the Next Session
 
-Phase 2 (UI/UX) should start by reading `docs/supernova-data-structures-addendum.md` alongside
-the original data structures doc, then `data/manifest.json` for what actually exists. Every UI
-element named in the addendum's gap table has data behind it.
+Phase 2 (UI/UX) should start by reading `docs/supernova-data-structures-addendum.md`
+alongside the original data structures doc, then `data/manifest.json` for what actually
+exists. Every UI element named in the addendum's gap table has data behind it.
+
+Useful entry points:
+
+- `data/aggregates/current-year.json` — precomputed rollups for every zoom level, with
+  a `suppressForPublicDisplay` flag already computed per cell
+- `data/district/sections.json` + `curriculum-units.json` — everything the
+  administrator classroom card needs, including pacing and interruption counts
+- `data/students/{schoolId}/{studentId}.json` — one student's full longitudinal
+  profile; evidence artifacts are in the `.evidence.json` companion
+- `schema/supernova.schema.json` — all 20 record types, verified against real output
+
+Two things Phase 2 will need to decide:
+
+1. Records omit fields at their default (absent `metadata` means no quality flags).
+   The UI should read defensively rather than assuming every key is present.
+2. `masteryRate` is over standards **taught to date**, not the full year.
+   `standardsNotYetTaught` is reported separately so the mastery map can render
+   untaught content as genuinely dark rather than as failure.

@@ -1,0 +1,78 @@
+{
+  "approximateBytes": 181277320,
+  "counts": {
+    "curriculumUnits": 1368,
+    "evidenceArtifacts": 98288,
+    "guardians": 1271,
+    "interruptionRecords": 252,
+    "masteryRecords": 111393,
+    "researchCitations": 12,
+    "schoolYears": 3,
+    "schools": 3,
+    "sections": 252,
+    "staff": 86,
+    "standards": 593,
+    "students": 1102,
+    "users": 2101
+  },
+  "currentSchoolYear": "2024-2025",
+  "datasetVersion": "0.1.0",
+  "determinismNote": "The same master seed always produces byte-identical output. After regenerating, `git diff` should be empty unless the generator changed.",
+  "deterministic": true,
+  "evidenceDensity": 1.0,
+  "fullEvidenceYears": [
+    "2024-2025"
+  ],
+  "generator": "supernova-generator",
+  "masterSeed": "supernova-constellation-2024",
+  "populationDistribution": {
+    "situation": {
+      "behavioral_cluster": 0.0681,
+      "chronic_absenteeism_recovery": 0.0789,
+      "family_engagement_gap": 0.0898,
+      "health_wellness_factor": 0.0517,
+      "iep_services": 0.0953,
+      "none": 0.5499,
+      "transfer_incomplete_history": 0.0662
+    },
+    "situationTierPairings": {
+      "behavioral_cluster + high_achiever": 11,
+      "behavioral_cluster + typical": 35,
+      "behavioral_cluster + underachiever": 29,
+      "chronic_absenteeism_recovery + typical": 26,
+      "chronic_absenteeism_recovery + underachiever": 61,
+      "family_engagement_gap + high_achiever": 6,
+      "family_engagement_gap + typical": 68,
+      "family_engagement_gap + underachiever": 25,
+      "health_wellness_factor + high_achiever": 6,
+      "health_wellness_factor + typical": 25,
+      "health_wellness_factor + underachiever": 26,
+      "iep_services + high_achiever": 4,
+      "iep_services + typical": 48,
+      "iep_services + underachiever": 53,
+      "none + high_achiever": 160,
+      "none + typical": 368,
+      "none + underachiever": 78,
+      "transfer_incomplete_history + high_achiever": 8,
+      "transfer_incomplete_history + typical": 46,
+      "transfer_incomplete_history + underachiever": 19
+    },
+    "tier": {
+      "high_achiever": 0.177,
+      "typical": 0.559,
+      "underachiever": 0.2641
+    },
+    "total": 1102,
+    "trajectory": {
+      "dipping": 0.1162,
+      "rising": 0.1906,
+      "steady": 0.6933
+    }
+  },
+  "schoolYears": [
+    "2022-2023",
+    "2023-2024",
+    "2024-2025"
+  ],
+  "syntheticDataNotice": "Every student, guardian, and staff member in this dataset is synthetic. No real student record, name, or artifact appears anywhere."
+}
