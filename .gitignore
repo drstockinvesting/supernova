@@ -20,6 +20,15 @@ venv/
 .idea/
 *.swp
 
+# Node / Vite
+node_modules/
+app/dist/
+*.tsbuildinfo
+
+# The dataset is committed once, at data/. app/public/data is a symlink to it so
+# the dev server can serve it; committing the link would duplicate 178MB.
+app/public/data
+
 # Local scratch — not part of the dataset
 scratch/
 *.local.json

@@ -1,0 +1,79 @@
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { PersonaPicker } from './session/PersonaPicker'
+import { useSession } from './session/session'
+import { homePathFor } from './session/roles'
+import { StudentView } from './views/StudentView'
+import { FamilyView } from './views/FamilyView'
+import { ComingLater } from './views/ComingLater'
+import { AS_OF_LABEL } from './lib/dataset'
+import { Loading } from './ui/primitives'
+import './ui/theme.css'
+import './ui/app.css'
+
+function Header() {
+  const { session } = useSession()
+  const navigate = useNavigate()
+
+  return (
+    <header className="app-header">
+      <div className="app-header-inner">
+        <button
+          type="button"
+          className="wordmark"
+          onClick={() => session && navigate(homePathFor(session))}
+        >
+          <span className="wordmark-name">Supernova</span>
+          <span className="wordmark-sub">Constellation Area School District</span>
+        </button>
+
+        <div className="row">
+          <span className="as-of subtle" title="Nothing in this dataset is dated later">
+            as of {AS_OF_LABEL}
+          </span>
+          <PersonaPicker />
+        </div>
+      </div>
+    </header>
+  )
+}
+
+function HomeRedirect() {
+  const { session, loading } = useSession()
+  if (loading || !session) {
+    return (
+      <div className="page">
+        <Loading what="accounts" />
+      </div>
+    )
+  }
+  return <Navigate to={homePathFor(session)} replace />
+}
+
+export default function App() {
+  return (
+    <>
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/" element={<HomeRedirect />} />
+          <Route path="/student/:studentId" element={<StudentView />} />
+          <Route path="/family" element={<FamilyView />} />
+          <Route
+            path="/section/:sectionId"
+            element={<ComingLater layer="Teacher" stage="Stage 4" />}
+          />
+          <Route
+            path="/school/:schoolId"
+            element={<ComingLater layer="Building administrator" stage="Stage 5" />}
+          />
+          <Route path="/district" element={<ComingLater layer="District" stage="Stage 5" />} />
+          <Route
+            path="/community"
+            element={<ComingLater layer="Board and community" stage="Stage 6" />}
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+    </>
+  )
+}
