@@ -12,10 +12,13 @@ See [`docs/supernova-vision.md`](docs/supernova-vision.md) for the full vision.
 
 ## Current Phase
 
-**Phase 1 — Synthetic Data Generation.** No UI exists yet, by design. The dashboards described
-in [`docs/supernova-ui-ux-design.md`](docs/supernova-ui-ux-design.md) depend on data that tells a
-believable story; independently randomized fields would leave every correlation and narrative
-feature with nothing real to surface. So the data comes first.
+**Phase 2 — UI/UX Build.** Phase 1 (synthetic data generation) is complete: the dashboards
+described in [`docs/supernova-ui-ux-design.md`](docs/supernova-ui-ux-design.md) depend on data
+that tells a believable story, so the data came first.
+
+The interface is being built from the inside out — the student profile, then the family view,
+then teacher, administrator, and board. The student profile is the atom every other view
+aggregates, so each rollup above it summarises something already proven.
 
 Track progress and decisions in [`PROGRESS.md`](PROGRESS.md).
 
@@ -28,8 +31,41 @@ Track progress and decisions in [`PROGRESS.md`](PROGRESS.md).
 | `docs/` | Source design documents, plus the schema addendum |
 | `schema/` | JSON Schema for every record type |
 | `generator/` | The synthetic data generator (Python 3, stdlib only) |
-| `scripts/` | Entry points — `generate.py`, `validate.py` |
+| `scripts/` | Entry points — `generate.py`, `validate.py`, `emit_types.py` |
 | `data/` | Generated dataset, committed |
+| `app/` | The interface — React and TypeScript, built with Vite |
+
+---
+
+## Running the App
+
+Requires Node. `app/public/data` is a symlink to `data/`, so the dev server serves the
+generated dataset at `/data/...` without copying it.
+
+```bash
+npm --prefix app install
+```
+
+```bash
+npm --prefix app run dev
+```
+
+The app opens on a student account. The control in the top right signs in as any of the
+district's 2,101 real accounts, and each one's actual role, scope, and permission list decides
+what renders — a guardian carries `view_attendance_detail` and `view_evidence_artifacts` but
+not behaviour or health, so those layers are absent from the family view rather than empty.
+
+TypeScript types are generated from the JSON Schema rather than hand-written, so a generator
+change surfaces as a type error instead of as `undefined` at runtime. After any schema change:
+
+```bash
+python3 scripts/emit_types.py
+```
+
+**macOS and iCloud Drive:** `node_modules` is excluded from sync with an extended attribute,
+reapplied by a `postinstall` script. Without it iCloud syncs tens of thousands of package files
+and leaves conflict copies — which is not cosmetic. A duplicated `generator/standards/*.json`
+silently doubled the standards catalog once already.
 
 ---
 
