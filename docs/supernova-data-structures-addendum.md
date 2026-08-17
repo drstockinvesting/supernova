@@ -394,10 +394,25 @@ RoleAssignment
 | Teacher | Their sections | Full detail for their own students; aggregates only for other classes |
 | Building administrator | Their school | All sections and students in the building, named |
 | District administrator | The district | All buildings, all students, named |
-| School board member | The district | Aggregates only — no school or student identifiers |
+| School board member | The district | Aggregates only — no individual identifiers; buildings may be named |
 | Guardian | Their linked students | One child's full record, where educational rights apply |
-| Student | Themselves | Own mastery map and goal progress, age-appropriate |
+| Student | Themselves | Own mastery map, attendance, and goal progress, age-appropriate |
 | Community member | Public | School-level aggregates only |
+
+**Amended in Phase 3.** Two rows above were rewritten against what building them revealed.
+
+The board member's row read "aggregates only — no school or student identifiers", and Phase 2
+implemented it literally: the board saw district totals while an anonymous visitor saw three
+named schools and a grade-level breakdown. That put an elected body governing the district
+behind a member of the public, which no reading of the vision document supports. The rule the
+row was reaching for is **aggregates, not individuals** — the board's limit is the student, not
+the building. Both audiences now read the same figures; the board additionally reads the
+disclosure rules those figures were produced under.
+
+The student's row gained attendance. `view_attendance_detail` at student scope is the right to
+read one's own attendance record, which the guardian on the row above already held. A mastery
+map without the attendance beside it withholds the most common explanation of its shape from
+the one person it is about.
 
 **Integrity rule — health and special services are separately gated.** `view_health_detail` and
 `view_special_services_detail` are not implied by `view_individual_students`. A teacher sees
@@ -408,6 +423,24 @@ records; this is the permission side of the same boundary.
 **Integrity rule — permission boundaries are invisible, not blocked.** Per the UI/UX doc, users
 never see "access denied." The UI renders only what the scope contains, so out-of-scope items
 have no affordance to click. Enforcement is a filtering operation, not a gate.
+
+*Clarified in Phase 3, which had to implement it.* The rule holds for everything reachable by
+clicking, and that remains true: no view offers a link out of the viewer's scope. What the rule
+did not cover is a **typed address**, and something has to happen there. Silence is not the
+answer — a redirect with nothing said is indistinguishable from a broken link, and the same
+document's insistence that absent is not the same as zero argues against pretending nothing
+occurred. So a refused address returns the viewer to their own dashboard with one neutral line,
+and nothing about what was on the other side: not the record, not whether the id exists, not
+what the account would have needed. An unknown id and an out-of-scope one are refused
+identically and deliberately, so the boundary cannot be used to enumerate the district.
+
+**Integrity rule — a role is a permission set and a scope is a set of ids, and both must
+agree.** Neither is sufficient alone, and the district issues counterexamples to each. A school
+board member holds `district` scope, so every id in the district is inside their scope, and
+holds only `view_aggregate_mastery` — no page naming a student or a teacher is open to them. A
+nurse is the mirror: named students, attendance, and health at their building, and no aggregate
+mastery, so the building's rollups are not theirs to read. An authorization check written as a
+role comparison gets both of these wrong.
 
 ---
 

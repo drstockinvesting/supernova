@@ -42,17 +42,21 @@ export interface Session {
   role: Role
   assignment: RoleAssignment
   can: (permission: Permission) => boolean
-  withinScope: (candidate: { studentId?: string; schoolId?: string; sectionId?: string }) => boolean
 }
 
 /**
  * A user can hold more than one assignment. The primary one is whichever appears
  * first, which is how the generator writes it.
  *
- * `withinScope` is not enforcement yet — Phase 2 uses it to shape views, and a
- * typed URL still reaches a student outside the viewer's scope. It is written here,
- * against the account's real `scopeIds`, so Phase 3 closes that gap in one place
- * rather than in every view.
+ * Phase 2 carried a `withinScope` predicate here, matching a candidate id against
+ * `scopeIds` by `scopeType`. Phase 3 removed it rather than called it, because it
+ * could not answer the question enforcement actually asks. A teacher's scope is
+ * sections, so "is this student mine?" is a question about rosters — and a
+ * synchronous predicate over `scopeIds` can only answer it by declaring every
+ * student out of scope, which would have locked teachers out of their own
+ * classes. Scope is resolved against the data in `scope.ts`, and the decision is
+ * made in `access.ts`; `can` stays here because a permission list needs nothing
+ * beyond the account itself.
  */
 export function buildSession(user: User): Session {
   const assignment = user.roleAssignments[0]
@@ -65,23 +69,6 @@ export function buildSession(user: User): Session {
     role: assignment.role,
     assignment,
     can: (permission) => permissions.has(permission),
-    withinScope: ({ studentId, schoolId, sectionId }) =>
-      user.roleAssignments.some((entry) => {
-        switch (entry.scopeType) {
-          case 'district':
-            return true
-          case 'public':
-            return false
-          case 'school':
-            return schoolId !== undefined && entry.scopeIds.includes(schoolId)
-          case 'section':
-            return sectionId !== undefined && entry.scopeIds.includes(sectionId)
-          case 'student':
-            return studentId !== undefined && entry.scopeIds.includes(studentId)
-          default:
-            return false
-        }
-      }),
   }
 }
 

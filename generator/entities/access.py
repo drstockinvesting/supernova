@@ -69,8 +69,14 @@ ROLE_PERMISSIONS = {
         "view_attendance_detail",
         "view_evidence_artifacts",
     ],
+    # A student's scope is themselves, so view_attendance_detail here is the
+    # right to read one's own attendance record. Withholding it while the
+    # student's guardian holds it is hard to justify: the absence is the
+    # student's own, and a mastery map with no attendance beside it hides the
+    # most common explanation for its shape.
     "student": [
         "view_individual_students",
+        "view_attendance_detail",
         "view_evidence_artifacts",
     ],
     "community_member": [

@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { PersonaPicker } from './session/PersonaPicker'
 import { useSession } from './session/session'
+import { Guard, ScopeNotice } from './session/Guard'
 import { homePathFor } from './session/roles'
 import { StudentView } from './views/StudentView'
 import { FamilyView } from './views/FamilyView'
@@ -58,15 +59,69 @@ export default function App() {
     <>
       <Header />
       <main>
+        <ScopeNotice />
+
+        {/* Every route is wrapped. A view that decides for itself whether the
+            viewer belongs there is a view that will be written without the
+            check one day; the boundary is one place, and it is here. */}
         <Routes>
           <Route path="/" element={<HomeRedirect />} />
-          <Route path="/student/:studentId" element={<StudentView />} />
-          <Route path="/family" element={<FamilyView />} />
-          <Route path="/teacher" element={<TeacherView />} />
-          <Route path="/section/:sectionId" element={<SectionView />} />
-          <Route path="/school/:schoolId" element={<SchoolView />} />
-          <Route path="/district" element={<DistrictView />} />
-          <Route path="/community" element={<CommunityView />} />
+          <Route
+            path="/student/:studentId"
+            element={
+              <Guard route="student">
+                <StudentView />
+              </Guard>
+            }
+          />
+          <Route
+            path="/family"
+            element={
+              <Guard route="family">
+                <FamilyView />
+              </Guard>
+            }
+          />
+          <Route
+            path="/teacher"
+            element={
+              <Guard route="classrooms">
+                <TeacherView />
+              </Guard>
+            }
+          />
+          <Route
+            path="/section/:sectionId"
+            element={
+              <Guard route="section">
+                <SectionView />
+              </Guard>
+            }
+          />
+          <Route
+            path="/school/:schoolId"
+            element={
+              <Guard route="school">
+                <SchoolView />
+              </Guard>
+            }
+          />
+          <Route
+            path="/district"
+            element={
+              <Guard route="district">
+                <DistrictView />
+              </Guard>
+            }
+          />
+          <Route
+            path="/community"
+            element={
+              <Guard route="public">
+                <CommunityView />
+              </Guard>
+            }
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

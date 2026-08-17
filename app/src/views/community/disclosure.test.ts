@@ -111,7 +111,25 @@ test('grades sort naturally rather than as strings', () => {
 
 // --- Audience ----------------------------------------------------------------
 
-test('a board member may not name a building; a community member may', () => {
-  assert.equal(ruleFor('school_board_member').namesBuildings, false)
-  assert.equal(ruleFor('community_member').namesBuildings, true)
+// Phase 3 reversed Stage 6 here. The board's row in the role table means
+// "aggregates, not individuals" — it does not put a governing body behind an
+// anonymous visitor, which is what the literal reading produced. Both audiences
+// now read the same figures; only the board is told how they were made.
+test('both audiences read the same figures', () => {
+  assert.equal(ruleFor('school_board_member').audience, 'board')
+  assert.equal(ruleFor('community_member').audience, 'public')
+})
+
+test('the board, and only the board, is given the rules behind the figures', () => {
+  assert.equal(ruleFor('school_board_member').explainsRules, true)
+  assert.equal(ruleFor('community_member').explainsRules, false)
+})
+
+test('every role that is not the board reads the page as the public does', () => {
+  // The route is open to anyone — a student following a link from outside the
+  // app lands here too — and everything but the board falls through to the
+  // public rule rather than to a role check that would need updating per role.
+  for (const role of ['student', 'guardian', 'teacher', 'district_administrator'] as const) {
+    assert.equal(ruleFor(role).audience, 'public')
+  }
 })

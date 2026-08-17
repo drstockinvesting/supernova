@@ -7,18 +7,23 @@
  * needed a new rollup. What the stage had to get right is what must *not* appear,
  * and that turns out to be a harder question than any layout below it:
  *
- *   - A grade level identifies a building. Nova teaches K-5, Meridian 6-8,
- *     Constellation 9-12, so "Grade 7 mastery is 39.1%" is Meridian's figure
- *     whether or not Meridian is named. A view forbidden from naming buildings
- *     cannot print a grade breakdown either.
  *   - Suppressing a single cell out of a published total hides nothing, because
  *     the reader can subtract. See `discloseCells`.
- *   - There is no drill-down. Not because the routes are guarded — Phase 2 does
- *     not guard them — but because the addendum is explicit that boundaries are
- *     invisible rather than blocked, so an out-of-scope building gets no
- *     affordance to click rather than a link that says no.
+ *   - A grade level identifies a building. Nova teaches K-5, Meridian 6-8,
+ *     Constellation 9-12, so "Grade 7 mastery is 39.1%" is Meridian's figure
+ *     whether or not Meridian is named. On a page that names buildings anyway
+ *     that is no leak — but it is why Stage 6's board view, forbidden from
+ *     naming them, could not print a grade breakdown either. Phase 3 retired
+ *     that prohibition; see `community/disclosure` for the reasoning.
+ *   - There is still no drill-down, now for two reasons rather than one. The
+ *     addendum's rule is that boundaries are invisible rather than blocked, so
+ *     an out-of-scope building gets no affordance to click rather than a link
+ *     that says no. Since Phase 3 the route behind that absent link is shut as
+ *     well: neither audience holds `view_student_names`, so neither can open a
+ *     building, a classroom, or a student by typing its address.
  *
- * The route serves two audiences with different rules; see `community/disclosure`.
+ * The two audiences now read the same figures. The board additionally reads the
+ * rules those figures were produced under; see `community/disclosure`.
  */
 
 import { useMemo, useState } from 'react'
@@ -162,32 +167,14 @@ export function CommunityView() {
         />
       </section>
 
-      {rule.namesBuildings ? (
-        <PublicSchools
-          aggregates={aggregates}
-          subject={subject}
-          onSubject={setSubject}
-        />
-      ) : (
-        <WithheldFromBoard aggregates={aggregates} />
-      )}
+      <PublicSchools aggregates={aggregates} subject={subject} onSubject={setSubject} />
 
       <NarrativeBlock title="How much the schools differ">
         <p>
-          {rule.namesBuildings ? (
-            <>
-              The {schools.length} schools sit within {schoolSpread.range.toFixed(1)} points of
-              one another on mastery, from {percent(schoolSpread.min, 1)} to{' '}
-              {percent(schoolSpread.max, 1)}. Grade levels vary more than twice as widely —{' '}
-              {gradeSpread.range.toFixed(1)} points between the highest and the lowest.
-            </>
-          ) : (
-            <>
-              The district's schools sit within {schoolSpread.range.toFixed(1)} points of one
-              another on mastery. Grade levels within them vary{' '}
-              {gradeSpread.range.toFixed(1)} points, more than twice as widely.
-            </>
-          )}{' '}
+          The {schools.length} schools sit within {schoolSpread.range.toFixed(1)} points of one
+          another on mastery, from {percent(schoolSpread.min, 1)} to{' '}
+          {percent(schoolSpread.max, 1)}. Grade levels vary more than twice as widely —{' '}
+          {gradeSpread.range.toFixed(1)} points between the highest and the lowest.{' '}
           That ordering matters for how these figures should be read: a difference between
           schools of about a point is not a finding, and treating it as one would direct
           attention away from the variation that is real.
@@ -208,6 +195,8 @@ export function CommunityView() {
         rather than a school against itself, so nothing here is described as improving or
         declining.
       </Notice>
+
+      {rule.explainsRules ? <DisclosureRules aggregates={aggregates} /> : null}
 
       <ResearchContext
         role={session.role}
@@ -433,50 +422,73 @@ function SchoolCard({
   )
 }
 
-// --- The board view's subtraction --------------------------------------------
+// --- What the board gets that the public does not ----------------------------
 
 /**
- * What the board view leaves out, and the reasoning, in the place where the
- * breakdown would otherwise be.
+ * The rules the figures above were produced under.
  *
- * The alternative — omitting the section silently — would leave a reader unable
- * to tell a district with no grade-level variation from one whose variation is
- * being withheld. The addendum's "boundaries are invisible" rule is about not
- * dangling links at people, not about concealing that a rule exists; a governing
- * body in particular is owed the rule it is governing under.
+ * Stage 6 gave the board *less* than the public — no named buildings, no grade
+ * breakdown — on a literal reading of a role table row. Phase 3 gave it the same
+ * figures and this instead, which is the thing a governing body actually lacks.
+ * A board is asked to act on a mastery rate; what it cannot get from the number
+ * is how the number was made, which cells were withheld from it, and what a
+ * reader could work back to anyway.
+ *
+ * It is also the honest place to record that the suppression machinery has never
+ * fired on this district. A rule tested only against districts the generator does
+ * not produce is a rule that has been reasoned about, not one known to work, and
+ * the body governing under it should be told which it is.
  */
-function WithheldFromBoard({ aggregates }: { aggregates: Aggregates }) {
+function DisclosureRules({ aggregates }: { aggregates: Aggregates }) {
   const identifying = gradesIdentifyingOneBuilding(aggregates.grades)
   const everyGrade = gradeDimensionNamesBuildings(aggregates.grades)
+  const smallest = Math.min(...aggregates.grades.map((entry) => entry.studentCount))
+  const threshold = aggregates.publicSuppressionThreshold
 
   return (
     <section className="card stack-tight">
       <div className="section-heading">
-        <h2>By grade level</h2>
-        <span className="subtle">not shown</span>
+        <h2>How these figures are disclosed</h2>
+        <span className="subtle">board view</span>
       </div>
 
-      <Notice tone="caution">
-        <strong>A grade level names a school in this district.</strong>{' '}
-        {everyGrade ? 'Every one of the' : `${identifying.length} of the`}{' '}
-        {aggregates.grades.length} grade levels is taught in exactly one building, so
-        publishing a grade's mastery rate publishes that building's — the school does not have
-        to be named for a reader to know which one it is. A board member's scope is aggregates
-        without school identifiers, and a grade breakdown would defeat that through the back
-        door rather than honour it.
-      </Notice>
+      <dl className="detail-facts">
+        <dt>Individuals</dt>
+        <dd>
+          Never shown, to either audience. No student, classroom, or teacher is named on this
+          page, and this account cannot open one — the boundary is enforced on the route, not
+          on the link.
+        </dd>
 
-      {/* Deliberately does not name the buildings. The section exists to explain a
-          rule against school identifiers, and an explanation that breaks the rule
-          it is explaining is worse than no explanation. The shape of the problem
-          survives the anonymity; the names add nothing to it. */}
+        <dt>Small cells</dt>
+        <dd>
+          A group of fewer than {threshold} students is withheld, because a rate over a group
+          that small can identify a child at the top or bottom of it. The smallest group
+          published above holds {smallest}, so nothing is withheld on this district — the rule
+          is in force and has had nothing to do.
+        </dd>
+
+        <dt>What can be subtracted</dt>
+        <dd>
+          A single withheld cell under a published total is recoverable by arithmetic, so a
+          second is withheld alongside it. This has never run here either, for the same reason.
+        </dd>
+
+        <dt>The grade dimension</dt>
+        <dd>
+          {everyGrade ? 'Every one of the' : `${identifying.length} of the`}{' '}
+          {aggregates.grades.length} grade levels is taught in exactly one building, so a
+          grade's rate is also a building's rate. On a page that names buildings that reveals
+          nothing further — but it is a property of how this district is organised rather than
+          a fact about grades, and it is computed from the data each time rather than assumed.
+        </dd>
+      </dl>
+
       <p className="prose subtle">
-        This is a property of how the district is organised, not a fixed rule about grades:
-        its {aggregates.schools.length} schools divide the grades between them with no
-        overlap. A district whose buildings shared a grade range — two schools each teaching
-        the same grades — could publish that breakdown without identifying either, and this
-        view would show it, because the check is computed from the data rather than written
-        into the page.
+        Until Phase 3 this view showed the board less than it showed the public: the role table
+        was read as forbidding school identifiers, which — because of the line above — also
+        forbade the grade breakdown. That reading put an elected body behind an anonymous
+        visitor. The rule now applied is that the board's limit is individuals, not buildings.
       </p>
     </section>
   )

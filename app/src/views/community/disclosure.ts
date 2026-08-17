@@ -6,15 +6,30 @@
  * live here as pure functions rather than as conditions scattered through JSX.
  * A disclosure rule that cannot be read on its own cannot be reviewed.
  *
- * Two audiences share the route and do not share the rules. The addendum's role
- * table is explicit:
+ * Two audiences share the route. Stage 6 read the addendum's role table
+ * literally —
  *
  *   School board member | The district | Aggregates only -- no school or student identifiers
  *   Community member    | Public       | School-level aggregates only
  *
- * which puts the board on a *stricter* footing than the public. That reads
- * backwards and is recorded as an open question, but it is what the reference
- * table says, so it is what these functions implement.
+ * — and built a board view stricter than the public one: the community got three
+ * named schools and a grade breakdown, and the elected body governing the
+ * district got totals and an explanation of what was missing. Phase 3 resolves
+ * that rather than hardening it. The board's row means **aggregates, not
+ * individuals**; it was never a rule that a governing body may not know which
+ * building is which. An anonymous visitor cannot reasonably be better informed
+ * about the district than the people elected to run it.
+ *
+ * So the floor is shared and the ceiling differs:
+ *
+ *   - Neither audience may reach a named student, classroom, or building page.
+ *     That is not enforced here — it is enforced at the route boundary in
+ *     `session/access.ts`, which is where a rule about what may be *opened*
+ *     belongs. Neither role holds `view_student_names`.
+ *   - Both read school-level aggregates, the grade breakdown, and whatever the
+ *     small-cell rule leaves standing.
+ *   - The board additionally gets the rules those figures were produced under. A
+ *     body governing by these numbers is owed the method, not only the result.
  */
 
 import type { AggregateCell, Aggregates } from '../../types/profile'
@@ -27,22 +42,24 @@ export interface DisclosureRule {
   /** Shown in the header, so the reader knows which rules produced the page. */
   label: string
   /**
-   * May a building be named? The board's row says no; the public's row says
-   * school-level aggregates are the whole point of the view.
+   * Whether the page states the disclosure rules it was produced under — the
+   * suppression threshold, the complementary rule, and what the grade dimension
+   * does and does not reveal. The public page publishes the figures; the board
+   * page publishes the figures and the method.
    */
-  namesBuildings: boolean
+  explainsRules: boolean
 }
 
 export const BOARD_RULE: DisclosureRule = {
   audience: 'board',
-  label: 'Board view · district aggregates only',
-  namesBuildings: false,
+  label: 'Board view · aggregates, and the rules behind them',
+  explainsRules: true,
 }
 
 export const PUBLIC_RULE: DisclosureRule = {
   audience: 'public',
   label: 'Public view · school-level aggregates',
-  namesBuildings: true,
+  explainsRules: false,
 }
 
 export function ruleFor(role: Role): DisclosureRule {

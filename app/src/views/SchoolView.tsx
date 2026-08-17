@@ -13,7 +13,7 @@
 
 import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import type { SectionContext } from '../types/profile'
+import type { Aggregates, SectionContext } from '../types/profile'
 import {
   loadAggregates,
   loadSchoolIndex,
@@ -105,6 +105,14 @@ export function SchoolView() {
   // is somewhere above it the viewer can actually go.
   const seesDistrict = session.assignment.scopeType === 'district'
 
+  // The route boundary asks whether this account covers this building. It does
+  // not ask whether the account holds the capability the page is *made of*, and
+  // for one role the answer is no: a nurse is scoped to the building and holds
+  // named students, attendance, and health detail — but not
+  // `view_aggregate_mastery`, which is every rollup, comparison, and classroom
+  // card below. Phase 2 showed them all of it because no view asked.
+  const seesAggregates = session.can('view_aggregate_mastery')
+
   const gradeRows: ComparisonRow[] = [...grades]
     .sort((a, b) => b.masteryRate - a.masteryRate)
     .map((entry) => ({
@@ -134,6 +142,36 @@ export function SchoolView() {
     0,
   )
 
+  const head = (
+    <BuildingHead
+      building={building}
+      principalName={school?.principalName}
+      sectionCount={sections.length}
+      schoolYear={aggregates.schoolYear}
+    />
+  )
+
+  // Everything below the header is aggregate mastery in one form or another, so
+  // an account without it gets the building and an explanation rather than a
+  // page of figures it is not entitled to. The alternative — refusing the route
+  // — would leave the role with no dashboard at all to land on.
+  if (!seesAggregates) {
+    return (
+      <div className="page stack">
+        {head}
+        <Notice tone="caution">
+          <strong>This building's rollups are not part of this account's view.</strong> The
+          account is scoped to {building.label} and holds named students, attendance, and
+          health detail — but not aggregate mastery, which is what the building's rates, its
+          comparisons by grade, subject, and teacher, and its classroom index all are. They are
+          absent here rather than empty, which is the same distinction the student profile
+          draws: this account has no claim on them, so the page does not pretend to have
+          checked and found nothing.
+        </Notice>
+      </div>
+    )
+  }
+
   return (
     <div className="page stack">
       {/* "District" rather than the district's full name, to match the crumb the
@@ -142,32 +180,7 @@ export function SchoolView() {
         <Breadcrumb items={[{ label: 'District', to: '/district' }, { label: building.label }]} />
       ) : null}
 
-      <header className="student-head">
-        <div className="stack-tight">
-          <div className="eyebrow">
-            Building · {formatSchoolYear(aggregates.schoolYear)}
-          </div>
-          <h1>{building.label}</h1>
-          <div className="row subtle">
-            {school ? (
-              <>
-                <span>{school.principalName}</span>
-                <span>·</span>
-              </>
-            ) : null}
-            <span>
-              Grades {building.gradesCovered[0]}–
-              {building.gradesCovered[building.gradesCovered.length - 1]}
-            </span>
-            <span>·</span>
-            <span>{building.studentCount.toLocaleString()} students</span>
-            <span>·</span>
-            <span>{sections.length} sections</span>
-            <span>·</span>
-            <span>as of {AS_OF_LABEL}</span>
-          </div>
-        </div>
-      </header>
+      {head}
 
       <section className="grid">
         <MetricCard
@@ -309,6 +322,46 @@ export function SchoolView() {
         }}
       />
     </div>
+  )
+}
+
+/** Shared by the full building page and the aggregate-less one. */
+function BuildingHead({
+  building,
+  principalName,
+  sectionCount,
+  schoolYear,
+}: {
+  building: Aggregates['schools'][number]
+  principalName: string | undefined
+  sectionCount: number
+  schoolYear: string
+}) {
+  return (
+    <header className="student-head">
+      <div className="stack-tight">
+        <div className="eyebrow">Building · {formatSchoolYear(schoolYear)}</div>
+        <h1>{building.label}</h1>
+        <div className="row subtle">
+          {principalName ? (
+            <>
+              <span>{principalName}</span>
+              <span>·</span>
+            </>
+          ) : null}
+          <span>
+            Grades {building.gradesCovered[0]}–
+            {building.gradesCovered[building.gradesCovered.length - 1]}
+          </span>
+          <span>·</span>
+          <span>{building.studentCount.toLocaleString()} students</span>
+          <span>·</span>
+          <span>{sectionCount} sections</span>
+          <span>·</span>
+          <span>as of {AS_OF_LABEL}</span>
+        </div>
+      </div>
+    </header>
   )
 }
 

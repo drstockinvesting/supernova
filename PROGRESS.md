@@ -11,9 +11,22 @@ rewriting it, so the reasoning behind the build stays legible.
 |---|---|---|
 | **1. Synthetic data generation** | Complete | 2026-08-16 |
 | **2. UI / UX build** | Complete — student through board and community | 2026-08-17 |
-| 3. Permissions enforcement | Not started | — |
+| **3. Permissions enforcement** | Complete — enforced at the route boundary | 2026-08-17 |
 | 4. Visual design system | Not started | — |
 | 5. Research context layer | Not started | — |
+
+---
+
+## Phase 3 Checklist
+
+- [x] Access model as pure functions — `app/src/session/access.ts`, no React, no fetch
+- [x] Scope expansion against the data — `app/src/session/scope.ts`, viewer's scope only
+- [x] Every route wrapped at one boundary — `app/src/session/Guard.tsx`
+- [x] Refusal returns the viewer home with one neutral line, never a wall
+- [x] Board / public asymmetry resolved: the board's limit is individuals, not buildings
+- [x] Student role granted `view_attendance_detail` over its own record; dataset regenerated
+- [x] Building page gated internally on `view_aggregate_mastery` (the nurse case)
+- [x] 19 access tests across all ten roles; 31 tests total, build and lint clean
 
 ---
 
@@ -400,6 +413,73 @@ affected. The UI now names the gap rather than rendering the summary's 0.0%. Whe
 the generator should build prior-year sections at the school matching the grade is an
 open question below.
 
+### 2026-08-17 — Session 6 (Phase 3) — permissions enforcement
+
+**Enforcement is a permission set and a scope, and both have to agree.** Phase 2 left
+`withinScope` in `roles.ts` as the hook Phase 3 would call. Phase 3 deleted it instead.
+It matched a candidate id against `scopeIds` by `scopeType`, which cannot answer the
+question the boundary actually asks: a teacher's scope is *sections*, so "is this
+student mine?" is a question about rosters, and a synchronous predicate over `scopeIds`
+can only answer it by declaring every student out of scope — locking 72 teachers out of
+their own classes. The model that replaced it resolves an account's scope into concrete
+ids (`session/scope.ts`) and decides against them (`session/access.ts`), and it checks
+permissions as well as scope because the district issues counterexamples to each on its
+own. A board member holds district scope — every id in the district is inside it — and
+only `view_aggregate_mastery`. A nurse is the mirror image: named students, attendance,
+and health at their building, and no aggregate at all. A role comparison gets both wrong.
+
+**Scope is expanded from the viewer, never from the record.** A teacher's student list
+is built by fetching their own four or five rosters, not by reading the requested
+student's profile to see who teaches them. Reading the record to decide whether the
+record may be read is how an authorization check quietly becomes no check; it also
+fetches the protected file before deciding. Building and district accounts expand to
+nothing at all — a district scope is a flag, and a building scope is answered by
+comparing the target's own `schoolId` against three.
+
+**A refused address returns the viewer home with one line.** The addendum's integrity
+rule says boundaries are invisible rather than blocked, which is written about links,
+and it still holds — no view offers one out of scope. It says nothing about a typed
+address, and there silence is the wrong answer: a redirect with nothing said is
+indistinguishable from a broken link, in an app whose whole voice is that absent is not
+the same as zero. So: back to their own dashboard, one neutral sentence, and nothing
+about the other side. An unknown id and an out-of-scope id are refused identically, so
+the boundary cannot be used to enumerate the district. The addendum records both the
+clarification and the two-part rule above.
+
+**The guard failed open across an account switch, and that is the defect worth
+remembering.** The first implementation resolved scope and target in two `useAsync`
+hooks and decided from whatever they held. An async value in state survives one render
+past the change that invalidated it, so switching accounts rendered the *new* session
+against the *previous* account's scope — which showed up as a teacher being refused
+their own student, and would have shown up as a guardian briefly seeing a student
+profile inherited from a district administrator's scope. Both halves of the check are
+now resolved together under one key, and a result stamped with a different key is
+discarded rather than used. Verified in the browser by switching from a district
+administrator viewing a Nova student to a guardian: it lands on `/family`, showing only
+their own child.
+
+**The board's row meant "aggregates, not individuals".** Stage 6's literal reading —
+no school identifiers — put an elected body behind an anonymous visitor, which was
+recorded as the highest-value open question and is now closed in that direction. Both
+audiences read the same figures. What the board gets instead is the *method*: the
+suppression threshold, the complementary rule, what the grade dimension reveals, and
+the fact that none of that machinery has ever fired on this district. A body governing
+by these numbers is owed how they were made. The two functions Stage 6 wrote to detect
+re-identification through the grade dimension are still called — they now explain a
+published breakdown rather than justify a withheld one.
+
+**A student can see their own attendance.** `view_attendance_detail` at student scope
+is the right to read one's own record, which the guardian already held. Regenerating
+changed `users.json` and the manifest's byte total and nothing else, which is the
+determinism guarantee doing its job.
+
+**Enforcement exposed a role with no view of its own job.** A nurse is scoped to a
+building and holds no `view_aggregate_mastery` — and the building page is aggregates
+end to end. Refusing the route would leave the role with nowhere to land, so the page
+now renders the building header and says what is absent and why. What it cannot do is
+give a nurse the thing they actually hold: named students with attendance and health at
+their school, which no view in the app indexes. That is an honest gap, recorded below.
+
 ---
 
 ## Phase 1 Results
@@ -451,10 +531,9 @@ Raised during Phase 2:
   named features, and it cannot be shown for a student who changed buildings. The UI is
   honest about the gap; filling it means generating sections at the school matching each
   prior grade.
-- **A student account cannot see its own attendance.** The `student` role carries only
-  `view_individual_students` and `view_evidence_artifacts`, so the student view shows
-  mastery and evidence but not the attendance record. Deliberate or an oversight in the
-  role definition, worth deciding before Phase 3 enforces it.
+- ~~**A student account cannot see its own attendance.**~~ **Resolved in Phase 3** — an
+  oversight. The role now carries `view_attendance_detail`, which at student scope is the
+  right to read one's own record; the guardian on the same child already held it.
 - The guardian view answers Phase 1's open question about parent-visible behaviour data
   by omitting it entirely, since the guardian role holds no `view_behavior_detail`.
   Worth confirming that is the intended answer rather than the default one.
@@ -478,12 +557,10 @@ Raised during Stage 4:
 
 Raised during Stage 5:
 
-- **Should the teacher comparison be scope-gated before Phase 3?** It is the most
-  sensitive surface built so far — named staff, ranked against each other. Phase 2's
-  documented stance is that permissions shape views but do not enforce, and a typed URL
-  still reaches out-of-scope data, so a guardian can currently open `/school/nova-elementary`
-  and read the staff ranking. That was already true of student data; it is more pointed
-  here. Worth deciding whether this one section is gated early rather than waiting.
+- ~~**Should the teacher comparison be scope-gated before Phase 3?**~~ **Resolved in
+  Phase 3** — gated with everything else rather than early. The building page requires
+  `view_student_names` and the building in scope, so a guardian, a student, a board
+  member, and a teacher at that same school are all refused it.
 - **Should prior-year aggregates be generated, so trends become possible?** The honest
   blocker is that prior years attach to students rather than buildings. Generating
   prior-year sections at the school matching each prior grade — already an open question
@@ -496,16 +573,10 @@ Raised during Stage 5:
 
 Raised during Stage 6:
 
-- **Why does a board member see less than a member of the public?** The addendum's role
-  table gives the board "aggregates only — no school or student identifiers" and the
-  community "school-level aggregates only", which puts an elected body governing the
-  district on a *stricter* footing than an anonymous visitor. Stage 6 implements the table
-  as written, and the two views differ sharply as a result: the public gets three named
-  schools and a grade-by-subject breakdown, the board gets district totals and an
-  explanation of what is missing. That reads backwards. Either the board's row means
-  "aggregates, not individuals" and should say so, or the community's row is too generous.
-  This is the highest-value question on the list, because it is the one where the built
-  thing looks wrong rather than merely incomplete.
+- ~~**Why does a board member see less than a member of the public?**~~ **Resolved in
+  Phase 3** — the board's row means "aggregates, not individuals", and the addendum now
+  says so. Both audiences read the same figures; the board additionally reads the
+  disclosure rules behind them, which is the thing a governing body actually lacked.
 - **Is the Phase 1 small-cell question now closed?** It was carried as "with three schools,
   a single-school aggregate may still be identifying at the extremes." The answer built here
   is a threshold plus complementary suppression plus a re-identification check on the second
@@ -525,25 +596,67 @@ Raised during Stage 6:
   this stage rather than one the role table decides, and it is the closest the board view
   comes to its own line.
 
+Raised during Phase 3:
+
+- **A nurse has no view of the job the permissions describe.** The account holds named
+  students, attendance, and health detail at one building, and there is no view in the app
+  that indexes students. Their home is the building page, which is aggregate mastery end to
+  end — a permission they do not hold — so it now renders the header and an explanation of
+  what is absent. The same is nearly true of a counselor, who holds aggregate mastery and so
+  scrapes through on a page built for an administrator. The missing piece is a caseload view:
+  *the students at my building, filtered to the stream I am responsible for.* This is the
+  most concrete gap Phase 3 uncovered.
+- **Should a refused request be recorded?** Nothing is logged. In a district system, a
+  repeated attempt on records outside an account's scope is exactly the signal an
+  administrator would want, and FERPA-adjacent audit expectations assume access to student
+  records leaves a trail. Adding one is a question about what a prototype is claiming to be
+  — and about who reads the log, since it would itself be a record of who looked at whom.
+- **Guardian rights are stored twice and enforced once.** The route boundary trusts
+  `scopeIds` on the guardian's role assignment; the family view filters `studentLinks` by
+  `hasEducationalRights`. The generator writes both from the same source so they agree
+  today. If custody changes and only one is updated, the guarded route and the rendered
+  page disagree — and the route is the one that decides. A single derivation would be
+  better than two that happen to match.
+- **Scope expansion re-fetches on every guarded navigation.** `resolveScope` runs per guard
+  render, and for a teacher that is up to five roster files. The data client caches by path,
+  so the cost is paid once per session, but the check is doing real I/O rather than reading
+  a resolved scope held on the session. It is correct and it is not slow here; it would be
+  neither in a district with a teacher scoped to forty sections.
+- **Everyone can open the public page, including a signed-in teacher.** That is deliberate —
+  the community view is genuinely public — but it means every account has two homes, and the
+  view speaks to a reader it assumes is outside the district. Worth deciding whether a
+  signed-in account should see the public page at all, or see it labelled as what the
+  public sees.
+
 ---
 
 ## Notes for the Next Session
 
-**Phase 2 is complete.** All ten roles land on a built view, and every route in `App.tsx`
-renders something real — `ComingLater` is deleted because nothing referenced it any more.
+**Phase 3 is complete.** Every route in `App.tsx` is wrapped in `Guard`, and a typed
+address outside the viewer's scope returns them to their own dashboard with one line. The
+three decisions that shaped it — refuse-by-redirect over a denial page, the board's limit
+being individuals rather than buildings, and a student's right to their own attendance —
+are in the decision log above with their reasoning.
 
-**Phase 3 is permissions enforcement, and Stage 6 sharpened what that means.** The stance
-carried through Phase 2 is that permissions shape views but do not enforce, so a typed URL
-still reaches out-of-scope data. That is now the most pointed unfinished thing in the app:
-`/community` is careful to the point of withholding a grade breakdown from a board member,
-and the same account can type `/school/nova-elementary` and read a named staff ranking. The
-disclosure work only means something once `withinScope` in `app/src/session/roles.ts` is
-actually consulted at the route boundary. It was written against real `scopeIds` precisely
-so that closing this is one change rather than thirty.
+**Phase 4 is the visual design system.** Nothing about it is blocked. The one thing worth
+carrying in: the app now has three states that only exist because of enforcement — the
+redirect notice, the aggregate-less building page, and the board's disclosure panel — and
+none of them has had any design attention beyond reusing `Notice` and `detail-facts`.
 
-Read the four Stage 6 open questions before starting — the first one (why a board member
-sees less than the public) is a decision about the reference model, not about code, and
-Phase 3 will harden whichever answer is standing.
+**If you would rather close a gap than start a phase**, the strongest candidate is the
+first Phase 3 open question: a nurse and a counselor hold permissions describing a job the
+app has no view for. A caseload view — *the students at my building, filtered to the stream
+I am responsible for* — would give two of the ten roles a real home, and it is the only
+place where the built product currently explains an absence instead of showing something.
+
+Two things about the code that are easy to get wrong:
+
+- **Never resolve scope from the record being requested.** `scope.ts` expands the
+  *viewer's* assignments — a teacher's rosters — precisely so that deciding access never
+  requires fetching the thing access is being decided about.
+- **Any async check must be keyed and its result discarded on mismatch.** The guard held
+  scope and target in separate `useAsync` hooks at first, and an account switch rendered a
+  new session against the previous account's scope for one frame. See `Guard.tsx`.
 
 Running the app:
 
@@ -562,17 +675,22 @@ npm --prefix app run build && npm --prefix app test && npm --prefix app run lint
 ```
 
 `test` is `node --test` over `src/**/*.test.ts`, using Node's own type stripping — there is
-no test framework and nothing to install. Only the disclosure rules are covered, because
-they are the only logic whose failure is invisible on screen. Lint reports 12 pre-existing
-`only-export-components` warnings; that count should not grow.
+no test framework and nothing to install. 31 tests: the disclosure rules and the access
+rules, which are covered for the same reason — their failures are invisible on screen. A
+guard that wrongly allows renders a page indistinguishable from one the viewer was entitled
+to. Lint reports 12 pre-existing `only-export-components` warnings; that count should not
+grow.
 
 Useful entry points:
 
+- `app/src/session/access.ts` — every access decision, as pure functions
+- `app/src/session/scope.ts` — expanding an account's scope into concrete ids
+- `app/src/session/Guard.tsx` — the route boundary, and the redirect notice
 - `app/src/views/StudentView.tsx` — the composed student profile; the family view
   reuses it through `StudentProfileScreen` with a narrower audience
 - `app/src/views/student/MasteryConstellation.tsx` — the four star states and how
   records are grouped by subject and unit
-- `app/src/session/roles.ts` — roles, permissions, `withinScope` (the Phase 3 hook)
+- `app/src/session/roles.ts` — roles, permissions, `can`, and where each role lands
 - `app/src/data/client.ts` — every dataset read, with the eager/lazy split
 - `app/src/views/section/ClassroomCard.tsx` — the classroom card, viewer-agnostic
 - `app/src/views/SectionView.tsx` — the classroom drill-down and its scoping helpers

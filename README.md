@@ -12,19 +12,23 @@ See [`docs/supernova-vision.md`](docs/supernova-vision.md) for the full vision.
 
 ## Current Phase
 
-**Phase 3 — Permissions Enforcement.** Phases 1 and 2 are complete: the synthetic dataset,
-and the dashboards described in [`docs/supernova-ui-ux-design.md`](docs/supernova-ui-ux-design.md)
-built on top of it.
+**Phase 4 — Visual Design System.** Phases 1 through 3 are complete: the synthetic dataset,
+the dashboards described in [`docs/supernova-ui-ux-design.md`](docs/supernova-ui-ux-design.md)
+built on top of it, and permissions enforced at the route boundary.
 
 The interface was built from the inside out — the student profile, then the family view,
 then teacher, administrator, and finally the board and community layer. The student profile
 is the atom every other view aggregates, so each rollup above it summarises something
-already proven. All ten roles now land on a built view.
+already proven. All ten roles land on a built view.
 
-Through Phase 2, permissions **shape** views without enforcing them: a view renders only
-what the viewer's scope contains, but a typed URL still reaches data outside it. Phase 3
-closes that at the route boundary, through the `withinScope` hook already written against
-each account's real scope.
+Through Phase 2, permissions **shaped** views without enforcing them: a view rendered only
+what the viewer's scope contained, but a typed URL still reached data outside it. Phase 3
+closed that. Every route is now decided by the account's real permission set *and* its real
+scope, because neither is sufficient alone — a board member holds district scope over every
+id in the district and may open nothing but the public page, while a nurse holds named
+students at their building and none of the aggregates that building page is made of. A
+refused address returns the viewer to their own dashboard with one neutral line, and nothing
+about what was on the other side.
 
 Track progress and decisions in [`PROGRESS.md`](PROGRESS.md).
 
@@ -58,8 +62,10 @@ npm --prefix app run dev
 
 The app opens on a student account. The control in the top right signs in as any of the
 district's 2,101 real accounts, and each one's actual role, scope, and permission list decides
-what renders — a guardian carries `view_attendance_detail` and `view_evidence_artifacts` but
-not behaviour or health, so those layers are absent from the family view rather than empty.
+both what renders and what can be reached — a guardian carries `view_attendance_detail` and
+`view_evidence_artifacts` but not behaviour or health, so those layers are absent from the
+family view rather than empty, and typing another family's child into the address bar returns
+them to their own.
 
 TypeScript types are generated from the JSON Schema rather than hand-written, so a generator
 change surfaces as a type error instead of as `undefined` at runtime. After any schema change:
