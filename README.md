@@ -12,13 +12,19 @@ See [`docs/supernova-vision.md`](docs/supernova-vision.md) for the full vision.
 
 ## Current Phase
 
-**Phase 2 — UI/UX Build.** Phase 1 (synthetic data generation) is complete: the dashboards
-described in [`docs/supernova-ui-ux-design.md`](docs/supernova-ui-ux-design.md) depend on data
-that tells a believable story, so the data came first.
+**Phase 3 — Permissions Enforcement.** Phases 1 and 2 are complete: the synthetic dataset,
+and the dashboards described in [`docs/supernova-ui-ux-design.md`](docs/supernova-ui-ux-design.md)
+built on top of it.
 
-The interface is being built from the inside out — the student profile, then the family view,
-then teacher, administrator, and board. The student profile is the atom every other view
-aggregates, so each rollup above it summarises something already proven.
+The interface was built from the inside out — the student profile, then the family view,
+then teacher, administrator, and finally the board and community layer. The student profile
+is the atom every other view aggregates, so each rollup above it summarises something
+already proven. All ten roles now land on a built view.
+
+Through Phase 2, permissions **shape** views without enforcing them: a view renders only
+what the viewer's scope contains, but a typed URL still reaches data outside it. Phase 3
+closes that at the route boundary, through the `withinScope` hook already written against
+each account's real scope.
 
 Track progress and decisions in [`PROGRESS.md`](PROGRESS.md).
 

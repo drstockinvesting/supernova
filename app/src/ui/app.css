@@ -506,6 +506,16 @@
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
 
+/*
+ * The evidence-strength distribution needs one bar to read as a warning rather
+ * than as another category — "no evidence recorded" is not a fourth flavour of
+ * evidence. The tone attribute is the same vocabulary the metric cards and rate
+ * bars use, so it means the same thing here.
+ */
+.bar-fill[data-tone='critical'] {
+  background: var(--status-critical);
+}
+
 .bar-value {
   font-weight: 600;
 }

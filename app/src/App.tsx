@@ -8,7 +8,7 @@ import { TeacherView } from './views/TeacherView'
 import { SectionView } from './views/SectionView'
 import { SchoolView } from './views/SchoolView'
 import { DistrictView } from './views/DistrictView'
-import { ComingLater } from './views/ComingLater'
+import { CommunityView } from './views/CommunityView'
 import { AS_OF_LABEL } from './lib/dataset'
 import { Loading } from './ui/primitives'
 import './ui/theme.css'
@@ -66,10 +66,7 @@ export default function App() {
           <Route path="/section/:sectionId" element={<SectionView />} />
           <Route path="/school/:schoolId" element={<SchoolView />} />
           <Route path="/district" element={<DistrictView />} />
-          <Route
-            path="/community"
-            element={<ComingLater layer="Board and community" stage="Stage 6" />}
-          />
+          <Route path="/community" element={<CommunityView />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

@@ -85,9 +85,12 @@ export function ComparisonTable({
           ))}
         </tbody>
       </table>
+      {/* The label is written to read mid-sentence, and is not lowercased here:
+          a benchmark can name a subject, and "the district rate in ela" is not
+          what the caller wrote. */}
       {benchmark ? (
         <p className="subtle">
-          The line on each bar marks {benchmark.label.toLowerCase()}, {percent(benchmark.rate, 1)}.
+          The line on each bar marks {benchmark.label}, {percent(benchmark.rate, 1)}.
         </p>
       ) : null}
     </div>

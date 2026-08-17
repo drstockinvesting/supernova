@@ -10,7 +10,7 @@ rewriting it, so the reasoning behind the build stays legible.
 | Phase | Status | Session |
 |---|---|---|
 | **1. Synthetic data generation** | Complete | 2026-08-16 |
-| **2. UI / UX build** | In progress — student through district built; board layer remains | 2026-08-16 |
+| **2. UI / UX build** | Complete — student through board and community | 2026-08-17 |
 | 3. Permissions enforcement | Not started | — |
 | 4. Visual design system | Not started | — |
 | 5. Research context layer | Not started | — |
@@ -29,7 +29,7 @@ known to be true.
 - [x] Stage 3 — guardian layer: own children, narrowed by real guardian permissions
 - [x] Stage 4 — teacher layer: section index (`/teacher`) and classroom drill-down (`/section/:id`)
 - [x] Stage 5 — administrator layer: building (`/school/:id`) and district (`/district`)
-- [ ] Stage 6 — board and community layer
+- [x] Stage 6 — board and community layer (`/community`), two audiences, one route
 
 ---
 
@@ -307,6 +307,73 @@ grades, teachers). The classroom breadcrumb became role-aware in the same pass: 
 classroom is reached from three directions now, and the trail has to lead back where the
 viewer actually came from.
 
+### 2026-08-17 — Session 5 (Phase 2, Stage 6) — Phase 2 complete
+
+**The only layer built by subtraction.** No generator change and no new rollup: every
+number on `/community` was already in `aggregates/current-year.json` and had already been
+rendered one layer in with names attached. The stage's whole content is what must *not*
+appear, so the rules live in `views/community/disclosure.ts` as pure functions rather than
+as conditions inside JSX. A disclosure rule that cannot be read on its own cannot be
+reviewed, and this is the one part of the app whose correctness a reader cannot check by
+looking at the page.
+
+**A grade level names a school, so the board view cannot show one.** This is the finding
+the stage turned on. Nova teaches K–5, Meridian 6–8, Constellation 9–12 — all 13 grade
+levels sit in exactly one building, so "Grade 7 mastery is 39.1%" *is* Meridian's figure
+whether or not Meridian is named. The addendum gives a board member aggregates with no
+school identifiers; a grade breakdown would defeat that through the back door. The board
+view therefore stops at district totals, the subject breakdown, and the evidence mix, and
+says in place of the grade table exactly why the grade table is absent.
+
+The check is computed from the data (`gradeDimensionNamesBuildings`), not written into the
+page. Whether a grade label identifies a building is a property of how a district is
+organised, not a fact about grades — in a district with two K–5 buildings the breakdown is
+publishable, and the view would show it.
+
+**Suppressing one cell out of a published total hides nothing.** `PUBLIC_SUPPRESSION_THRESHOLD`
+was the flag Stage 6 was supposed to start honouring, and honouring it literally would have
+been wrong. If the district publishes its own figure and twelve of thirteen grades, the
+thirteenth is arithmetic. `discloseCells` applies the generator's flag and then applies
+complementary suppression: a lone primary suppression against a published total takes the
+next-smallest cell with it. Standard practice in education reporting, and absent from the
+generator's flag, which is per-cell and cannot see the group.
+
+**On this dataset none of it fires, which is why it is tested rather than eyeballed.**
+The smallest grade cell holds 59 students against a threshold of 10 — nearly six times
+over — so nothing is suppressed and the screen looks identical whether the rule works or
+not. That is the condition under which a rule quietly rots, so
+`views/community/disclosure.test.ts` exercises it against districts the generator does not
+produce. Ten cases, `node --test` plus Node's own type stripping, no new dependency;
+tests are their own TS project (`tsconfig.test.json`) so Node's globals stay out of the
+browser app. `npm --prefix app test`.
+
+The public view states the negative result rather than hiding it: "No grade level is
+withheld. The suppression rule applies below 10 students, and the smallest grade in the
+district holds 59." A reader cannot otherwise distinguish a rule that found nothing from
+a rule that is not running.
+
+**The community view has no links at all.** Verified in the browser: zero anchors inside
+`<main>`. A community member has no scope on a building's classrooms, teachers, or
+students, and the addendum's rule is that boundaries are invisible rather than blocked —
+so the school card is where the view ends, and it ends without announcing it. This is a
+subtraction the earlier layers did not have to make, since every one of them had somewhere
+legitimate to send the reader.
+
+**The evidence mix is on the page because a governance audience is the right one for it.**
+`evidenceStrengthCounts` sits on every aggregate and no view had read it. Of 40,331
+standards taught so far, 10.4% rest on substantial evidence and 30.0% carry no recorded
+artifact at all. A mastery rate is a count of judgements; a board asked to act on 39.4%
+should see what those judgements rest on. The board's framing says so plainly — where
+evidence is thin the rate measures recording practice as much as learning.
+
+**Two defects fixed in passing.** The board view's own explanation of the no-school-
+identifiers rule named all three schools; an explanation that breaks the rule it is
+explaining is worse than none, and the sentence works without them. And
+`ComparisonTable`'s benchmark caption lowercased its label, which was harmless while every
+caller passed "the district rate" and produced "the district rate in ela" the moment a
+subject appeared in it. Removed — every caller already writes a label that reads
+mid-sentence.
+
 ### Phase 1 defects found by building the UI
 
 Three, all of which validation passed over because they were internally consistent:
@@ -427,24 +494,56 @@ Raised during Stage 5:
   deliberately simplified to keep answerable, and neither the by-grade nor the by-subject
   table answers it on its own.
 
+Raised during Stage 6:
+
+- **Why does a board member see less than a member of the public?** The addendum's role
+  table gives the board "aggregates only — no school or student identifiers" and the
+  community "school-level aggregates only", which puts an elected body governing the
+  district on a *stricter* footing than an anonymous visitor. Stage 6 implements the table
+  as written, and the two views differ sharply as a result: the public gets three named
+  schools and a grade-by-subject breakdown, the board gets district totals and an
+  explanation of what is missing. That reads backwards. Either the board's row means
+  "aggregates, not individuals" and should say so, or the community's row is too generous.
+  This is the highest-value question on the list, because it is the one where the built
+  thing looks wrong rather than merely incomplete.
+- **Is the Phase 1 small-cell question now closed?** It was carried as "with three schools,
+  a single-school aggregate may still be identifying at the extremes." The answer built here
+  is a threshold plus complementary suppression plus a re-identification check on the second
+  dimension — but all three are inert on this dataset. The rule has been reasoned about and
+  tested; it has never actually run against real data. That is not the same as knowing it
+  works, and a district with a 6-student grade would be the real test.
+- **The citation library is admin-shaped.** A community member gets no research context at
+  all: the only two citations tagged for the role trigger below 90% attendance and above
+  95% attendance, and the district sits at 93.4% — squarely in the gap between them. A board
+  member gets exactly one, on discipline referrals. The library was written for views that
+  describe a student or a classroom, and the outermost layer has almost nothing to say
+  through it. Phase 5 should add public-facing claims, or the role tags are decorative.
+- **Should the board see the spread without the labels?** The board narrative states that
+  schools sit within 1.1 points and grades vary 10.3, which is the shape of the variation
+  with no identifiers attached. That felt right — a governing body needs to know the
+  variation is inside buildings rather than between them — but it is a judgement made in
+  this stage rather than one the role table decides, and it is the closest the board view
+  comes to its own line.
+
 ---
 
 ## Notes for the Next Session
 
-Phase 2 finishes at **Stage 6, the board and community layer** (`/community`). The route
-exists and renders a placeholder.
+**Phase 2 is complete.** All ten roles land on a built view, and every route in `App.tsx`
+renders something real — `ComingLater` is deleted because nothing referenced it any more.
 
-This is the one layer where the constraint is subtraction rather than addition. Every
-number it shows already exists in `aggregates/current-year.json`; what the stage has to
-get right is what it must *not* show. `PUBLIC_SUPPRESSION_THRESHOLD` (10) and the
-`suppressForPublicDisplay` flag are already computed on every cell by
-`generator/aggregates.py`, and nothing in the app reads them yet — Stage 6 is where they
-start mattering. The addendum's role table is explicit that a board member sees
-aggregates only, with no school or student identifiers, which is a harder rule than it
-sounds: with three schools, naming a building and a grade can identify a child at the
-extremes.
+**Phase 3 is permissions enforcement, and Stage 6 sharpened what that means.** The stance
+carried through Phase 2 is that permissions shape views but do not enforce, so a typed URL
+still reaches out-of-scope data. That is now the most pointed unfinished thing in the app:
+`/community` is careful to the point of withholding a grade breakdown from a board member,
+and the same account can type `/school/nova-elementary` and read a named staff ranking. The
+disclosure work only means something once `withinScope` in `app/src/session/roles.ts` is
+actually consulted at the route boundary. It was written against real `scopeIds` precisely
+so that closing this is one change rather than thirty.
 
-The Phase 1 open question about small-cell disclosure is now due rather than deferred.
+Read the four Stage 6 open questions before starting — the first one (why a board member
+sees less than the public) is a decision about the reference model, not about code, and
+Phase 3 will harden whichever answer is standing.
 
 Running the app:
 
@@ -453,7 +552,19 @@ npm --prefix app run dev
 ```
 
 `app/public/data` is a symlink to `data/`, so the dev server serves the dataset at
-`/data/...`. It is gitignored — do not commit a second copy of 178MB.
+`/data/...`. It is gitignored — do not commit a second copy of 178MB. `vite.config.ts`
+honours `PORT`, so a second dev server can run alongside a first.
+
+Checks:
+
+```bash
+npm --prefix app run build && npm --prefix app test && npm --prefix app run lint
+```
+
+`test` is `node --test` over `src/**/*.test.ts`, using Node's own type stripping — there is
+no test framework and nothing to install. Only the disclosure rules are covered, because
+they are the only logic whose failure is invisible on screen. Lint reports 12 pre-existing
+`only-export-components` warnings; that count should not grow.
 
 Useful entry points:
 
@@ -468,6 +579,8 @@ Useful entry points:
 - `app/src/views/section/narrative.ts` — the analytics paragraph, as a pure function
 - `app/src/ui/ComparisonTable.tsx` — ranked rows with bars, shared by every zoom level
 - `app/src/views/admin/compare.ts` — the spread computation the district view argues from
+- `app/src/views/community/disclosure.ts` — every public-display rule, as pure functions
+- `app/src/views/CommunityView.tsx` — the board and public views, and what each withholds
 - `scripts/emit_types.py` — regenerate TypeScript types after any schema change
 
 Three things that stay true:
