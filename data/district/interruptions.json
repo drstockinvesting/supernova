@@ -3,7 +3,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-gK-1",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-1",
         "date": "2024-09-16",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-014",
@@ -13,7 +13,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-1",
         "date": "2024-10-15",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-005",
@@ -23,7 +23,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-1",
         "date": "2024-10-23",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-009",
@@ -33,7 +33,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-2",
         "date": "2024-11-19",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-012",
@@ -43,7 +43,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-2",
         "date": "2024-11-26",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-004",
@@ -53,7 +53,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-3",
         "date": "2025-01-16",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-001",
@@ -63,7 +63,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-3",
         "date": "2025-01-21",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-008",
@@ -73,7 +73,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-3",
         "date": "2025-02-11",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-006",
@@ -83,7 +83,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-3",
         "date": "2025-02-12",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-013",
@@ -93,7 +93,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-3",
         "date": "2025-03-13",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-010",
@@ -103,7 +103,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-4",
         "date": "2025-03-25",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-011",
@@ -113,7 +113,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-4",
         "date": "2025-03-25",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-015",
@@ -123,7 +123,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-4",
         "date": "2025-04-04",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-016",
@@ -133,7 +133,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-4",
         "date": "2025-04-08",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-007",
@@ -143,7 +143,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-4",
         "date": "2025-04-25",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-003",
@@ -153,7 +153,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-1-math-4",
         "date": "2025-04-29",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-gK-1-002",
@@ -180,7 +180,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-gK-2",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-1",
         "date": "2024-09-10",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-014",
@@ -190,7 +190,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-1",
         "date": "2024-10-02",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-002",
@@ -200,7 +200,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-1",
         "date": "2024-10-03",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-011",
@@ -210,7 +210,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-1",
         "date": "2024-10-09",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-001",
@@ -220,7 +220,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-1",
         "date": "2024-10-16",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-010",
@@ -230,7 +230,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-2",
         "date": "2024-11-18",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-007",
@@ -240,7 +240,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-2",
         "date": "2024-11-21",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-006",
@@ -250,7 +250,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-2",
         "date": "2024-12-09",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-013",
@@ -260,7 +260,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-2",
         "date": "2024-12-17",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-012",
@@ -270,7 +270,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-2",
         "date": "2025-01-07",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-008",
@@ -280,7 +280,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-3",
         "date": "2025-01-21",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-015",
@@ -290,7 +290,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-3",
         "date": "2025-01-22",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-009",
@@ -300,7 +300,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-3",
         "date": "2025-02-18",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-004",
@@ -310,7 +310,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-4",
         "date": "2025-05-02",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-003",
@@ -320,7 +320,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-2-math-4",
         "date": "2025-06-02",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-gK-2-005",
@@ -347,7 +347,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-gK-3",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-math-1",
         "date": "2024-09-06",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-gK-3-002",
@@ -357,7 +357,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-math-1",
         "date": "2024-09-09",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-gK-3-006",
@@ -367,7 +367,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-math-1",
         "date": "2024-09-24",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-gK-3-004",
@@ -377,7 +377,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-math-1",
         "date": "2024-10-18",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-gK-3-007",
@@ -387,7 +387,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-math-2",
         "date": "2024-12-12",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-gK-3-008",
@@ -397,7 +397,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-math-2",
         "date": "2024-12-16",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-gK-3-001",
@@ -407,7 +407,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-math-3",
         "date": "2025-02-13",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-gK-3-003",
@@ -417,7 +417,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-gK-3-math-3",
         "date": "2025-03-12",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-gK-3-005",
@@ -444,7 +444,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g1-1",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-1",
         "date": "2024-09-16",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-010",
@@ -454,7 +454,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-1",
         "date": "2024-09-18",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-002",
@@ -464,7 +464,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-1",
         "date": "2024-09-20",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-007",
@@ -474,7 +474,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-1",
         "date": "2024-09-23",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-016",
@@ -484,7 +484,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-1",
         "date": "2024-10-22",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-003",
@@ -494,7 +494,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-2",
         "date": "2024-12-06",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-005",
@@ -504,7 +504,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-2",
         "date": "2025-01-08",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-008",
@@ -514,7 +514,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-3",
         "date": "2025-02-11",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-009",
@@ -524,7 +524,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-3",
         "date": "2025-02-19",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-012",
@@ -534,7 +534,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-3",
         "date": "2025-03-18",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-011",
@@ -544,7 +544,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-4",
         "date": "2025-03-25",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-006",
@@ -554,7 +554,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-4",
         "date": "2025-04-07",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-004",
@@ -564,7 +564,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-4",
         "date": "2025-04-23",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-001",
@@ -574,7 +574,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-4",
         "date": "2025-04-25",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-014",
@@ -584,7 +584,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-4",
         "date": "2025-05-23",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-015",
@@ -594,7 +594,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-1-math-4",
         "date": "2025-06-02",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g1-1-013",
@@ -621,7 +621,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g1-2",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-math-2",
         "date": "2024-11-13",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g1-2-001",
@@ -631,7 +631,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-math-2",
         "date": "2024-11-14",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g1-2-009",
@@ -641,7 +641,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-math-2",
         "date": "2024-11-19",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g1-2-004",
@@ -651,7 +651,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-math-2",
         "date": "2024-11-26",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g1-2-011",
@@ -661,7 +661,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-math-2",
         "date": "2024-12-12",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g1-2-002",
@@ -671,7 +671,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-math-2",
         "date": "2024-12-13",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g1-2-008",
@@ -681,7 +681,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-math-2",
         "date": "2024-12-23",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g1-2-003",
@@ -691,7 +691,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-math-3",
         "date": "2025-02-07",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g1-2-006",
@@ -701,7 +701,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-math-3",
         "date": "2025-03-21",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g1-2-010",
@@ -711,7 +711,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-math-4",
         "date": "2025-05-12",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-g1-2-007",
@@ -721,7 +721,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-2-math-4",
         "date": "2025-05-21",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g1-2-005",
@@ -748,7 +748,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g1-3",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-math-1",
         "date": "2024-08-30",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g1-3-003",
@@ -758,7 +758,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-math-1",
         "date": "2024-10-02",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g1-3-009",
@@ -768,7 +768,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-math-1",
         "date": "2024-10-28",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g1-3-005",
@@ -778,7 +778,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-math-2",
         "date": "2025-01-07",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g1-3-002",
@@ -788,7 +788,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-math-3",
         "date": "2025-02-10",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g1-3-004",
@@ -798,7 +798,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-math-3",
         "date": "2025-02-11",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g1-3-001",
@@ -808,7 +808,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-math-3",
         "date": "2025-03-05",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g1-3-006",
@@ -818,7 +818,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-math-4",
         "date": "2025-04-03",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g1-3-008",
@@ -828,7 +828,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g1-3-math-4",
         "date": "2025-04-28",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g1-3-007",
@@ -855,7 +855,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g2-1",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-math-1",
         "date": "2024-09-06",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-g2-1-003",
@@ -865,7 +865,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-math-1",
         "date": "2024-10-16",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g2-1-005",
@@ -875,7 +875,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-math-3",
         "date": "2025-02-03",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g2-1-004",
@@ -885,7 +885,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-math-3",
         "date": "2025-02-04",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-g2-1-001",
@@ -895,7 +895,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-math-3",
         "date": "2025-03-06",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g2-1-006",
@@ -905,7 +905,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-math-3",
         "date": "2025-03-19",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g2-1-002",
@@ -915,7 +915,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-math-4",
         "date": "2025-03-28",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g2-1-009",
@@ -925,7 +925,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-math-4",
         "date": "2025-05-22",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g2-1-008",
@@ -935,7 +935,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-1-math-4",
         "date": "2025-05-30",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g2-1-007",
@@ -962,7 +962,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g2-2",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-math-1",
         "date": "2024-09-26",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g2-2-002",
@@ -972,7 +972,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-math-2",
         "date": "2024-11-26",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-g2-2-005",
@@ -982,7 +982,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-math-2",
         "date": "2025-01-06",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g2-2-009",
@@ -992,7 +992,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-math-3",
         "date": "2025-03-03",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g2-2-001",
@@ -1002,7 +1002,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-math-4",
         "date": "2025-03-24",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g2-2-008",
@@ -1012,7 +1012,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-math-4",
         "date": "2025-03-27",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g2-2-003",
@@ -1022,7 +1022,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-math-4",
         "date": "2025-05-15",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g2-2-006",
@@ -1032,7 +1032,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-math-4",
         "date": "2025-05-21",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g2-2-004",
@@ -1042,7 +1042,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-2-math-4",
         "date": "2025-05-29",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g2-2-007",
@@ -1069,7 +1069,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g2-3",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-math-2",
         "date": "2024-12-09",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g2-3-002",
@@ -1079,7 +1079,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-math-3",
         "date": "2025-02-05",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g2-3-003",
@@ -1089,7 +1089,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-math-3",
         "date": "2025-02-05",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g2-3-007",
@@ -1099,7 +1099,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-math-3",
         "date": "2025-02-13",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-g2-3-006",
@@ -1109,7 +1109,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-math-3",
         "date": "2025-02-27",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-g2-3-001",
@@ -1119,7 +1119,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-math-3",
         "date": "2025-03-20",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-g2-3-005",
@@ -1129,7 +1129,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-math-4",
         "date": "2025-05-27",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g2-3-004",
@@ -1139,7 +1139,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g2-3-math-4",
         "date": "2025-05-27",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g2-3-008",
@@ -1166,7 +1166,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g3-1",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-math-1",
         "date": "2024-09-24",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g3-1-005",
@@ -1176,7 +1176,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-math-2",
         "date": "2024-12-03",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g3-1-004",
@@ -1186,7 +1186,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-math-2",
         "date": "2024-12-13",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g3-1-006",
@@ -1196,7 +1196,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-math-3",
         "date": "2025-01-29",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g3-1-007",
@@ -1206,7 +1206,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-math-3",
         "date": "2025-02-19",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g3-1-001",
@@ -1216,7 +1216,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-math-4",
         "date": "2025-04-09",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g3-1-008",
@@ -1226,7 +1226,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-math-4",
         "date": "2025-04-22",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g3-1-002",
@@ -1236,7 +1236,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-1-math-4",
         "date": "2025-06-02",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g3-1-003",
@@ -1263,7 +1263,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g3-2",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-1",
         "date": "2024-09-04",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-009",
@@ -1273,7 +1273,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-1",
         "date": "2024-10-15",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-007",
@@ -1283,7 +1283,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-1",
         "date": "2024-10-23",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-013",
@@ -1293,7 +1293,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-2",
         "date": "2024-11-07",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-004",
@@ -1303,7 +1303,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-2",
         "date": "2024-11-07",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-005",
@@ -1313,7 +1313,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-2",
         "date": "2024-11-11",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-001",
@@ -1323,7 +1323,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-2",
         "date": "2024-11-19",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-006",
@@ -1333,7 +1333,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-2",
         "date": "2024-11-22",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-015",
@@ -1343,7 +1343,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-2",
         "date": "2025-01-06",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-003",
@@ -1353,7 +1353,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-3",
         "date": "2025-01-31",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-010",
@@ -1363,7 +1363,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-4",
         "date": "2025-03-25",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-012",
@@ -1373,7 +1373,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-4",
         "date": "2025-04-21",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-011",
@@ -1383,7 +1383,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-4",
         "date": "2025-05-16",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-008",
@@ -1393,7 +1393,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-4",
         "date": "2025-05-16",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-014",
@@ -1403,7 +1403,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-2-math-4",
         "date": "2025-05-28",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g3-2-002",
@@ -1430,7 +1430,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g3-3",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-math-1",
         "date": "2024-08-28",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g3-3-008",
@@ -1440,7 +1440,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-math-1",
         "date": "2024-09-27",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g3-3-002",
@@ -1450,7 +1450,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-math-1",
         "date": "2024-10-11",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g3-3-005",
@@ -1460,7 +1460,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-math-1",
         "date": "2024-10-21",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g3-3-006",
@@ -1470,7 +1470,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-math-2",
         "date": "2024-11-26",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g3-3-007",
@@ -1480,7 +1480,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-math-3",
         "date": "2025-03-18",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g3-3-004",
@@ -1490,7 +1490,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-math-3",
         "date": "2025-03-19",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g3-3-001",
@@ -1500,7 +1500,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-math-4",
         "date": "2025-04-21",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g3-3-003",
@@ -1510,7 +1510,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g3-3-math-4",
         "date": "2025-05-05",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g3-3-009",
@@ -1537,7 +1537,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g4-1",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-1",
         "date": "2024-09-13",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-006",
@@ -1547,7 +1547,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-2",
         "date": "2024-11-08",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-014",
@@ -1557,7 +1557,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-2",
         "date": "2024-11-20",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-007",
@@ -1567,7 +1567,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-2",
         "date": "2024-12-05",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-004",
@@ -1577,7 +1577,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-2",
         "date": "2024-12-18",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-003",
@@ -1587,7 +1587,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-2",
         "date": "2025-01-14",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-009",
@@ -1597,7 +1597,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-3",
         "date": "2025-01-23",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-013",
@@ -1607,7 +1607,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-3",
         "date": "2025-02-06",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-011",
@@ -1617,7 +1617,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-3",
         "date": "2025-02-21",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-002",
@@ -1627,7 +1627,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-3",
         "date": "2025-03-03",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-001",
@@ -1637,7 +1637,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-3",
         "date": "2025-03-11",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-008",
@@ -1647,7 +1647,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-4",
         "date": "2025-04-10",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-012",
@@ -1657,7 +1657,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-4",
         "date": "2025-04-22",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-015",
@@ -1667,7 +1667,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-4",
         "date": "2025-05-22",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-010",
@@ -1677,7 +1677,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-4",
         "date": "2025-05-23",
         "description": "School-wide assembly",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-016",
@@ -1687,7 +1687,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-1-math-4",
         "date": "2025-05-29",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g4-1-005",
@@ -1714,7 +1714,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g4-2",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-1",
         "date": "2024-09-12",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-006",
@@ -1724,7 +1724,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-1",
         "date": "2024-10-04",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-015",
@@ -1734,7 +1734,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-1",
         "date": "2024-10-04",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-016",
@@ -1744,7 +1744,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-1",
         "date": "2024-10-15",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-002",
@@ -1754,7 +1754,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-1",
         "date": "2024-10-21",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-011",
@@ -1764,7 +1764,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-1",
         "date": "2024-10-24",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-008",
@@ -1774,7 +1774,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-2",
         "date": "2024-11-13",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-007",
@@ -1784,7 +1784,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-2",
         "date": "2024-12-10",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-014",
@@ -1794,7 +1794,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-3",
         "date": "2025-01-27",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-004",
@@ -1804,7 +1804,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-3",
         "date": "2025-02-25",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-012",
@@ -1814,7 +1814,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-3",
         "date": "2025-02-27",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-005",
@@ -1824,7 +1824,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-3",
         "date": "2025-03-17",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-001",
@@ -1834,7 +1834,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-3",
         "date": "2025-03-17",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-009",
@@ -1844,7 +1844,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-3",
         "date": "2025-03-18",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-010",
@@ -1854,7 +1854,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-4",
         "date": "2025-05-22",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-013",
@@ -1864,7 +1864,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-2-math-4",
         "date": "2025-05-28",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g4-2-003",
@@ -1891,7 +1891,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g4-3",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-1",
         "date": "2024-09-03",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-004",
@@ -1901,7 +1901,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-1",
         "date": "2024-10-07",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-013",
@@ -1911,7 +1911,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-2",
         "date": "2024-12-17",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-005",
@@ -1921,7 +1921,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-2",
         "date": "2025-01-02",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-014",
@@ -1931,7 +1931,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-2",
         "date": "2025-01-10",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-012",
@@ -1941,7 +1941,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-3",
         "date": "2025-01-24",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-006",
@@ -1951,7 +1951,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-3",
         "date": "2025-02-27",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-007",
@@ -1961,7 +1961,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-3",
         "date": "2025-03-04",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-010",
@@ -1971,7 +1971,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-3",
         "date": "2025-03-12",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-002",
@@ -1981,7 +1981,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-4",
         "date": "2025-04-23",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-011",
@@ -1991,7 +1991,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-4",
         "date": "2025-05-16",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-008",
@@ -2001,7 +2001,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-4",
         "date": "2025-05-20",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-001",
@@ -2011,7 +2011,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-4",
         "date": "2025-05-27",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-003",
@@ -2021,7 +2021,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g4-3-math-4",
         "date": "2025-05-29",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g4-3-009",
@@ -2048,7 +2048,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g5-1",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-math-2",
         "date": "2024-10-31",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g5-1-002",
@@ -2058,7 +2058,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-math-2",
         "date": "2024-11-06",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g5-1-001",
@@ -2068,7 +2068,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-math-2",
         "date": "2024-11-12",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g5-1-006",
@@ -2078,7 +2078,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-math-2",
         "date": "2024-12-17",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g5-1-005",
@@ -2088,7 +2088,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-math-2",
         "date": "2025-01-08",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g5-1-007",
@@ -2098,7 +2098,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-math-3",
         "date": "2025-02-24",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g5-1-004",
@@ -2108,7 +2108,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-math-3",
         "date": "2025-02-24",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g5-1-008",
@@ -2118,7 +2118,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-1-math-4",
         "date": "2025-05-09",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g5-1-003",
@@ -2145,7 +2145,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g5-2",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-math-1",
         "date": "2024-10-11",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g5-2-005",
@@ -2155,7 +2155,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-math-1",
         "date": "2024-10-25",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g5-2-002",
@@ -2165,7 +2165,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-math-2",
         "date": "2024-10-31",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g5-2-004",
@@ -2175,7 +2175,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-math-3",
         "date": "2025-01-17",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g5-2-001",
@@ -2185,7 +2185,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-math-3",
         "date": "2025-01-30",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g5-2-006",
@@ -2195,7 +2195,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-math-3",
         "date": "2025-03-05",
         "description": "Scheduled fire drill",
         "id": "int-sec-nova-elementary-2024-2025-g5-2-003",
@@ -2205,7 +2205,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-2-math-4",
         "date": "2025-03-24",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g5-2-007",
@@ -2232,7 +2232,7 @@
     "id": "intrec-sec-nova-elementary-2024-2025-g5-3",
     "interruptions": [
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-1",
         "date": "2024-08-27",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-011",
@@ -2242,7 +2242,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-1",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-1",
         "date": "2024-10-25",
         "description": "Safety drill",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-012",
@@ -2252,7 +2252,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-2",
         "date": "2024-11-05",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-009",
@@ -2262,7 +2262,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-2",
         "date": "2024-11-07",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-008",
@@ -2272,7 +2272,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-2",
         "date": "2024-11-11",
         "description": "Unfilled substitute coverage",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-001",
@@ -2282,7 +2282,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-2",
         "date": "2024-12-11",
         "description": "Modified bell schedule",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-002",
@@ -2292,7 +2292,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-2",
         "date": "2024-12-18",
         "description": "State assessment window",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-003",
@@ -2302,7 +2302,7 @@
         "wasPlanned": true
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-2",
         "date": "2025-01-06",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-006",
@@ -2312,7 +2312,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-2",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-2",
         "date": "2025-01-13",
         "description": "Network or device outage",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-010",
@@ -2322,7 +2322,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-3",
         "date": "2025-02-10",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-005",
@@ -2332,7 +2332,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-3",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-3",
         "date": "2025-03-04",
         "description": "Weather-related early dismissal",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-004",
@@ -2342,7 +2342,7 @@
         "wasPlanned": false
       },
       {
-        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-4",
+        "curriculumUnitId": "unit-sec-nova-elementary-2024-2025-g5-3-math-4",
         "date": "2025-04-10",
         "description": "Student pull-out for testing",
         "id": "int-sec-nova-elementary-2024-2025-g5-3-007",

@@ -352,8 +352,11 @@ def build_participation(
     shows a real mid-year decline rather than uniform noise.
     """
     rng = stream(student.id, "participation", school_year, section.id)
-    assignments = []
-    by_quarter: dict[int, list[bool]] = {}
+    # (quarter, completed, assignment) so an assignment can be dropped from the
+    # metrics and the retained window together. Work assigned before the cutoff
+    # but not due until after it is not yet gradeable, and counting it as
+    # incomplete would understate every student's completion rate mid-year.
+    drafted: list[tuple[int, bool, dict]] = []
 
     for unit in units:
         quarter_index = min(3, max(0, unit.sequence - 1))
@@ -383,21 +386,33 @@ def build_participation(
                 status = "missing" if chance(rng, 0.6) else "incomplete"
                 submitted, completed = None, False
 
-            assignments.append(
-                {
-                    "id": f"asg-{student.id}-{unit.id}-{index + 1:02d}",
-                    "assignmentTitle": f"{rng.choice(ASSIGNMENT_TITLES)} {unit.sequence}.{index + 1}",
-                    "curriculumUnitId": unit.id,
-                    "assignedDate": assigned.isoformat(),
-                    "dueDate": due.isoformat(),
-                    "submittedDate": submitted.isoformat() if submitted else None,
-                    "completionStatus": status,
-                    "standardIds": unit.standard_ids[:2],
-                }
+            drafted.append(
+                (
+                    quarter_index + 1,
+                    completed,
+                    {
+                        "id": f"asg-{student.id}-{unit.id}-{index + 1:02d}",
+                        "assignmentTitle": f"{rng.choice(ASSIGNMENT_TITLES)} {unit.sequence}.{index + 1}",
+                        "curriculumUnitId": unit.id,
+                        "assignedDate": assigned.isoformat(),
+                        "dueDate": due.isoformat(),
+                        "submittedDate": submitted.isoformat() if submitted else None,
+                        "completionStatus": status,
+                        "standardIds": unit.standard_ids[:2],
+                    },
+                )
             )
-            if status != "excused":
-                by_quarter.setdefault(quarter_index + 1, []).append(completed)
 
+    if as_of is not None:
+        cutoff = as_of.isoformat()
+        drafted = [entry for entry in drafted if entry[2]["dueDate"] <= cutoff]
+
+    by_quarter: dict[int, list[bool]] = {}
+    for quarter, was_completed, assignment in drafted:
+        if assignment["completionStatus"] != "excused":
+            by_quarter.setdefault(quarter, []).append(was_completed)
+
+    assignments = [assignment for _, _, assignment in drafted]
     assignments.sort(key=lambda a: a["assignedDate"])
     graded = [a for a in assignments if a["completionStatus"] != "excused"]
     completed = [a for a in graded if a["completionStatus"].startswith("completed")]
@@ -408,6 +423,10 @@ def build_participation(
     # ledger of 240 individual assignments per secondary student is data no view
     # ever surfaces, and it dominates the dataset's size.
     recent = assignments[-RECENT_ASSIGNMENT_WINDOW:] if retain_assignments else []
+
+    # A gradebook sync cannot have happened after the date the dataset is viewed
+    # as of; for a closed prior year the last due date is the honest stand-in.
+    max_due = max((a["dueDate"] for a in assignments), default=school_year[-4:] + "-06-02")
 
     return {
         "id": f"part-{student.id}-{school_year}-{section.id}",
@@ -431,7 +450,10 @@ def build_participation(
                 for quarter, values in sorted(by_quarter.items())
             ],
         },
-        "metadata": {"dataSource": "Google Classroom", "lastSyncDate": "2025-06-02"},
+        "metadata": {
+            "dataSource": "Google Classroom",
+            "lastSyncDate": (as_of.isoformat() if as_of else max_due),
+        },
     }
 
 
@@ -560,13 +582,18 @@ SCREENER_NAMES = ["Universal Reading Screener", "Math Fact Fluency Screener", "E
 
 def build_prior_achievement(
     student, archetype: Archetype, school_year: str, subjects: list[str],
-    prior_mastery_ids: list[str],
+    prior_mastery_ids: list[str], as_of: dt.date | None = None,
 ) -> dict:
     """Benchmarks, screeners, and links to prior-year mastery.
 
     Transfer students carry a genuinely sparse record with honest data quality
     flags. The generator does not invent a full history to fill the gap -- the
     gap itself is the data.
+
+    A full year's benchmark rounds are drawn regardless of `as_of`, then rounds
+    dated after it are dropped. Filtering after the draw rather than skipping the
+    draw keeps the random stream identical whether or not a cutoff applies, so
+    prior years stay byte-identical while the current year stops where it should.
     """
     rng = stream(student.id, "prior", school_year)
     is_transfer = archetype.situation.key == "transfer_incomplete_history"
@@ -627,6 +654,16 @@ def build_prior_achievement(
                 ),
             }
         )
+
+    if as_of is not None:
+        cutoff = as_of.isoformat()
+        dropped = [b for b in benchmarks if b["date"] > cutoff]
+        benchmarks = [b for b in benchmarks if b["date"] <= cutoff]
+        screeners = [s for s in screeners if s["date"] <= cutoff]
+        if dropped:
+            quality_notes.append(
+                f"Benchmark rounds after {cutoff} have not been administered yet"
+            )
 
     return {
         "id": f"pri-{student.id}-{school_year}",

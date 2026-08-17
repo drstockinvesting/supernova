@@ -223,6 +223,23 @@ def _validate_units(dataset, report: Report, standard_ids, section_ids) -> None:
     if empty_units:
         report.warn(f"Curriculum units carrying no standards: {empty_units}")
 
+    # Unit ids must be unique. They were not, once: a self-contained elementary
+    # section teaches six subjects, and an id built from section and sequence alone
+    # collided across all of them, so a mastery record's curriculumUnitId resolved
+    # to an arbitrary one of six units. An existence check passes in that state --
+    # only a uniqueness check catches it.
+    counts: dict[str, int] = defaultdict(int)
+    for unit in dataset.units:
+        counts[unit["id"]] += 1
+    collisions = sorted(unit_id for unit_id, count in counts.items() if count > 1)
+    if collisions:
+        report.error(
+            f"Curriculum unit ids are not unique: {len(collisions)} reused "
+            f"(e.g. {collisions[0]})"
+        )
+    else:
+        report.finding("Curriculum unit id uniqueness", f"{len(counts)} unique ids")
+
 
 def validate_aggregates(dataset, aggregates: dict, report: Report) -> None:
     """Rollups must reconcile: grades sum to schools, schools sum to district."""

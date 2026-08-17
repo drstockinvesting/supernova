@@ -321,7 +321,7 @@ def _build_profile(
             student, archetype, calendar, year, as_of=as_of
         )
         prior = build_prior_achievement(
-            student, archetype, year, SUBJECTS, prior_mastery_ids[-40:]
+            student, archetype, year, SUBJECTS, prior_mastery_ids[-40:], as_of=as_of
         )
         prior_mastery_ids.extend(r["id"] for r in mastery if r["status"] == "mastered")
 

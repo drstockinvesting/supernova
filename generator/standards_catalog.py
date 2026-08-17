@@ -109,11 +109,25 @@ class Catalog:
         return {s.id: s for s in self.standards}
 
 
+# This repo lives in iCloud Drive, which resolves a sync conflict by leaving a
+# second copy beside the original: `ccss_math 2.json`. Globbing picks both up, and
+# because the duplicate carries the same standard codes, the catalog silently
+# doubles -- 593 standards become 1,186, and every downstream count with them.
+# Nothing legitimate here ends in a bare number, so skipping that shape is safe.
+CONFLICT_COPY = re.compile(r" \d+$")
+
+
+def _is_conflict_copy(path: Path) -> bool:
+    return bool(CONFLICT_COPY.search(path.stem))
+
+
 def load_catalog(standards_dir: Path = STANDARDS_DIR) -> Catalog:
     """Load every framework file, sorted by filename for deterministic ordering."""
     catalog = Catalog()
 
     for path in sorted(standards_dir.glob("*.json")):
+        if _is_conflict_copy(path):
+            continue
         with path.open(encoding="utf-8") as handle:
             data = json.load(handle)
 

@@ -132,6 +132,17 @@ def build_units_for_section(
     if not standards:
         return []
 
+    # A self-contained elementary section teaches all six subjects, so the section
+    # id and sequence number together do not identify a unit -- Math Unit 1 and PE
+    # Unit 1 would both be `unit-<section>-1`, and a mastery record pointing at one
+    # could not be told from the other. Departmentalized sections are already one
+    # subject each and keep their existing ids.
+    unit_scope = (
+        section.id
+        if section.subject != "all"
+        else f"{section.id}-{subject.lower().replace(' ', '')}"
+    )
+
     total_units = len(calendar.marking_periods) * UNITS_PER_MARKING_PERIOD
     buckets = _distribute_standards(standards, total_units)
     themes = UNIT_THEMES.get(subject, [f"{subject} Unit"] * total_units)
@@ -161,7 +172,7 @@ def build_units_for_section(
             key_dates = _key_instruction_dates(rng, chunk, unit_standards)
 
             unit = CurriculumUnit(
-                id=f"unit-{section.id}-{sequence}",
+                id=f"unit-{unit_scope}-{sequence}",
                 section_id=section.id,
                 school_year=section.school_year,
                 subject=subject,
