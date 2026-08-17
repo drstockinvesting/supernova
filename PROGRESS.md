@@ -10,7 +10,7 @@ rewriting it, so the reasoning behind the build stays legible.
 | Phase | Status | Session |
 |---|---|---|
 | **1. Synthetic data generation** | Complete | 2026-08-16 |
-| **2. UI / UX build** | In progress — student and family layers built | 2026-08-16 |
+| **2. UI / UX build** | In progress — student, family, and teacher layers built | 2026-08-16 |
 | 3. Permissions enforcement | Not started | — |
 | 4. Visual design system | Not started | — |
 | 5. Research context layer | Not started | — |
@@ -27,7 +27,7 @@ known to be true.
 - [x] Stage 1 — types from schema, data client, router, persona switcher, design baseline
 - [x] Stage 2 — student layer: mastery constellation, evidence drill-down, context layers
 - [x] Stage 3 — guardian layer: own children, narrowed by real guardian permissions
-- [ ] Stage 4 — teacher layer (`/section/:id`); needs per-section context rollups
+- [x] Stage 4 — teacher layer: section index (`/teacher`) and classroom drill-down (`/section/:id`)
 - [ ] Stage 5 — administrator layer (building grid, district)
 - [ ] Stage 6 — board and community layer
 
@@ -177,6 +177,86 @@ reached renders as an outline, not a dark star. And a school year the profile ho
 mastery records for now says so explicitly instead of reporting 0.0% — see the finding
 below.
 
+### 2026-08-16 — Session 3 (Phase 2, Stage 4)
+
+**The repo has moved out of iCloud Drive to `~/Desktop/Supernova`.** Session 1 accepted
+the sync risk on `.git` internals for convenience; that is now retired rather than
+mitigated. Verified after the move: the working tree is clean, `origin` is reachable and
+both branches match their remote refs, `app/public/data → ../../data` is a *relative*
+symlink and still resolves, and no `.icloud` placeholder stubs or broken links remain.
+Two artifacts of the old arrangement were cleaned up — an empty `constellation-high 2/`
+sync-conflict directory under `data/students/`, and the `postinstall` xattr script in
+`app/package.json` that existed only to keep `node_modules` out of iCloud sync.
+
+**A teacher lands on an index of their own sections, not on one of them.** 36 teachers
+hold four sections and 18 hold five. `homePathFor` returned `scopeIds[0]`, which silently
+dropped the rest of the job. `/teacher` lists all of them as classroom cards, and
+`ClassroomCard` takes a `SectionContext` and nothing about who is looking at it — the
+building administrator's grid in Stage 5 iterates the same component over the same file.
+
+**Section context is precomputed, and split the way profiles are.** The classroom view
+needs attendance, homework, behaviour, pacing, and interruptions per section;
+`aggregates/current-year.json` carries section mastery only. Computing the rest in the
+browser would mean fetching every roster member's profile — about 2MB per section, and
+Stage 5 multiplies that by twenty sections per building page. `build_sections_context`
+emits it at generation time.
+
+The first cut put everything in one file and came out at 2.4MB, too heavy to load
+eagerly. It now splits exactly as profiles and evidence do: `sections-context.json` is
+a 615KB index any classroom-grid view loads once, and `aggregates/sections/{id}.json`
+carries one section's roster and full unit list, fetched only when that classroom opens
+(~35KB). Rosters are the bulk of it and are duplicated across a secondary student's six
+sections, so keeping them out of the index is what keeps the index small.
+
+**The classroom view is scoped to a unit, because the correlation is.**
+`keyInstructionDates` are per-unit, so "three students missed the day this unit opened"
+only resolves inside a unit window. A departmentalized section opens on the unit it is
+teaching. A self-contained elementary section is teaching six at once — one per subject —
+so it opens on the year to date instead and offers the units grouped by subject. Naming
+one of six as "the current unit" would have been arbitrary.
+
+**Three things the view says out loud, because the data does not support the alternative:**
+
+- *Attendance is a school-day record, not a period one.* For a departmentalized section,
+  the class attendance rate is the roster's whole-day attendance; a student marked present
+  may still have missed that period. The SIS has no period-level record and inventing one
+  would be worse than naming the limit.
+- *Behaviour cannot always be attributed to a class.* Incidents carry a nullable `subject`.
+  A self-contained section is the student's whole day so every incident belongs to it; a
+  departmentalized section claims only incidents naming its own subject, and the remainder
+  are reported as unattributable rather than assigned by guesswork. This is not rare — the
+  Art II section sampled during the build has 27 roster incidents and none attributable.
+- *A roster place with no participation record is absent, not zero.* The same distinction
+  the student view already draws for a school year holding no mastery records.
+
+**The analytics summary is composed, not templated.** `views/section/narrative.ts` is a
+pure function over the section's real numbers, so the reasoning is readable against the
+data it describes. It states only factors that are present: a class with no interruptions
+and nobody absent through key instruction gets a shorter paragraph, not a sentence with
+zeroes in it. A dashboard that always finds something to blame teaches its reader to stop
+believing it.
+
+**Defect found by building the UI: a teacher teaches five classes at once.**
+`generator/entities/organization.py:460` sets a departmentalized section's period to
+`str((SUBJECTS.index(subject) % 7) + 1)` — a function of subject alone. Every Math section
+is period 1, every ELA section period 2. So all of a teacher's sections share one period:
+234 of 252 sections are in a teacher/period collision, and Jeremiah Duarte's five cards on
+`/teacher` all read "period 1". Invisible until five sections were put side by side.
+
+Not fixed here, because the correct fix is a two-sided constraint rather than a one-line
+change: no teacher may hold two sections in one period, *and* each student's six subject
+sections must land in six distinct periods. The current formula satisfies the second by
+construction, which is why the first was never noticed. Assigning periods in a post-pass
+would keep the RNG stream untouched and the rest of the dataset byte-identical; section
+names would change, since they embed the period. Tracked separately.
+
+**Validation now checks that both files agree.** Two places state a section's mastery —
+`current-year.json` for the district rollup and `sections-context.json` for the classroom
+view. `validate_sections_context` checks that they match, that every roster row is a
+student the section actually enrolls, and that unit totals sum to the section. A teacher
+and their principal reading different numbers for the same class is worse than either
+being wrong alone. All 252 sections reconcile exactly.
+
 ### Phase 1 defects found by building the UI
 
 Three, all of which validation passed over because they were internally consistent:
@@ -262,18 +342,40 @@ Raised during Phase 2:
   by omitting it entirely, since the guardian role holds no `view_behavior_detail`.
   Worth confirming that is the intended answer rather than the default one.
 
+Raised during Stage 4:
+
+- **Should behaviour be recordable against a section?** Incidents carry a nullable
+  `subject`, which is the only handle a departmentalized classroom view has for deciding
+  whether an incident belongs to it. In one sampled Art II section, 27 roster incidents
+  were all unattributable. If a teacher is meant to see the behaviour affecting *their*
+  class, the record needs a `sectionId` — or the view has to keep saying it cannot tell.
+- **Should attendance be period-level?** The same question one layer down. Whole-day
+  attendance makes "class attendance" an approximation for every departmentalized
+  section, which is 234 of 252 of them. Real secondary schools take attendance per
+  period; modelling that would make the absence-to-mastery correlation sharper, at the
+  cost of a much larger attendance stream.
+- **Is "pacing behind" a section property or a curriculum-plan property?** Most sections
+  read behind at the February as-of date because `percentTimeElapsed` runs ahead of
+  `percentContentCovered` across the board. If nearly every class is behind, the signal
+  stops distinguishing classes and starts describing the plan.
+
 ---
 
 ## Notes for the Next Session
 
-Phase 2 continues at **Stage 4, the teacher layer** (`/section/:id`). The route exists
-and renders a placeholder.
+Phase 2 continues at **Stage 5, the administrator layer** (`/school/:id` and `/district`).
+Both routes exist and render placeholders.
 
-It needs one generator addition first: `aggregates/current-year.json` carries section
-**mastery** only, so a classroom grid would have to load every roster member's profile
-to show class attendance, homework, behaviour flags, pacing, and interruption counts.
-`generator/aggregates.py` already walks every profile and buckets by section — extend it
-and emit `data/aggregates/sections-context.json`.
+Most of the data it needs is already there. `aggregates/current-year.json` carries the
+grade, school, and district rollups, and `aggregates/sections-context.json` carries every
+section a building contains — so the building administrator's classroom grid is
+`ClassroomCard` (`app/src/views/section/ClassroomCard.tsx`) iterated over the sections
+whose `schoolId` matches, with the building's own metrics above it. The card was written
+to take a `SectionContext` and nothing about the viewer for exactly this reason.
+
+What Stage 5 has to decide is what a building administrator sees that a teacher does not:
+comparison across teachers and grade levels within the building, which the UI/UX document
+calls for and no view currently offers.
 
 Running the app:
 
@@ -292,12 +394,18 @@ Useful entry points:
   records are grouped by subject and unit
 - `app/src/session/roles.ts` — roles, permissions, `withinScope` (the Phase 3 hook)
 - `app/src/data/client.ts` — every dataset read, with the eager/lazy split
+- `app/src/views/section/ClassroomCard.tsx` — the classroom card, viewer-agnostic
+- `app/src/views/SectionView.tsx` — the classroom drill-down and its scoping helpers
+- `app/src/views/section/narrative.ts` — the analytics paragraph, as a pure function
 - `scripts/emit_types.py` — regenerate TypeScript types after any schema change
 
-Two things that stay true:
+Three things that stay true:
 
 1. Records omit fields at their default (absent `metadata` means no quality flags).
    The UI reads defensively rather than assuming every key is present.
 2. `masteryRate` is over standards **taught to date**, not the full year.
    `standardsNotYetTaught` is reported separately so the mastery map can render
    untaught content as genuinely dark rather than as failure.
+3. Counts are per student, not per standard. A unit of 3 standards across 19 students
+   is 57 demonstrations, and every rollup in `sections-context.json` counts that way.
+   Views that say "of 57" have to say what the 57 are.

@@ -16,7 +16,7 @@ import json
 import shutil
 from pathlib import Path
 
-from .aggregates import build_aggregates
+from .aggregates import build_aggregates, build_sections_context
 from .archetypes import summarize_population
 from .config import (
     CURRENT_SCHOOL_YEAR,
@@ -124,6 +124,18 @@ def emit(dataset, data_dir: Path = DATA_DIR) -> dict:
     # --- Aggregates ---------------------------------------------------------
     aggregates = build_aggregates(dataset)
     bytes_written += _write(data_dir / "aggregates" / "current-year.json", aggregates)
+
+    # Section context splits the way profiles do: an index every classroom-grid
+    # view can load eagerly, and one roster file per section fetched only when
+    # that classroom is opened. Rosters carry per-student attendance, behaviour,
+    # and per-unit mastery, duplicated across a secondary student's six sections
+    # -- keeping them out of the index is what keeps the index small.
+    sections_index, sections_detail = build_sections_context(dataset)
+    bytes_written += _write(data_dir / "aggregates" / "sections-context.json", sections_index)
+    for section_id, payload in sorted(sections_detail.items()):
+        bytes_written += _write(
+            data_dir / "aggregates" / "sections" / f"{section_id}.json", payload, compact=True
+        )
 
     # --- Manifest -----------------------------------------------------------
     population = summarize_population(list(dataset.archetypes.values()))

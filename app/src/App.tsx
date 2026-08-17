@@ -4,6 +4,8 @@ import { useSession } from './session/session'
 import { homePathFor } from './session/roles'
 import { StudentView } from './views/StudentView'
 import { FamilyView } from './views/FamilyView'
+import { TeacherView } from './views/TeacherView'
+import { SectionView } from './views/SectionView'
 import { ComingLater } from './views/ComingLater'
 import { AS_OF_LABEL } from './lib/dataset'
 import { Loading } from './ui/primitives'
@@ -58,10 +60,8 @@ export default function App() {
           <Route path="/" element={<HomeRedirect />} />
           <Route path="/student/:studentId" element={<StudentView />} />
           <Route path="/family" element={<FamilyView />} />
-          <Route
-            path="/section/:sectionId"
-            element={<ComingLater layer="Teacher" stage="Stage 4" />}
-          />
+          <Route path="/teacher" element={<TeacherView />} />
+          <Route path="/section/:sectionId" element={<SectionView />} />
           <Route
             path="/school/:schoolId"
             element={<ComingLater layer="Building administrator" stage="Stage 5" />}

@@ -273,6 +273,77 @@ def validate_aggregates(dataset, aggregates: dict, report: Report) -> None:
         )
 
 
+def validate_sections_context(
+    dataset, aggregates: dict, sections_index: dict, sections_detail: dict, report: Report
+) -> None:
+    """The teacher layer's rollup must agree with the one the district reads.
+
+    Two files now state a section's mastery -- `current-year.json` for the
+    district rollup and `sections-context.json` for the classroom view. If they
+    disagree, a teacher and their principal are looking at different numbers for
+    the same class, which is worse than either being wrong alone.
+    """
+    sections_by_id = {s["id"]: s for s in dataset.sections}
+    district_view = {s["sectionId"]: s for s in aggregates["sections"]}
+
+    unresolved = roster_mismatches = mastery_mismatches = unit_mismatches = 0
+
+    for entry in sections_index["sections"]:
+        section_id = entry["sectionId"]
+        section = sections_by_id.get(section_id)
+        if not section:
+            unresolved += 1
+            continue
+
+        detail = sections_detail.get(section_id)
+        if detail is None:
+            unresolved += 1
+            continue
+
+        # Every roster row must be a student the section actually enrolls.
+        enrolled = set(section["roster"])
+        if any(row["studentId"] not in enrolled for row in detail["roster"]):
+            roster_mismatches += 1
+
+        # Section mastery must match what the district rollup already publishes.
+        # A section with no taught standards yet is absent from that rollup
+        # rather than present at zero, so only compare where both speak.
+        published = district_view.get(section_id)
+        if published is not None:
+            if (
+                published["standardsTaughtToDate"] != entry["standardsTaughtToDate"]
+                or published["standardsMastered"] != entry["standardsMastered"]
+            ):
+                mastery_mismatches += 1
+        elif entry["standardsTaughtToDate"] != 0:
+            mastery_mismatches += 1
+
+        # Units partition the section's taught standards; every mastery record
+        # carries a curriculumUnitId, so the unit totals must sum to the section.
+        unit_taught = sum(u["standardsTaughtToDate"] for u in detail["units"])
+        unit_mastered = sum(u["standardsMastered"] for u in detail["units"])
+        if (
+            unit_taught != entry["standardsTaughtToDate"]
+            or unit_mastered != entry["standardsMastered"]
+        ):
+            unit_mismatches += 1
+
+    for label, count in (
+        ("sections that do not resolve to a section or roster file", unresolved),
+        ("sections with a roster row not on the section roster", roster_mismatches),
+        ("sections whose mastery disagrees with the district rollup", mastery_mismatches),
+        ("sections whose unit totals do not sum to the section", unit_mismatches),
+    ):
+        if count:
+            report.error(f"Section context: {label}: {count}")
+
+    if not (unresolved or roster_mismatches or mastery_mismatches or unit_mismatches):
+        report.finding(
+            "Section context reconciliation (unit -> section -> district)",
+            f"{len(sections_index['sections'])} sections, exact",
+        )
+
+
 # ---------------------------------------------------------------------------
 # Narrative coherence
 # ---------------------------------------------------------------------------

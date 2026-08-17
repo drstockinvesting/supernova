@@ -16,7 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from generator.aggregates import build_aggregates
+from generator.aggregates import build_aggregates, build_sections_context
 from generator.config import CURRENT_SCHOOL_YEAR, MASTER_SEED
 from generator.emit import DATA_DIR
 from generator.pipeline import AS_OF_DATE, generate
@@ -25,6 +25,7 @@ from generator.validate import (
     Report,
     validate_aggregates,
     validate_narrative,
+    validate_sections_context,
     validate_structure,
 )
 
@@ -139,6 +140,9 @@ def main() -> int:
     print("  aggregate reconciliation...", flush=True)
     aggregates = build_aggregates(dataset)
     validate_aggregates(dataset, aggregates, report)
+
+    sections_index, sections_detail = build_sections_context(dataset)
+    validate_sections_context(dataset, aggregates, sections_index, sections_detail, report)
 
     print("  narrative coherence...", flush=True)
     validate_narrative(dataset, report)

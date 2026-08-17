@@ -10,6 +10,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     fs: { allow: ['..'] },
+    // Vite defaults to 5173 and ignores PORT. Honouring it lets a second dev
+    // server run alongside a first instead of the two fighting over the port.
+    port: Number(process.env.PORT) || 5173,
   },
   build: {
     copyPublicDir: false,

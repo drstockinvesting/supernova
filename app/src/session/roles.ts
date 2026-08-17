@@ -93,9 +93,11 @@ export function homePathFor(session: Session): string {
       return `/student/${assignment.scopeIds[0] ?? ''}`
     case 'guardian':
       return '/family'
+    // Most teachers hold four or five sections. Landing on the first one would
+    // silently drop the rest, so the teacher's home is the index over all of them.
     case 'teacher':
     case 'special_education_teacher':
-      return assignment.scopeIds[0] ? `/section/${assignment.scopeIds[0]}` : '/district'
+      return '/teacher'
     case 'counselor':
     case 'nurse':
     case 'building_administrator':

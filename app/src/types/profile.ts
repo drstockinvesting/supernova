@@ -211,6 +211,145 @@ export interface Aggregates {
   publicSuppressionThreshold: number
 }
 
+// --- Section context --------------------------------------------------------
+//
+// `Aggregates.sections` gives a section its mastery rate, which is all the
+// district rollup needs. These are the layers that explain it, and they split
+// the way profiles do: an index every classroom-grid view loads eagerly, and
+// one roster file per section fetched when that classroom is opened.
+
+export interface UnitPacing {
+  percentContentCovered: number
+  percentTimeElapsed: number
+  pacingStatus: 'ahead' | 'on_track' | 'slightly_behind' | 'behind'
+}
+
+export interface UnitInterruptions {
+  count: number
+  unplanned: number
+  minutesLost: number
+}
+
+/** The shape carried in the index: what a classroom card needs, and no more. */
+export interface SectionUnitSummary {
+  unitId: string
+  name: string
+  subject: Subject
+  sequence: number
+  startDate: string
+  endDate: string
+  status: 'not_started' | 'in_progress' | 'completed'
+  pacing: UnitPacing
+  standardsTaughtToDate: number
+  standardsMastered: number
+  masteryRate: number
+  interruptions: UnitInterruptions
+}
+
+export interface KeyInstructionDate {
+  date: string
+  description: string
+  standardIds: string[]
+}
+
+/** The full unit, carried in the roster file the drill-down loads. */
+export interface SectionUnit extends SectionUnitSummary {
+  markingPeriodId: string
+  plannedInstructionalDays: number
+  standardIds: string[]
+  keyInstructionDates: KeyInstructionDate[]
+}
+
+export interface RosterIncident {
+  date: string
+  incidentType: string
+  severity: string | null
+  subject: string | null
+  description: string
+  /**
+   * Behaviour is recorded per student per year, not per period. A self-contained
+   * section is the student's whole day so every incident belongs to it; a
+   * departmentalized section can only claim incidents naming its own subject.
+   */
+  attributedToSection: boolean
+}
+
+export interface SectionRosterRow {
+  studentId: string
+  firstName: string
+  lastName: string
+  standardsTaughtToDate: number
+  standardsMastered: number
+  masteryRate: number
+  masteryByUnit: Record<string, { taught: number; mastered: number }>
+  /** A roster place with no participation record is absent, not zero. */
+  hasParticipationRecord: boolean
+  homeworkCompletionRate: number | null
+  completionRateByMarkingPeriod: { markingPeriod: number; completionRate: number }[]
+  attendanceRate: number | null
+  daysAbsent: number
+  chronicAbsenteeismFlag: boolean
+  /** Exceptions only; present days are recovered from the school calendar. */
+  attendanceExceptions: { date: string; status: string }[]
+  behaviorIncidents: RosterIncident[]
+  disciplineReferralCount: number
+}
+
+export interface SectionContext {
+  sectionId: string
+  sectionName: string
+  schoolId: string
+  schoolYear: string
+  gradeLevel: string
+  subject: Subject | 'all'
+  instructionalModel: 'self_contained' | 'departmentalized'
+  teacherId: string
+  coTeacherIds: string[]
+  period: string | null
+  roomNumber: string
+  studentCount: number
+  standardsTaughtToDate: number
+  standardsMastered: number
+  masteryRate: number
+  evidenceStrengthCounts: Partial<Record<EvidenceStrength, number>>
+  masteryBySubject: Record<
+    string,
+    { standardsTaughtToDate: number; standardsMastered: number; masteryRate: number }
+  >
+  /** Whole-day attendance for the roster — the SIS holds no period-level record. */
+  attendanceRate: number | null
+  chronicallyAbsentStudents: number
+  chronicAbsenteeismRate: number
+  homeworkCompletionRate: number | null
+  studentsWithoutParticipationRecord: number
+  attributedBehaviorIncidents: number
+  unattributedBehaviorIncidents: number
+  disciplineReferrals: number
+  interruptions: {
+    totalInterruptions: number
+    unplannedInterruptions: number
+    totalMinutesLost: number
+    averageInterruptionsPerUnit: number
+  }
+  /** One unit for a departmentalized section; six for self-contained elementary. */
+  activeUnits: SectionUnitSummary[]
+  unitCount: number
+  suppressForPublicDisplay: boolean
+}
+
+export interface SectionsContext {
+  schoolYear: string
+  sections: SectionContext[]
+  rosterFilePattern: string
+}
+
+export interface SectionDetail {
+  sectionId: string
+  schoolYear: string
+  units: SectionUnit[]
+  roster: SectionRosterRow[]
+}
+
 export interface Manifest {
   datasetVersion: string
   generator: string

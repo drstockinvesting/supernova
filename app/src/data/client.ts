@@ -28,6 +28,9 @@ import type {
   Manifest,
   School,
   SchoolCalendar,
+  SectionContext,
+  SectionDetail,
+  SectionsContext,
   StudentProfile,
 } from '../types/profile'
 
@@ -96,6 +99,22 @@ export const loadResearchCitations = () =>
     '/reference/research-citations.json',
   )
 
+// --- Sections ---------------------------------------------------------------
+
+/**
+ * The index: one summary per section, small enough that any view showing a grid
+ * of classrooms loads it once and keeps it. Rosters are not in here.
+ */
+export const loadSectionsContext = () =>
+  loadJson<SectionsContext>('/aggregates/sections-context.json')
+
+/**
+ * One section's roster and full unit list. Fetched only when a classroom is
+ * opened, the same way an evidence companion is fetched only when a standard is.
+ */
+export const loadSectionDetail = (sectionId: string) =>
+  loadJson<SectionDetail>(`/aggregates/sections/${sectionId}.json`)
+
 // --- Students ---------------------------------------------------------------
 
 export const loadStudentProfile = (schoolId: string, studentId: string) =>
@@ -133,6 +152,11 @@ export async function loadStandardIndex(): Promise<Map<string, Standard>> {
 export async function loadStaffIndex(): Promise<Map<string, Staff>> {
   const staff = await loadStaff()
   return new Map(staff.map((member) => [member.id, member]))
+}
+
+export async function loadSectionContextIndex(): Promise<Map<string, SectionContext>> {
+  const { sections } = await loadSectionsContext()
+  return new Map(sections.map((section) => [section.sectionId, section]))
 }
 
 export async function loadSchoolIndex(): Promise<Map<string, School>> {
