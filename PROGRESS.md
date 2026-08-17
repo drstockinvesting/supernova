@@ -10,7 +10,7 @@ rewriting it, so the reasoning behind the build stays legible.
 | Phase | Status | Session |
 |---|---|---|
 | **1. Synthetic data generation** | Complete | 2026-08-16 |
-| **2. UI / UX build** | In progress — student, family, and teacher layers built | 2026-08-16 |
+| **2. UI / UX build** | In progress — student through district built; board layer remains | 2026-08-16 |
 | 3. Permissions enforcement | Not started | — |
 | 4. Visual design system | Not started | — |
 | 5. Research context layer | Not started | — |
@@ -28,7 +28,7 @@ known to be true.
 - [x] Stage 2 — student layer: mastery constellation, evidence drill-down, context layers
 - [x] Stage 3 — guardian layer: own children, narrowed by real guardian permissions
 - [x] Stage 4 — teacher layer: section index (`/teacher`) and classroom drill-down (`/section/:id`)
-- [ ] Stage 5 — administrator layer (building grid, district)
+- [x] Stage 5 — administrator layer: building (`/school/:id`) and district (`/district`)
 - [ ] Stage 6 — board and community layer
 
 ---
@@ -257,6 +257,56 @@ student the section actually enrolls, and that unit totals sum to the section. A
 and their principal reading different numbers for the same class is worse than either
 being wrong alone. All 252 sections reconcile exactly.
 
+### 2026-08-17 — Session 4 (Phase 2, Stage 5)
+
+**No generator change was needed.** The first stage where that was true. Everything the
+building and district views ask for was already emitted — `aggregates/current-year.json`
+carries the grade, school, and district rollups, and `sections-context.json` carries every
+section a building contains. Stage 4's `ClassroomCard` was written to take a
+`SectionContext` and nothing about the viewer, so the building's classroom grid is that
+component over a filtered list. A principal and a teacher looking at the same class see
+the same card, which was the point of the fractal architecture rather than a convenience.
+
+**The district view leads with where the variation is, not with a building ranking.**
+The three buildings sit within 1.1 points of each other on mastery (sd 0.48). Grades span
+10.3 (sd 2.84) and classrooms span 34.7 (sd 6.11). A district dashboard that ranks three
+buildings a point apart is reading noise and inviting action on it, so the view states the
+three spreads and sends the reader inward instead. `views/admin/compare.ts` holds the
+computation as a pure function, because that paragraph is an argument rather than a layout.
+
+**The teacher comparison says what it is.** The UI/UX document asks for comparison across
+teachers within a building, and the building view provides it — ranked, with an attendance
+column beside it and the building rate marked on every bar. It carries an explicit caveat
+that it ranks classes rather than teaching: rosters are not equivalent, and a low row is a
+place to open the classroom and read its context layers. Building the ranking without
+that sentence would have been the easier and worse choice.
+
+**A section is not the same unit of thing at both levels.** Nova Elementary has 18
+sections and Constellation High has 144, and printing those side by side invites a
+comparison that means nothing — an elementary section is one teacher and a child's whole
+day, a high school section is one subject for one period. The building cards say
+"self-contained classes" or "subject sections" accordingly.
+
+**No year-over-year trend is shown, and the district view says why.** The document asks
+for trend indicators at both levels. Rollups are computed for the current year only, and
+prior years are held per student rather than per building — a student now at Meridian may
+have spent last year at Nova. Aggregating those would compare a cohort against itself
+rather than a building against itself. Labelling that "improving" would be inventing a
+finding, so nothing is labelled at all.
+
+**Two defects found in this stage, both fixed:** the views render from two files of very
+different sizes, and the section index arrives about four times later than the aggregates.
+The building view briefly showed a ranked teacher table with no rows under a heading
+promising staff, and the district narrative briefly claimed classrooms span 0.0 points.
+Both now wait for the data the claim depends on. A loading state that asserts something
+false is worse than a spinner.
+
+**Shared where the third use appeared.** `ui/ComparisonTable.tsx` was extracted when
+ranked-rows-with-bars was needed for a fourth time (student subjects, section subjects,
+grades, teachers). The classroom breadcrumb became role-aware in the same pass: a
+classroom is reached from three directions now, and the trail has to lead back where the
+viewer actually came from.
+
 ### Phase 1 defects found by building the UI
 
 Three, all of which validation passed over because they were internally consistent:
@@ -359,23 +409,42 @@ Raised during Stage 4:
   `percentContentCovered` across the board. If nearly every class is behind, the signal
   stops distinguishing classes and starts describing the plan.
 
+Raised during Stage 5:
+
+- **Should the teacher comparison be scope-gated before Phase 3?** It is the most
+  sensitive surface built so far — named staff, ranked against each other. Phase 2's
+  documented stance is that permissions shape views but do not enforce, and a typed URL
+  still reaches out-of-scope data, so a guardian can currently open `/school/nova-elementary`
+  and read the staff ranking. That was already true of student data; it is more pointed
+  here. Worth deciding whether this one section is gated early rather than waiting.
+- **Should prior-year aggregates be generated, so trends become possible?** The honest
+  blocker is that prior years attach to students rather than buildings. Generating
+  prior-year sections at the school matching each prior grade — already an open question
+  from Stage 2 — would resolve the trend question and the longitudinal-constellation gap
+  at the same time. They are the same piece of work.
+- **Does the district need a subject × grade matrix rather than two separate tables?**
+  "Which grades are strongest in mathematics" is a question the course model was
+  deliberately simplified to keep answerable, and neither the by-grade nor the by-subject
+  table answers it on its own.
+
 ---
 
 ## Notes for the Next Session
 
-Phase 2 continues at **Stage 5, the administrator layer** (`/school/:id` and `/district`).
-Both routes exist and render placeholders.
+Phase 2 finishes at **Stage 6, the board and community layer** (`/community`). The route
+exists and renders a placeholder.
 
-Most of the data it needs is already there. `aggregates/current-year.json` carries the
-grade, school, and district rollups, and `aggregates/sections-context.json` carries every
-section a building contains — so the building administrator's classroom grid is
-`ClassroomCard` (`app/src/views/section/ClassroomCard.tsx`) iterated over the sections
-whose `schoolId` matches, with the building's own metrics above it. The card was written
-to take a `SectionContext` and nothing about the viewer for exactly this reason.
+This is the one layer where the constraint is subtraction rather than addition. Every
+number it shows already exists in `aggregates/current-year.json`; what the stage has to
+get right is what it must *not* show. `PUBLIC_SUPPRESSION_THRESHOLD` (10) and the
+`suppressForPublicDisplay` flag are already computed on every cell by
+`generator/aggregates.py`, and nothing in the app reads them yet — Stage 6 is where they
+start mattering. The addendum's role table is explicit that a board member sees
+aggregates only, with no school or student identifiers, which is a harder rule than it
+sounds: with three schools, naming a building and a grade can identify a child at the
+extremes.
 
-What Stage 5 has to decide is what a building administrator sees that a teacher does not:
-comparison across teachers and grade levels within the building, which the UI/UX document
-calls for and no view currently offers.
+The Phase 1 open question about small-cell disclosure is now due rather than deferred.
 
 Running the app:
 
@@ -397,6 +466,8 @@ Useful entry points:
 - `app/src/views/section/ClassroomCard.tsx` — the classroom card, viewer-agnostic
 - `app/src/views/SectionView.tsx` — the classroom drill-down and its scoping helpers
 - `app/src/views/section/narrative.ts` — the analytics paragraph, as a pure function
+- `app/src/ui/ComparisonTable.tsx` — ranked rows with bars, shared by every zoom level
+- `app/src/views/admin/compare.ts` — the spread computation the district view argues from
 - `scripts/emit_types.py` — regenerate TypeScript types after any schema change
 
 Three things that stay true:

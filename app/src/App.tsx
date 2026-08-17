@@ -6,6 +6,8 @@ import { StudentView } from './views/StudentView'
 import { FamilyView } from './views/FamilyView'
 import { TeacherView } from './views/TeacherView'
 import { SectionView } from './views/SectionView'
+import { SchoolView } from './views/SchoolView'
+import { DistrictView } from './views/DistrictView'
 import { ComingLater } from './views/ComingLater'
 import { AS_OF_LABEL } from './lib/dataset'
 import { Loading } from './ui/primitives'
@@ -62,11 +64,8 @@ export default function App() {
           <Route path="/family" element={<FamilyView />} />
           <Route path="/teacher" element={<TeacherView />} />
           <Route path="/section/:sectionId" element={<SectionView />} />
-          <Route
-            path="/school/:schoolId"
-            element={<ComingLater layer="Building administrator" stage="Stage 5" />}
-          />
-          <Route path="/district" element={<ComingLater layer="District" stage="Stage 5" />} />
+          <Route path="/school/:schoolId" element={<SchoolView />} />
+          <Route path="/district" element={<DistrictView />} />
           <Route
             path="/community"
             element={<ComingLater layer="Board and community" stage="Stage 6" />}

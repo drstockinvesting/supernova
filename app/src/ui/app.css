@@ -807,3 +807,23 @@
   gap: var(--space-1);
   margin-top: var(--space-1);
 }
+
+/* --- Comparison benchmark ----------------------------------------------- */
+/*
+ * A hairline on each bar marking the level above it — the district rate on a
+ * building's grades, the building rate on its teachers. Without it a row of
+ * bars shows rank but not whether any of them is actually behind.
+ */
+
+.rate-track {
+  position: relative;
+}
+
+.rate-benchmark {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: var(--text-subtle);
+  border-radius: 1px;
+}

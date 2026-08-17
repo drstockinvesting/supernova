@@ -27,8 +27,10 @@ import {
 import { useAsync } from '../data/useAsync'
 import { useSession } from '../session/session'
 import { AS_OF_LABEL, bySubjectOrder, formatSchoolYear, gradeLabel } from '../lib/dataset'
+import type { Session } from '../session/roles'
 import {
   Breadcrumb,
+  type Crumb,
   ErrorState,
   Loading,
   MetricCard,
@@ -162,12 +164,10 @@ export function SectionView() {
 
   return (
     <div className="page stack">
-      <Breadcrumb
-        items={[
-          { label: 'Your classrooms', to: '/teacher' },
-          { label: section.sectionName },
-        ]}
-      />
+      {/* A classroom is reached from three directions. The trail has to lead back
+          where the viewer actually came from — a teacher owns this class, an
+          administrator is looking down into it from a building or the district. */}
+      <Breadcrumb items={[...trailAbove(session, section, school?.name), { label: section.sectionName }]} />
 
       <header className="student-head">
         <div className="stack-tight">
@@ -853,6 +853,25 @@ function RosterGrid({
 }
 
 // --- Derivations ------------------------------------------------------------
+
+/** The crumbs above a classroom, which depend on who is looking at it. */
+function trailAbove(
+  session: Session,
+  section: SectionContext,
+  schoolName: string | undefined,
+): Crumb[] {
+  const building = { label: schoolName ?? section.schoolId, to: `/school/${section.schoolId}` }
+  switch (session.assignment.scopeType) {
+    case 'district':
+      return [{ label: 'District', to: '/district' }, building]
+    case 'school':
+      return [building]
+    case 'section':
+      return [{ label: 'Your classrooms', to: '/teacher' }]
+    default:
+      return []
+  }
+}
 
 const LAST_DAY = '2025-02-10'
 
