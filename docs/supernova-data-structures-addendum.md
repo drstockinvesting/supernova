@@ -485,14 +485,52 @@ ResearchCitation
 │   ├── threshold (the bound; the lower bound when comparator is "between")
 │   └── upperThreshold (required for "between" and meaningless otherwise)
 ├── confidenceNote (any caveat about strength or generalizability)
-└── metadata (added date, last reviewed date, review status)
+├── metadata (added date)
+└── review (what checking the claim found, and who signed it off)
+    ├── status (derived: unreviewed, source_checked, revision_required,
+    │           verified, withdrawn)
+    ├── sourceCheck (null until somebody reads the source)
+    │   ├── checkedOn, checkedBy
+    │   ├── sourceReachable (does the URL reach the document the record names?)
+    │   ├── recordAccurate (are author, title, year and source type right?)
+    │   ├── support (enum: supported, partial, unsupported)
+    │   ├── finding (one sentence, shown next to the claim)
+    │   └── defects (what a reviewer would have to fix or decide)
+    └── signOff (null on every claim in this library)
+        ├── reviewer, credentials, signedOn
+        ├── outcome (enum: accepted, withdrawn)
+        └── note
 ```
 
-**On `confidenceNote` and `reviewStatus`:** the vision documents commit to being
-"research-grounded" and "accountable, not punitive." A citation library that overstates
-correlational findings as causal would undercut both. Every generated citation carries a review
-status, and none should reach a stakeholder-facing view until a human has verified the source
-says what the claim says.
+**On `confidenceNote`:** the vision documents commit to being "research-grounded" and
+"accountable, not punitive." A citation library that overstates correlational findings as
+causal would undercut both. Every citation carries a caveat about how far its claim can be
+pushed, and every claim is worded correlationally for the same reason.
+
+**On `review`, reshaped in Phase 7.** Through Phase 6 this was a single `reviewStatus` flag
+with two values, `needs_human_review` and `verified`, written by hand at each of the eighteen
+call sites. Three problems with that, all of which showed up the first time anybody checked:
+
+1. **It collapsed two different acts.** A **source check** asks whether the cited document
+   exists and says what the claim says. It is careful reading; anyone can do it, including a
+   machine with a network connection; and its result is a written finding somebody else can
+   disagree with. A **sign-off** asks whether a claim is fit to put in front of a school board,
+   which is a judgement about educational research that a named person makes and is accountable
+   for afterwards. `verified` is the second thing and cannot be produced by doing more of the
+   first, so the two are stored separately and only a `signOff` reaches `verified`.
+2. **Absence of a review was indistinguishable from a clean one.** Eighteen identical flags
+   said nothing about whether anybody had looked. The review is now attached at import time
+   rather than typed into each record, so a claim added without one reports `unreviewed` by
+   construction, and `unreviewed` renders as a caution rather than as silence.
+3. **A hand-written status drifts.** `status` is derived from `sourceCheck` and `signOff` by
+   the generator, written into the dataset so it can be read without running code, and
+   recomputed by the app's test suite so the two cannot disagree.
+
+The first check ran 2026-08-18 and no claim in the library came through it clean — three URLs
+that no longer reach the document they name, twelve records with a wrong title, year, author
+order or source type, and ten claims describing their source as establishing more than it does.
+The findings are in `supernova-research-review.md`. **Nothing in the library is verified**, and
+nothing marked otherwise should reach a stakeholder-facing view without its unverified marker.
 
 **On `triggerConditions`, added in Phase 5.** Three rules, each learned by measuring what the
 library actually showed:

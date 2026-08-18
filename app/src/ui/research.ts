@@ -442,6 +442,68 @@ export function exercisableAt(citation: ResearchCitation, scale: 'student' | 'gr
   return spec.scale === 'either' || spec.scale === scale
 }
 
+/**
+ * The review vocabulary, and the one rule underneath it.
+ *
+ * A **source check** asks whether the cited document exists and says what the
+ * claim says. A **sign-off** asks whether the claim is fit to put in front of a
+ * stakeholder, and is a judgement a named person makes and is accountable for.
+ * Only the second licenses dropping the marker, and no amount of the first adds
+ * up to it. `generator/review.py` argues this at length; what matters here is
+ * that `isUnverified` is written against the sign-off and never against the
+ * source check, so a thorough check cannot quietly promote a claim.
+ *
+ * The library today: no sign-offs, sixteen claims needing revision, two checked
+ * clean and waiting for somebody with standing to sign them.
+ */
+export type ReviewStatus = ResearchCitation['review']['status']
+
+export const REVIEW_LABELS: Record<ReviewStatus, string> = {
+  unreviewed: 'unreviewed',
+  source_checked: 'source checked',
+  revision_required: 'revision required',
+  verified: 'verified',
+  withdrawn: 'withdrawn',
+}
+
+/**
+ * Unverified means unsigned, and that is the whole definition.
+ *
+ * Deliberately not `status !== 'source_checked' && status !== 'verified'`. A
+ * source check is evidence for a reviewer, not a substitute for one, and the
+ * moment this function starts accepting one the marker stops meaning anything.
+ */
 export function isUnverified(citation: ResearchCitation): boolean {
-  return citation.metadata.reviewStatus === 'needs_human_review'
+  return citation.review.status !== 'verified'
+}
+
+/** A claim a source check found something wrong with. */
+export function needsRevision(citation: ResearchCitation): boolean {
+  return citation.review.status === 'revision_required'
+}
+
+/** A claim nobody has checked at all — not the same as one checked and found fine. */
+export function isUnchecked(citation: ResearchCitation): boolean {
+  return citation.review.sourceCheck === null
+}
+
+/**
+ * Recompute the stored status from the two records it is derived from.
+ *
+ * The generator writes `status` alongside `sourceCheck` and `signOff` so the
+ * dataset is readable without running any code. That makes it a third field that
+ * can drift, so the app recomputes it and the test suite asserts the two agree —
+ * the same shape as the metric vocabulary contract, and for the same reason: the
+ * two sides are edited by different people at different times.
+ */
+export function deriveReviewStatus(review: ResearchCitation['review']): ReviewStatus {
+  if (review.signOff) {
+    return review.signOff.outcome === 'withdrawn' ? 'withdrawn' : 'verified'
+  }
+  const check = review.sourceCheck
+  if (!check) return 'unreviewed'
+  if (!check.sourceReachable || !check.recordAccurate || check.support !== 'supported') {
+    return 'revision_required'
+  }
+  return 'source_checked'
 }

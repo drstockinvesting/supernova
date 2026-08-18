@@ -49,6 +49,20 @@ def render(schema: dict, indent: int, nested: list[str]) -> str:
 
     node_type = schema.get("type")
 
+    # A nullable object -- `"type": ["object", "null"]` -- still has to render
+    # its shape, so this has to come before the object branch below. Letting the
+    # object branch win drops the `| null` silently, and the field where that
+    # first mattered is a citation's sign-off, which is absent on every claim in
+    # the library. A type saying otherwise would have the app dereferencing a
+    # reviewer who does not exist.
+    if isinstance(node_type, list) and "null" in node_type:
+        rest = [entry for entry in node_type if entry != "null"]
+        if not rest:
+            return "null"
+        inner = dict(schema)
+        inner["type"] = rest[0] if len(rest) == 1 else rest
+        return f"{render(inner, indent, nested)} | null"
+
     if node_type == "object" or "properties" in schema:
         # `allOf` in this schema carries if/then *constraints* (evidenceCount 0
         # implies evidenceStrength "none"), not additional shape. Those are rules

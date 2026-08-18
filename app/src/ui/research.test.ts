@@ -27,10 +27,13 @@ import type { ResearchCitation } from '../types/supernova.ts'
 import { ROLE_ORDER, type Role } from '../session/roles.ts'
 import {
   METRICS,
+  REVIEW_LABELS,
   coverageOf,
+  deriveReviewStatus,
   describeTrigger,
   exercisableAt,
   groupMetrics,
+  isUnverified,
   matches,
   referralsPer100,
   selectCitations,
@@ -62,7 +65,9 @@ function citation(
     applicableRoles: roles,
     triggerConditions: trigger,
     confidenceNote: 'A caveat.',
-    metadata: { reviewStatus: 'needs_human_review' },
+    metadata: {},
+    // A fixture claim nobody has checked, which is what an unreviewed record is.
+    review: { status: 'unreviewed', sourceCheck: null, signOff: null },
   }
 }
 
@@ -294,13 +299,124 @@ test('every claim reaches at least one role', () => {
   }
 })
 
-test('every claim carries a confidence note and a review status', () => {
+test('every claim carries a confidence note and a review record', () => {
   for (const entry of LIBRARY) {
     assert.ok(entry.confidenceNote.length > 0, `${entry.id} has no confidence note`)
     assert.ok(
-      ['needs_human_review', 'verified'].includes(entry.metadata.reviewStatus),
+      Object.keys(REVIEW_LABELS).includes(entry.review.status),
       `${entry.id} has an unrecognised review status`,
     )
+  }
+})
+
+test('the stored review status agrees with the two records it is derived from', () => {
+  // The generator writes `status` next to `sourceCheck` and `signOff` so the
+  // dataset can be read without running code, which makes it a third field that
+  // can drift. This is the same contract as the metric vocabulary and it exists
+  // for the same reason: the Python that writes it and the TypeScript that reads
+  // it are edited at different times by different people.
+  for (const entry of LIBRARY) {
+    assert.equal(
+      entry.review.status,
+      deriveReviewStatus(entry.review),
+      `${entry.id}: stored status disagrees with its sourceCheck and signOff`,
+    )
+  }
+})
+
+test('a source check cannot verify a claim, however thorough', () => {
+  // The load-bearing rule of the review layer. `verified` is reachable only
+  // through a named person's sign-off, so a claim whose source checks out
+  // perfectly is still unverified and still renders with its marker. If this
+  // ever fails, the marker has stopped meaning anything and the product is
+  // asserting educational research on the strength of somebody reading a URL.
+  const clean: ResearchCitation['review'] = {
+    status: 'source_checked',
+    sourceCheck: {
+      checkedOn: '2026-08-18',
+      checkedBy: 'a careful reader',
+      sourceReachable: true,
+      recordAccurate: true,
+      support: 'supported',
+      finding: 'The source says exactly this.',
+      defects: [],
+    },
+    signOff: null,
+  }
+
+  assert.equal(deriveReviewStatus(clean), 'source_checked')
+  assert.ok(isUnverified({ ...citation('cite-x', undefined), review: clean }))
+})
+
+test('nothing in the shipped library is signed off', () => {
+  // Not a style assertion. Every claim in this library is shown to stakeholders
+  // today, and the flag is the only thing standing between a synthetic prototype
+  // and a product asserting educational research to a school board. The day a
+  // real reviewer signs something, this test is the one that has to be
+  // deliberately changed, by somebody who has read why it is here.
+  for (const entry of LIBRARY) {
+    assert.equal(entry.review.signOff, null, `${entry.id} carries a sign-off`)
+    assert.ok(isUnverified(entry), `${entry.id} renders without its unverified marker`)
+  }
+})
+
+test('a claim added without a review record reports as unreviewed, not as clean', () => {
+  // The failure this replaces: eighteen identical `needs_human_review` flags
+  // written by hand, indistinguishable from a review that had happened and found
+  // nothing wrong. Absence of a check is now its own state.
+  assert.equal(
+    deriveReviewStatus({ status: 'unreviewed', sourceCheck: null, signOff: null }),
+    'unreviewed',
+  )
+})
+
+test('a source check that found something wrong reports revision required', () => {
+  const base: NonNullable<ResearchCitation['review']['sourceCheck']> = {
+    checkedOn: '2026-08-18',
+    checkedBy: 'a careful reader',
+    sourceReachable: true,
+    recordAccurate: true,
+    support: 'supported',
+    finding: 'Fine.',
+    defects: [],
+  }
+  const cases: NonNullable<ResearchCitation['review']['sourceCheck']>[] = [
+    { ...base, sourceReachable: false },
+    { ...base, recordAccurate: false },
+    { ...base, support: 'partial' },
+    { ...base, support: 'unsupported' },
+  ]
+  for (const sourceCheck of cases) {
+    assert.equal(
+      deriveReviewStatus({ status: 'revision_required', sourceCheck, signOff: null }),
+      'revision_required',
+    )
+  }
+})
+
+test('the shipped library records what the first source check found', () => {
+  // Phase 7's result, pinned. Sixteen claims need rewriting and two are checked
+  // clean; if a later edit changes those counts, it should be because somebody
+  // fixed a claim, and this line is where they say so.
+  const needing = LIBRARY.filter((entry) => entry.review.status === 'revision_required')
+  const checked = LIBRARY.filter((entry) => entry.review.status === 'source_checked')
+  assert.equal(needing.length + checked.length, LIBRARY.length)
+  assert.ok(
+    checked.length > 0,
+    'no claim survived the source check; the library would have nothing to sign',
+  )
+
+  for (const entry of LIBRARY) {
+    const check = entry.review.sourceCheck
+    assert.ok(check, `${entry.id} has no source check`)
+    assert.ok(check.finding.length > 0, `${entry.id} records a verdict with no finding`)
+    assert.ok(check.checkedBy.length > 0, `${entry.id} was checked by nobody`)
+    if (entry.review.status === 'revision_required') {
+      assert.ok(
+        check.defects.length > 0,
+        `${entry.id} needs revision and does not say what is wrong with it`,
+      )
+    }
   }
 })
 

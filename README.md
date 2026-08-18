@@ -12,11 +12,12 @@ See [`docs/supernova-vision.md`](docs/supernova-vision.md) for the full vision.
 
 ## Current Phase
 
-**Phase 6 complete — the caseload view.** All six phases are done: the synthetic
+**Phase 7 complete — the research review.** All seven phases are done: the synthetic
 dataset, the dashboards described in
 [`docs/supernova-ui-ux-design.md`](docs/supernova-ui-ux-design.md) built on top of it,
 permissions enforced at the route boundary, the visual design system, the research the
-figures are read against, and the caseload the first three phases kept pointing at.
+figures are read against, the caseload the first three phases kept pointing at, and the
+review that finally opened the sources.
 
 The interface was built from the inside out — the student profile, then the family view,
 then teacher, administrator, and finally the board and community layer. The student profile
@@ -80,6 +81,24 @@ library does the same at [`/research`](http://localhost:5173/research): every cl
 source, the plain-language condition that shows it, and a table of what each role actually
 gets. Both are outside the permission guard, because an audit only insiders can open is not
 one.
+
+Phase 7 opened all 18 sources, which nobody had done. **Not one claim came through clean:**
+three URLs no longer reach the document they name, twelve records carry a wrong title, year,
+author order or source type, and ten claims describe their source as establishing more than it
+does. Four are contradicted by their own confidence note — the claim states the strong general
+version, the qualification goes underneath, and the reader of a dashboard reads the claim. The
+findings are in [`docs/supernova-research-review.md`](docs/supernova-research-review.md), and
+`/research` now shows each one next to the claim it is about.
+
+The phase's architecture is one distinction. **A source check is not a sign-off.** A check asks
+whether the cited document exists and says what the claim says — careful reading, which anyone
+can do, and whose result is a written finding somebody else can disagree with. A sign-off asks
+whether a claim is fit to put in front of a school board, which is a judgement a named person
+makes and is accountable for afterwards. Only the second produces `verified`, and no amount of
+the first adds up to it. So this phase did thorough work and verified nothing: two claims are
+sourced correctly, worded within what their sources establish, and still carry the unverified
+marker, waiting for somebody with standing to sign them. That is the correct state for them to
+be in, and there is a test asserting a perfectly checked claim is still unverified.
 
 Track progress and decisions in [`PROGRESS.md`](PROGRESS.md).
 

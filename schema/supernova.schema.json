@@ -480,7 +480,7 @@
 
     "ResearchCitation": {
       "type": "object",
-      "required": ["id", "claim", "topic", "source", "confidenceNote", "metadata"],
+      "required": ["id", "claim", "topic", "source", "confidenceNote", "metadata", "review"],
       "properties": {
         "id": {"type": "string", "pattern": "^cite-"},
         "claim": {"type": "string"},
@@ -509,12 +509,55 @@
         },
         "metadata": {
           "type": "object",
-          "required": ["reviewStatus"],
           "properties": {
-            "addedDate": {"type": "string", "format": "date"},
-            "reviewStatus": {
-              "enum": ["needs_human_review", "verified"],
-              "description": "Nothing marked needs_human_review should reach a stakeholder-facing view."
+            "addedDate": {"type": "string", "format": "date"}
+          }
+        },
+        "review": {
+          "type": "object",
+          "description": "What checking this claim found, and who signed off on it. A source check asks whether the cited document exists and says what the claim says; a sign-off asks whether the claim is fit to put in front of a stakeholder. Only the second produces \"verified\", and only a named person can give it.",
+          "required": ["status", "sourceCheck", "signOff"],
+          "properties": {
+            "status": {
+              "enum": ["unreviewed", "source_checked", "revision_required", "verified", "withdrawn"],
+              "description": "Derived from sourceCheck and signOff rather than set by hand, so it cannot drift out of agreement with them. Nothing but \"verified\" should reach a stakeholder-facing view without its unverified marker, and only a signOff produces it."
+            },
+            "sourceCheck": {
+              "type": ["object", "null"],
+              "description": "Null means nobody has read the source, which is not the same as the source being fine.",
+              "required": ["checkedOn", "checkedBy", "sourceReachable", "recordAccurate", "support", "finding", "defects"],
+              "properties": {
+                "checkedOn": {"type": "string", "format": "date"},
+                "checkedBy": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Who or what did the checking. A review with no reviewer is the state this library was in for six phases."
+                },
+                "sourceReachable": {"type": "boolean", "description": "Does the URL reach the document the record names?"},
+                "recordAccurate": {"type": "boolean", "description": "Are author, title, year and source type right?"},
+                "support": {
+                  "enum": ["supported", "partial", "unsupported"],
+                  "description": "Whether the source establishes what the claim sentence says, read alone. A stakeholder reads the claim without the confidenceNote under it."
+                },
+                "finding": {"type": "string", "minLength": 1},
+                "defects": {"type": "array", "items": {"type": "string"}}
+              }
+            },
+            "signOff": {
+              "type": ["object", "null"],
+              "description": "A named person accepting this claim for stakeholder display, and accountable for it afterwards. Cannot be produced by a source check however thorough. Null on every claim in this library.",
+              "required": ["reviewer", "credentials", "signedOn", "outcome"],
+              "properties": {
+                "reviewer": {"type": "string", "minLength": 1},
+                "credentials": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Standing to make the judgement, recorded so a sign-off can be weighed rather than trusted."
+                },
+                "signedOn": {"type": "string", "format": "date"},
+                "outcome": {"enum": ["accepted", "withdrawn"]},
+                "note": {"type": "string"}
+              }
             }
           }
         }

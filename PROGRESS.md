@@ -15,6 +15,22 @@ rewriting it, so the reasoning behind the build stays legible.
 | **4. Visual design system** | Complete — one constellation at every zoom level | 2026-08-17 |
 | **5. Research context layer** | Complete — the library is a checked contract | 2026-08-17 |
 | **6. The caseload view** | Complete — three roles have a home | 2026-08-18 |
+| **7. The research review** | Sources checked — nothing signed off | 2026-08-18 |
+
+---
+
+## Phase 7 Checklist
+
+- [x] Every one of the 18 sources fetched and checked against the claim it backs
+- [x] Findings written up claim by claim — `docs/supernova-research-review.md`
+- [x] A source check and a sign-off separated, because only the second can verify
+- [x] `reviewStatus` retired; a review now carries a checker, a date, and findings
+- [x] `review.status` derived from the two records, never written by hand
+- [x] A claim added without a review record reports `unreviewed`, not as clean
+- [x] The finding shown next to the claim at `/research`, and on the flag a teacher hovers
+- [x] The type emitter dropped `| null`; found by the schema's first nullable object
+- [x] 6 new tests, 95 total; build clean, lint at the recorded baseline of 11
+- [ ] **Nothing is verified.** 16 claims need revision, 2 are clean and unsigned
 
 ---
 
@@ -852,6 +868,104 @@ reads 1, 2, 3, 4, 5, Kindergarten. `byGradeOrder` in `lib/dataset.ts` fixes it a
 uses it. The three older call sites still sort the old way and are listed under open questions
 rather than changed here.
 
+### 2026-08-18 — Session 10 (Phase 7) — the research review
+
+The gap the last three sessions kept naming. 18 of 18 claims marked
+`needs_human_review`, shown on more pages to more roles with every phase, and nobody had ever
+opened a source. This session opened all 18.
+
+**Not one claim in the library is clean.** Three point at a document their URL no longer
+reaches. Twelve carry a wrong title, year, author order, or source type. Ten describe their
+source as establishing more than it does. The findings are in
+`docs/supernova-research-review.md`, claim by claim, with what a reviewer would have to decide
+about each.
+
+The result is worse than expected and the reason is worth recording, because it is not
+carelessness. Every claim is about a real finding, most are sourced to the right literature,
+and the `confidenceNote` on each was written with care — in four cases the note already
+contains the correction the claim needs, sitting underneath a claim that contradicts it.
+`cite-interruptions-01` claims protected instructional time is associated with greater gains;
+its note says more minutes alone does not produce gains; the WestEd report they both cite
+concludes the second. What was never done was the last step. **The library was assembled from
+what its author knew to be broadly true, which is a different activity from citing**, and the
+two are indistinguishable until somebody fetches the URL.
+
+**The pattern is the same every time and it is a design problem, not a writing problem.** The
+claim is written as the strong general version, the qualification goes in the note, and the
+reader of a dashboard reads the claim. So the check has to ask whether the source establishes
+*the claim sentence, read alone*, because that is how it is read. Under that test ten claims
+fail; under "is this broadly defensible" almost none do.
+
+Three findings are worth naming individually:
+
+- **`cite-variation-01` attributes to Rivkin, Hanushek and Kain a result they do not report.**
+  They estimate a lower bound on the variance of teacher quality, identified *from*
+  within-school heterogeneity in order to strip out school-level confounding. The claim reads
+  that method as the finding and asserts that achievement varies more within schools than
+  between them. It fires on `masterySpreadPoints`, so it is one of the claims a **school board**
+  and the **public** see. The proposition is defensible and well supported elsewhere; it is not
+  supported here.
+- **`cite-attendance-02` is unsourced.** The `www2.ed.gov` data story is gone, and the page at
+  the end of its redirect chain says nothing about when in a unit an absence falls. This is the
+  only research claim the product shows a **student** about their own attendance, chosen in
+  Phase 5 precisely because it was the actionable, non-punitive half of the subject. Its own
+  `confidenceNote` predicted this exactly and it shipped anyway.
+- **`cite-services-01` is worded as an empirical finding and its source is a statute.**
+  IDEA §1412(a)(5) requires the least restrictive environment. It establishes an obligation and
+  makes no claim about outcomes, because there is no evidence in a statute.
+
+**A source check is not a sign-off, and that distinction is the phase's architecture.** The old
+flag had two values and collapsed two different acts. A source check asks whether the cited
+document exists and says what the claim says — careful reading, which anyone can do, including
+a machine with a network connection, and whose result is a written finding somebody else can
+disagree with. A sign-off asks whether a claim is fit to put in front of a school board, which
+is a judgement about educational research that a named person makes and is accountable for
+afterwards.
+
+So they are stored separately in `generator/review.py`, `verified` is reachable only through a
+`signOff`, and `isUnverified` in the app is written against the sign-off and never against the
+check. There is a test asserting that a claim whose source checks out perfectly is still
+unverified. **The consequence is that this session did thorough work and verified nothing**,
+which is the correct outcome and not a shortfall: two claims — `cite-engagement-03` and
+`cite-mastery-01` — are sourced correctly, worded within what their sources establish, and
+still carry the marker, waiting for somebody with standing to sign them.
+
+**A status derived from two records cannot drift; a third field can.** `review.status` is
+computed by `statusOf` in the generator and written into the dataset so it can be read without
+running code — which makes it exactly the kind of third copy that goes stale. The app
+recomputes it in `deriveReviewStatus` and the suite asserts the two agree, the same contract as
+the metric vocabulary and for the same reason: the Python that writes it and the TypeScript
+that reads it are edited at different times by different people.
+
+**Absence of a check is now its own state.** Eighteen identical `needs_human_review` flags
+written by hand at eighteen call sites were indistinguishable from a review that had happened
+and found nothing wrong. The review record is attached in `_with_review` at import time rather
+than typed into each literal, so a claim added to the library without one reports `unreviewed`
+by construction, and `unreviewed` is rendered as a caution rather than as silence.
+
+**The flag on a dashboard says which kind of outstanding.** A claim nobody has read the source
+for and a claim somebody read and found overstated are different problems and they had one word
+between them. A teacher's building page now reads `revision required`, and the tooltip is the
+defect list rather than the finding — a reader hovering a flag on their own dashboard is asking
+why it is flagged, and the finding can read as reassuring on a claim whose *record* is what is
+wrong. `/research` shows both, in that order, for a reader who came to audit rather than to
+work.
+
+### Defects found while building Phase 7
+
+- **The type emitter silently dropped `| null`.** `render` in `scripts/emit_types.py` checked
+  `"properties" in schema` before it checked whether `type` was a list, so `["object", "null"]`
+  rendered as a bare object. No schema had a nullable object before this one, and the first
+  field to have one is a citation's `signOff`, which is null on every claim in the library —
+  the app would have been typed to dereference a reviewer who does not exist.
+- **Ten, not nine.** The review write-up counted the overstated claims by hand and got nine;
+  the page computes them from the records and reported ten. The page was right. Recorded here
+  because it is the same failure the phase is about, one level up: a number asserted from
+  memory next to a number derived from the data.
+- **`cite-health-01` is filed under `attendance`.** The topic enum has no health value, so a
+  claim about asthma and vision sits under attendance. It is not wrong — the claim is about
+  missed instruction — but the enum is shaping the record rather than describing it.
+
 ---
 
 ## Phase 1 Results
@@ -1037,13 +1151,16 @@ Raised during Phase 4:
 
 Raised during Phase 5:
 
-- **Nothing has been verified, and the phase made that more visible rather than less.** All
-  18 claims carry `needs_human_review`, the schema says nothing so marked should reach a
-  stakeholder-facing view, and they are now shown to more roles on more pages than before.
-  The machinery for review exists and no review has happened. Two questions sit under it:
-  who is entitled to move a claim to `verified`, and what that flag would license — because
-  a verified claim is one the product asserts without a hedge, and the hedge is currently
-  doing real work.
+- ~~**Nothing has been verified, and the phase made that more visible rather than less.**~~
+  **Half resolved in Phase 7**, and the half that moved is not the half anybody expected. The
+  sources have now all been checked and the results are recorded per claim; 16 of the 18 need
+  revision before a reviewer could sign them, and 2 are clean and waiting. The first of the
+  two questions under it is answered: `verified` is reachable only through a `signOff` naming
+  a person and their standing, because a source check is careful reading and a sign-off is
+  accountability, and no amount of the first is the second. **The second question is still
+  open** — what a sign-off licenses. Presumably dropping the marker; not obviously showing the
+  claim to a school board, dropping the hedge, or surviving the source being superseded. The
+  hedge is still doing real work and nothing has decided when it may stop.
 - **A triggered citation discloses the figure that triggered it.** The student bag is now
   gated on the viewer's permissions for exactly this reason, but the same property holds at
   group scale and is not gated there: a nurse's building page shows a chronic-absence claim
@@ -1062,7 +1179,10 @@ Raised during Phase 5:
   been tried hard against.
 - **Every threshold is an editorial judgement and none was made by anyone qualified.**
   `/research` says so plainly, which is better than the previous state of not saying it. It
-  is not the same as the numbers being right. "Above 25 referrals per 100 students" and
+  is not the same as the numbers being right. **Phase 7 did not touch this** — the review
+  checked claims against sources, and a trigger threshold carries no authority from a source
+  by construction, so there is nothing to check it against. It needs a different kind of
+  review from the one that has now happened. "Above 25 referrals per 100 students" and
   "above 20% of standards without evidence" were both chosen in this session by reading the
   district's own figures and picking a number that fired.
 - **Claims are matched one metric at a time, and the design document promised more.** The
@@ -1135,16 +1255,56 @@ Raised during Phase 6:
   remains issued and unimplemented — which is a smaller version of exactly the gap this phase
   closed.
 
+Raised during Phase 7:
+
+- **Sixteen claims need rewriting and this session rewrote none of them.** That was
+  deliberate — a source check that also edits the claims is a check marking its own work, and
+  the record of what was found would have been destroyed by the fixing. But it leaves the
+  product shipping ten claims that overstate their sources, now with the overstatement
+  documented next to them, which is more honest and not better. The rewriting is the obvious
+  next piece of work and most of it needs no research judgement at all: a title, a year, an
+  author order, a clause struck.
+- **Three claims cannot be fixed by editing.** `cite-attendance-02` has no source,
+  `cite-variation-01` needs a different paper, and `cite-services-01` needs to decide whether
+  it is making a legal statement or an empirical one. Each is a product decision as much as a
+  citation one — withdrawing `cite-attendance-02` returns a student's own page to silence on
+  attendance, which is the state Phase 5 worked to get out of.
+- **A living webpage cannot be cited to a year, and four records do it.** Attendance Works
+  twice and PBIS once carry a `publicationYear` this repository supplied for a page that has
+  none. The schema's `source` has no field for an access date, so recording it honestly means
+  changing the shape rather than the value.
+- **What a sign-off licenses is undecided, and now blocks two claims.**
+  `cite-engagement-03` and `cite-mastery-01` are checked clean. Somebody could sign them
+  tomorrow and nothing says what would change: whether the marker comes off, whether the
+  `confidenceNote` may be dropped, whether a signed claim may go in front of the board, or what
+  happens when the 2013 monograph is superseded. The two claims are a small enough set to
+  answer the question concretely for once.
+- **The check was reading, and five sources were read at one remove.** Wiley, Sage, Taylor &
+  Francis and GAO serve a browser and refuse an automated request. Their metadata is confirmed
+  exact through Crossref and their headline findings through the publisher record or abstract,
+  which is enough to catch a claim that misattributes a result and not enough to catch one that
+  misreads a qualification on page 40. `cite-mastery-01` and `cite-engagement-02` are both in
+  that group and both are currently the library's best claims, which is a reason to have
+  somebody with library access confirm them rather than a reason to doubt them.
+- **`SOURCE_CHECKS` is keyed by citation id and nothing enforces the join.** A claim renamed
+  in `research.py` silently loses its review and reports `unreviewed`, which is the safe
+  direction to fail but is silent about it. A stale key in `review.py` pointing at no claim is
+  not reported at all.
+- **The topic enum has no health value.** `cite-health-01` is filed under `attendance`, which
+  is defensible — the claim is about missed instruction — and is the enum shaping the record
+  rather than describing it. The caseload has a health stream; the library cannot name one.
+
 ---
 
 ## Notes for the Next Session
 
-**All six phases are complete.** The dataset, the dashboards, enforcement at the route
+**All seven phases are complete.** The dataset, the dashboards, enforcement at the route
 boundary, one constellation at every zoom level, a research layer whose claims are matched to
-the figures rather than to the topic, and the caseload the first three phases kept pointing at.
-Phase 5's decision log is worth reading before touching the research code; the shortest version
-is that a trigger has to survive a change of scale, and that the metric vocabulary is now a
-contract with a test behind it rather than a convention.
+the figures rather than to the topic, the caseload the first three phases kept pointing at, and
+the review that finally opened the sources. Phase 5's decision log is worth reading before
+touching the research code; the shortest version is that a trigger has to survive a change of
+scale, and that the metric vocabulary is now a contract with a test behind it rather than a
+convention. Phase 7's is worth reading before touching a claim.
 
 **Every one of the ten roles now lands on a page built for it.** That was not true before
 Phase 6 and it was not true in the way anybody had written down: a special education teacher
@@ -1153,12 +1313,22 @@ as a provisioning error rather than as the missing view it was. Worth rememberin
 shape — the honest error message was accurate, unremarkable, and hid a real gap for three
 phases.
 
-**The strongest remaining gap is the review pass the library has never had.** 18 of 18 claims are
-`needs_human_review`, they are now shown on more pages to more roles than at any point in
-the project, and `/research` exists specifically to make checking them possible. Doing that
-work is not a coding task and should not be done by whoever writes the next commit without
-saying so — the flag is currently the only thing standing between a synthetic prototype and
-a product asserting educational research to a school board.
+**The sources have now been checked and it went badly.** Not one of the 18 claims came
+through clean: three URLs no longer reach the document they name, twelve records carry a wrong
+title, year, author order or source type, and ten claims describe their source as establishing
+more than it does. `docs/supernova-research-review.md` has the findings claim by claim and what
+each would take to fix. Most of the fixing needs no research judgement — a title, a year, a
+struck clause — and three claims cannot be fixed by editing at all.
+
+**Nothing is verified, and that is the correct state rather than unfinished business.** A
+source check establishes what a source says; a sign-off is a named person accepting that a
+claim belongs in front of a school board and being accountable for it afterwards. Only the
+second produces `verified`, `isUnverified` is written against the sign-off, and there is a test
+asserting a perfectly checked claim is still unverified. Two claims are checked clean and
+waiting for a signature. **The flag remains the only thing standing between a synthetic
+prototype and a product asserting educational research to a school board** — the difference
+after Phase 7 is that a reviewer signing one is now agreeing with a specific written argument
+rather than approving a sentence they have no way to check.
 
 Six things about the code that are easy to get wrong:
 
@@ -1185,6 +1355,11 @@ Six things about the code that are easy to get wrong:
   permission at the top of each stream's block rather than filtering the assembled list. Same
   output today; the difference is that a later change to the sort, the summary, or a "last
   contact" timestamp cannot reintroduce a stream the viewer never held.
+- **A source check is not a sign-off, and `isUnverified` is written against the sign-off.**
+  `generator/review.py` stores the two separately and `deriveReviewStatus` in
+  `ui/research.ts` recomputes the status from them. Widening `isUnverified` to accept a
+  checked-but-unsigned claim would take one word and would quietly turn "somebody read the
+  URL" into "the product asserts this."
 - **Never hand the research layer a figure the viewer cannot be shown.** A claim appears
   exactly when a metric crosses a threshold, so its presence publishes that the threshold was
   crossed. `StudentView` builds its bag from `canSeeBehavior` and friends rather than from the
@@ -1207,23 +1382,29 @@ npm --prefix app run build && npm --prefix app test && npm --prefix app run lint
 ```
 
 `test` is `node --test` over `src/**/*.test.ts`, using Node's own type stripping — there is
-no test framework and nothing to install. 89 tests, and everything covered is covered for
+no test framework and nothing to install. 95 tests, and everything covered is covered for
 the same reason: its failures are invisible on screen. A guard that wrongly allows renders
 a page indistinguishable from one the viewer was entitled to; a suppression rule that never
 fires looks identical to one that works; a sky lit on the wrong scale is still a sky, and
 nobody ever sees two zoom levels at once; a citation that can never fire renders exactly
 like one that fires correctly; a caseload leaking a stream the viewer may not read looks
-completely normal, because the leak *is* a student on a list with a chip on them. That last one was not hypothetical — half the citation
-library was inert for four phases — which is why `research.test.ts` is the only suite that
-reads the shipped dataset rather than fixtures. It is asserting a contract between two files
+completely normal, because the leak *is* a student on a list with a chip on them; and a claim
+whose source does not support it reads exactly like one whose source does, which is how ten of
+them survived six phases. That last pair was not hypothetical — half the citation
+library was inert for four phases and none of it had ever been checked — which is why
+`research.test.ts` is the only suite that reads the shipped dataset rather than fixtures. It is asserting a contract between two files
 that are edited by different people at different times, and fixtures cannot do that. Lint
 reports 11 `only-export-components` warnings against a recorded baseline of 12; that count
 should not grow.
 
 Useful entry points:
 
-- `app/src/ui/research.ts` — the metric vocabulary, the scale rule, and the selector.
-  Plain TypeScript so the contract can be tested
+- `app/src/ui/research.ts` — the metric vocabulary, the scale rule, the selector, and the
+  review vocabulary. Plain TypeScript so both contracts can be tested
+- `generator/review.py` — what checking each source found, who checked it, and why a check
+  can never produce `verified`
+- `docs/supernova-research-review.md` — the findings claim by claim, and what a reviewer
+  would have to decide about each
 - `app/src/ui/ResearchContext.tsx` — the card, and the two shapes silence takes
 - `app/src/views/ResearchView.tsx` — the library audit at `/research`, outside the guard
 - `generator/research.py` — the claims themselves, and why each trigger is what it is

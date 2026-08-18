@@ -67,9 +67,13 @@ def emit(dataset, data_dir: Path = DATA_DIR) -> dict:
         data_dir / "reference" / "research-citations.json",
         {
             "reviewWarning": (
-                "Every citation carries reviewStatus 'needs_human_review'. None "
-                "should be surfaced in a stakeholder-facing view until a human has "
-                "verified the source supports the claim as worded."
+                "No claim in this library has been signed off. A source check ran "
+                "on 2026-08-18 and found no clean claim in it; each citation's "
+                "`review` records what that check found. A source check is not a "
+                "verification -- only a named human accepting a claim produces "
+                "review.status 'verified', and none has. Nothing here should be "
+                "surfaced in a stakeholder-facing view without its unverified "
+                "marker. See docs/supernova-research-review.md."
             ),
             "citations": dataset.citations,
         },

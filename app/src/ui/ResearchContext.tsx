@@ -23,11 +23,17 @@
  * same reasoning as the disclosure rules that carry "in force · never fired": a
  * protection or a gap that has never announced itself is not thereby absent.
  *
- * Every citation in the dataset is marked `needs_human_review`, and the schema is
- * blunt that nothing so marked should reach a stakeholder-facing view. Rather
- * than hide the library until someone verifies it, unreviewed claims render
- * behind an explicit marker — the reviewing is visibly outstanding instead of
- * silently skipped.
+ * No claim in this library has been signed off, and the schema is blunt that
+ * nothing unsigned should reach a stakeholder-facing view. Rather than hide the
+ * library until someone verifies it, unsigned claims render behind an explicit
+ * marker — the reviewing is visibly outstanding instead of silently skipped.
+ *
+ * Since Phase 7 the marker says which kind of outstanding. A claim nobody has
+ * read the source for and a claim somebody read the source for and found
+ * overstated are different problems, and they had one word between them. The
+ * second is now marked `revision required` on the page a teacher reads, not only
+ * on the audit page an administrator might visit, because that is where the
+ * claim is actually doing its work.
  */
 
 import { Link } from 'react-router-dom'
@@ -35,7 +41,7 @@ import type { ResearchCitation } from '../types/supernova'
 import { useAsync } from '../data/useAsync'
 import { loadResearchCitations } from '../data/client'
 import type { Role } from '../session/roles'
-import { coverageOf, isUnverified, type MetricBag } from './research'
+import { REVIEW_LABELS, coverageOf, isUnverified, type MetricBag } from './research'
 
 export function ResearchContext({
   metrics,
@@ -97,6 +103,22 @@ export function ResearchContext({
   )
 }
 
+/**
+ * What the marker's tooltip says, which is not the same as what the check found.
+ *
+ * A reader hovering a flag on their own dashboard is asking *why is this
+ * flagged*, so the answer is the defects — the things wrong with the record. The
+ * finding is the verdict on the claim's substance and can read as reassuring
+ * even where revision is required: two claims here are well supported and carry
+ * an invented publication year. `/research` shows both, in that order, for a
+ * reader who came to audit rather than to work.
+ */
+function whyFlagged(citation: ResearchCitation): string {
+  const check = citation.review.sourceCheck
+  if (!check) return 'Nobody has read this source.'
+  return check.defects.length > 0 ? check.defects.join(' ') : check.finding
+}
+
 function Claim({ citation }: { citation: ResearchCitation }) {
   return (
     <li>
@@ -108,8 +130,8 @@ function Claim({ citation }: { citation: ResearchCitation }) {
           {citation.source.title}
         </a>
         {isUnverified(citation) ? (
-          <span className="research-flag" title="Not yet verified against the source">
-            unverified
+          <span className="research-flag" title={whyFlagged(citation)}>
+            {REVIEW_LABELS[citation.review.status]}
           </span>
         ) : null}
       </p>

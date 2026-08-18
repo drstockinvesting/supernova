@@ -13,8 +13,23 @@
       "confidenceNote": "Association, not causation. Chronic absence co-occurs with factors such as housing instability and chronic health conditions that independently affect achievement. Read as context for support, never as a prediction about this student.",
       "id": "cite-attendance-01",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "publicationYear 2018 was supplied by us; the page is undated and continuously revised, and needs an access date rather than a year.",
+            "'substantially' is an intensifier the source does not use."
+          ],
+          "finding": "The source says chronic absence can translate into difficulty learning to read by third grade and into not graduating, which is the claim. It does not say 'substantially', and its own figure is around four percentage points fewer students proficient in grade 3 reading.",
+          "recordAccurate": false,
+          "sourceReachable": true,
+          "support": "supported"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "Attendance Works",
@@ -44,8 +59,24 @@
       "confidenceNote": "The general link between absence and achievement is well documented; the specific key-instruction-day effect is a reasonable inference that should be verified against a direct source before being surfaced.",
       "id": "cite-attendance-02",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "www2.ed.gov/datastory/chronicabsenteeism.html redirects twice and the 2019 data story it named no longer exists.",
+            "The confidenceNote predicted exactly this and the claim shipped anyway.",
+            "This is the only attendance claim a student sees about their own record, so withdrawing it is a product decision as well as a citation one."
+          ],
+          "finding": "The URL is dead and the page at the end of its redirect chain is about chronic absenteeism generally, saying nothing about when in a unit an absence falls. The key-instruction-day effect is currently uncited.",
+          "recordAccurate": false,
+          "sourceReachable": false,
+          "support": "unsupported"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "US Department of Education",
@@ -72,8 +103,24 @@
       "confidenceNote": "School-level correlation. Attendance rates track community factors, so this should not be read as an isolated lever.",
       "id": "cite-attendance-03",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "'growth' describes an analysis the report does not perform.",
+            "'otherwise comparable schools' describes a matching the report does not do.",
+            "Authors are credited Ginsburg, Chang, Jordan; the record has Jordan second."
+          ],
+          "finding": "Absences Add Up compares NAEP scores against attendance across states and cities. That is a cross-sectional score comparison at student level, not achievement growth, and it matches no schools to each other.",
+          "recordAccurate": false,
+          "sourceReachable": true,
+          "support": "partial"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "Ginsburg, A., Jordan, P., & Chang, H.",
@@ -103,8 +150,22 @@
       "confidenceNote": "The arithmetic point, that an average is insensitive to a small group missing many days, is not in dispute. The strength of the link between chronic absence and outcomes is correlational and varies with the population studied.",
       "id": "cite-attendance-04",
       "metadata": {
-        "addedDate": "2026-08-17",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-17"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "publicationYear 2018 was supplied by us, as with cite-attendance-01."
+          ],
+          "finding": "The best-argued claim in the library. The arithmetic half is not in dispute and the note says so; the outcome half is the source's own central argument for preferring chronic absence to average attendance.",
+          "recordAccurate": false,
+          "sourceReachable": true,
+          "support": "supported"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "Attendance Works",
@@ -132,8 +193,23 @@
       "confidenceNote": "This is a statement about how averages behave, illustrated by the source rather than established by it. Whether it holds here is answerable directly from this district's own chronic absence figure, which is shown alongside.",
       "id": "cite-attendance-05",
       "metadata": {
-        "addedDate": "2026-08-17",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-17"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "Author order, as with cite-attendance-03.",
+            "A claim whose warrant is arithmetic rather than research may not belong in a research library at all. It is honest here; it may belong elsewhere."
+          ],
+          "finding": "Supported as framed. The note already says this is a statement about how averages behave, illustrated by the source rather than established by it, and the source does recommend chronic absence over average attendance.",
+          "recordAccurate": false,
+          "sourceReachable": true,
+          "support": "supported"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "Ginsburg, A., Jordan, P., & Chang, H.",
@@ -161,8 +237,24 @@
       "confidenceNote": "A synthesis arguing for attention to health as an educational lever, not an estimate of how much of this district's absence is health-driven. Nothing here identifies which students are affected.",
       "id": "cite-health-01",
       "metadata": {
-        "addedDate": "2026-08-17",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-17"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "The claim lists dental problems, which the source does not.",
+            "'among the more common causes of missed instruction' is a ranking the paper does not make.",
+            "topic is 'attendance' because the topic enum has no health value."
+          ],
+          "finding": "Basch names seven educationally relevant health disparities: vision, asthma, teen pregnancy, aggression and violence, physical activity, breakfast, and inattention and hyperactivity. Dental problems are not among them, and absenteeism is one pathway he describes rather than a ranking of causes.",
+          "recordAccurate": true,
+          "sourceReachable": true,
+          "support": "partial"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "Basch, C. E.",
@@ -190,8 +282,23 @@
       "confidenceNote": "Present this as context for support, never as a prediction about an individual student. The design principle is accountable, not punitive.",
       "id": "cite-behavior-01",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "Title truncated; the published title ends 'An Evidentiary Review and Recommendations', American Psychologist 63(9).",
+            "The dropout clause needs its own source or should be dropped."
+          ],
+          "finding": "The task force found the available data tend to contradict the assumptions behind zero tolerance and that such policies are not associated with improved academics. The dropout half is well established in the wider literature but is not what this report is about.",
+          "recordAccurate": false,
+          "sourceReachable": true,
+          "support": "partial"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "American Psychological Association Zero Tolerance Task Force",
@@ -219,8 +326,24 @@
       "confidenceNote": "Effects vary considerably with implementation fidelity. The threshold is an editorial choice about when this is worth showing, not a rate the source identifies as high.",
       "id": "cite-behavior-02",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "The page is titled 'What is PBIS?'.",
+            "publicationYear 2022 was supplied by us; the site's own citation guidance leaves the year blank because the page is living.",
+            "The implementation-fidelity caveat in the note comes from elsewhere."
+          ],
+          "finding": "The page states that schools implementing PBIS well reduce exclusionary discipline and improve climate, which is the claim. But it is the framework's own advocacy page, not the evidence base the record names, and no document called 'Evidence Base' exists at that address.",
+          "recordAccurate": false,
+          "sourceReachable": true,
+          "support": "partial"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "Center on PBIS, US Department of Education",
@@ -248,8 +371,22 @@
       "confidenceNote": "Low measured engagement often reflects barriers such as work schedules, language access, and transportation, rather than lack of interest. Frame as an access question, not a judgment about a family.",
       "id": "cite-engagement-01",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "sourceType is meta_analysis; this is a narrative synthesis of 51 studies, not a statistical meta-analysis, and a citation library exists to keep exactly that distinction."
+          ],
+          "finding": "The synthesis's own summary is that the evidence of families' influence is consistent, positive and convincing, and the across-backgrounds point is one it makes explicitly.",
+          "recordAccurate": false,
+          "sourceReachable": true,
+          "support": "supported"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "Henderson, A. T., & Mapp, K. L.",
@@ -276,8 +413,22 @@
       "confidenceNote": "The elementary correlation is weak. Do not surface homework completion as an achievement signal in elementary dashboards without that caveat.",
       "id": "cite-engagement-02",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "Title truncated; the published title ends 'A Synthesis of Research, 1987-2003', Review of Educational Research 76(1), 1-62."
+          ],
+          "finding": "Fully supported. The synthesis found the correlation much stronger for secondary students in grades 7 through 12 than for elementary students, which is what the note's warning about elementary dashboards rests on.",
+          "recordAccurate": false,
+          "sourceReachable": true,
+          "support": "supported"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "Cooper, H., Robinson, J. C., & Patall, E. A.",
@@ -304,8 +455,20 @@
       "confidenceNote": "A review of technique effectiveness in general, not advice fitted to this student or this subject. It says nothing about why any particular work went uncompleted.",
       "id": "cite-engagement-03",
       "metadata": {
-        "addedDate": "2026-08-17",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-17"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [],
+          "finding": "Supported, and the record is exact. Practice testing and distributed practice are the two techniques the monograph rates high utility; rereading and highlighting are among the low-utility techniques it singles out because students rely on them so heavily.",
+          "recordAccurate": true,
+          "sourceReachable": true,
+          "support": "supported"
+        },
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T.",
@@ -332,8 +495,20 @@
       "confidenceNote": "Effect sizes from this literature have been debated and are likely smaller than the headline figures often quoted. Avoid citing a number. An unrecorded artifact is also not the same as an unassessed standard.",
       "id": "cite-mastery-01",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [],
+          "finding": "Supported and correctly hedged. The note already carries the right caveat, that the effect sizes from this literature have been disputed and are likely smaller than the quoted figures, and the claim avoids citing a number, which is what that caveat requires.",
+          "recordAccurate": true,
+          "sourceReachable": true,
+          "support": "supported"
+        },
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "Black, P., & Wiliam, D.",
@@ -362,8 +537,24 @@
       "confidenceNote": "Strongest evidence is in mathematics; generalization to other subjects is less well established.",
       "id": "cite-mastery-02",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "The www2.ed.gov path 404s. The report is permanently available as ERIC ED500486, which does not rot when a department reorganises its site.",
+            "The compounding clause needs its own source or should be dropped.",
+            "The evidence is mathematics-specific and the claim fires on a mastery rate across all subjects."
+          ],
+          "finding": "The panel's Critical Foundations for Algebra is precisely an argument that prerequisites shape readiness. It does not make the compounding argument; that is an extrapolation.",
+          "recordAccurate": false,
+          "sourceReachable": false,
+          "support": "partial"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "National Mathematics Advisory Panel",
@@ -392,8 +583,24 @@
       "confidenceNote": "A professional standard for defensible measurement, not an empirical finding about outcomes. It bears on how much weight a mastery rate can carry, not on whether the students learned.",
       "id": "cite-evidence-01",
       "metadata": {
-        "addedDate": "2026-08-17",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-17"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "testingstandards.net is the official home of the Standards but is an informational and purchasing page; the 2014 edition is not free there and the URL does not reach the cited text.",
+            "sourceType is peer_reviewed; a professional standards document produced by three associations is not peer-reviewed research.",
+            "No chapter or standard number is given, so nobody holding the book can check the claim against it."
+          ],
+          "finding": "Supported in substance, and the note is unusually good: it says plainly that this is a professional standard rather than an empirical finding, and that it bears on how much weight a mastery rate can carry rather than on whether students learned.",
+          "recordAccurate": false,
+          "sourceReachable": false,
+          "support": "supported"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "American Educational Research Association, American Psychological Association, & National Council on Measurement in Education",
@@ -420,8 +627,24 @@
       "confidenceNote": "Measured on test-score gains in one state, not on mastery of standards, and the within-school variation it decomposes is not solely a teacher effect. Read as a reason to look inside a building, not as a ranking of anything inside this one.",
       "id": "cite-variation-01",
       "metadata": {
-        "addedDate": "2026-08-17",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-17"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "The comparison the claim makes is absent from the paper.",
+            "The claim fires on masterySpreadPoints, so it is one of the claims a school board and the public see.",
+            "The proposition is defensible and well supported elsewhere; it is not supported here."
+          ],
+          "finding": "Rivkin, Hanushek and Kain estimate a semiparametric lower bound on the variance of teacher quality, identified from within-school heterogeneity in order to strip out school-level confounding. They do not decompose achievement variance into within-school and between-school parts and report the former as larger. The claim reads the method as the finding.",
+          "recordAccurate": true,
+          "sourceReachable": true,
+          "support": "unsupported"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "Rivkin, S. G., Hanushek, E. A., & Kain, J. F.",
@@ -448,8 +671,23 @@
       "confidenceNote": "Quality of instructional time matters more than raw quantity; more minutes alone does not produce gains.",
       "id": "cite-interruptions-01",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "The confidenceNote contradicts the claim it is attached to, and the claim is the sentence a teacher reads.",
+            "The allocated-versus-engaged distinction is what the source establishes and is also the more useful thing to tell a teacher reading lost minutes."
+          ],
+          "finding": "The report concludes that time exhibits little impact on performance when considered alone, and that there is no consistent relationship between time allocated for instruction and time students spend engaged. That supports the claim's second clause and undercuts its first.",
+          "recordAccurate": true,
+          "sourceReachable": true,
+          "support": "partial"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "Aronson, J., Zimmerman, J., & Carlos, L.",
@@ -477,8 +715,23 @@
       "confidenceNote": "This is a legal standard as much as an empirical finding. Placement decisions are individualized and belong to the IEP team.",
       "id": "cite-services-01",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "The claim is worded as an empirical finding and the source is a legal mandate. The note concedes half of this by saying it is a legal standard 'as much as' an empirical finding.",
+            "Restating it as the legal requirement would be genuinely useful context for the caseload page. Doing both in one sentence is what went wrong."
+          ],
+          "finding": "Section 1412(a)(5) requires that children with disabilities be educated with children who are not disabled to the maximum extent appropriate. It establishes an obligation and makes no claim about outcomes, because there is no evidence in a statute.",
+          "recordAccurate": true,
+          "sourceReachable": true,
+          "support": "unsupported"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "US Department of Education, Office of Special Education Programs",
@@ -508,8 +761,23 @@
       "confidenceNote": "Sparse records reflect data transfer limits, not necessarily gaps in what the student knows. Read alongside current evidence, not instead of it.",
       "id": "cite-prior-01",
       "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
+        "addedDate": "2026-08-16"
+      },
+      "review": {
+        "signOff": null,
+        "sourceCheck": {
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedOn": "2026-08-18",
+          "defects": [
+            "There is no GAO report called 'Student Mobility'. GAO-11-40 is titled 'K-12 Education: Many Challenges Arise in Educating Students Who Change Schools Frequently'.",
+            "The recovery clause is not decoration: the note builds on it to reassure a transfer student, and that reassurance is currently uncited."
+          ],
+          "finding": "The GAO found achievement can be negatively affected by changing schools often. The recovery half, that effects diminish as students stabilise, is not established by this report.",
+          "recordAccurate": false,
+          "sourceReachable": true,
+          "support": "partial"
+        },
+        "status": "revision_required"
       },
       "source": {
         "authorOrOrganization": "US Government Accountability Office",
@@ -526,5 +794,5 @@
       }
     }
   ],
-  "reviewWarning": "Every citation carries reviewStatus 'needs_human_review'. None should be surfaced in a stakeholder-facing view until a human has verified the source supports the claim as worded."
+  "reviewWarning": "No claim in this library has been signed off. A source check ran on 2026-08-18 and found no clean claim in it; each citation's `review` records what that check found. A source check is not a verification -- only a named human accepting a claim produces review.status 'verified', and none has. Nothing here should be surfaced in a stakeholder-facing view without its unverified marker. See docs/supernova-research-review.md."
 }

@@ -8,10 +8,21 @@ auditable.
 IMPORTANT -- review status. The vision documents commit to being
 "research-grounded" and "accountable, not punitive." A citation library that
 overstates correlational findings as causal would undercut both. Every entry here
-carries `reviewStatus: "needs_human_review"` and a `confidenceNote`. None of these
-should reach a stakeholder-facing view until a human has confirmed the source says
-what the claim says. The claims below are stated in deliberately correlational
-language for that reason.
+carries a `confidenceNote`, and every entry is stated in deliberately
+correlational language for that reason.
+
+None of it should reach a stakeholder-facing view until a human has confirmed the
+source says what the claim says. **Nobody has.** The review record lives in
+`review.py` and is attached to each citation below at import time; a claim added
+here without one is reported as `unreviewed` rather than as unproblematic.
+
+The first source check ran on 2026-08-18 and found no clean claim in the library:
+three URLs that no longer reach the document they name, twelve records carrying a
+wrong title, year, author order or source type, and ten claims describing their
+source as establishing more than it does. Four of those are contradicted by their
+own `confidenceNote`. The findings are in `docs/supernova-research-review.md`, and
+they are a source check rather than a sign-off -- see `review.py` for why those
+are different acts and why only the second one produces `verified`.
 
 -------------------------------------------------------------------------------
 A trigger threshold is not a finding
@@ -58,7 +69,9 @@ metric means adding the metric there first.
 
 from __future__ import annotations
 
-RESEARCH_CITATIONS = [
+from .review import review_for
+
+_CITATIONS = [
     # --- Attendance ---------------------------------------------------------
     {
         "id": "cite-attendance-01",
@@ -91,7 +104,7 @@ RESEARCH_CITATIONS = [
             "independently affect achievement. Read as context for support, never "
             "as a prediction about this student."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-attendance-02",
@@ -125,7 +138,7 @@ RESEARCH_CITATIONS = [
             "the specific key-instruction-day effect is a reasonable inference that "
             "should be verified against a direct source before being surfaced."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-attendance-03",
@@ -152,7 +165,7 @@ RESEARCH_CITATIONS = [
             "School-level correlation. Attendance rates track community factors, so "
             "this should not be read as an isolated lever."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-attendance-04",
@@ -186,7 +199,7 @@ RESEARCH_CITATIONS = [
             "between chronic absence and outcomes is correlational and varies with "
             "the population studied."
         ),
-        "metadata": {"addedDate": "2026-08-17", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-17"},
     },
     {
         "id": "cite-attendance-05",
@@ -222,7 +235,7 @@ RESEARCH_CITATIONS = [
             "answerable directly from this district's own chronic absence figure, "
             "which is shown alongside."
         ),
-        "metadata": {"addedDate": "2026-08-17", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-17"},
     },
     {
         "id": "cite-health-01",
@@ -259,7 +272,7 @@ RESEARCH_CITATIONS = [
             "not an estimate of how much of this district's absence is health-driven. "
             "Nothing here identifies which students are affected."
         ),
-        "metadata": {"addedDate": "2026-08-17", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-17"},
     },
 
     # --- Behavior -----------------------------------------------------------
@@ -286,7 +299,7 @@ RESEARCH_CITATIONS = [
             "Present this as context for support, never as a prediction about an "
             "individual student. The design principle is accountable, not punitive."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-behavior-02",
@@ -322,7 +335,7 @@ RESEARCH_CITATIONS = [
             "is an editorial choice about when this is worth showing, not a rate "
             "the source identifies as high."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
 
     # --- Engagement and family ----------------------------------------------
@@ -354,7 +367,7 @@ RESEARCH_CITATIONS = [
             "language access, and transportation, rather than lack of interest. Frame "
             "as an access question, not a judgment about a family."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-engagement-02",
@@ -381,7 +394,7 @@ RESEARCH_CITATIONS = [
             "The elementary correlation is weak. Do not surface homework completion "
             "as an achievement signal in elementary dashboards without that caveat."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-engagement-03",
@@ -414,7 +427,7 @@ RESEARCH_CITATIONS = [
             "this student or this subject. It says nothing about why any particular "
             "work went uncompleted."
         ),
-        "metadata": {"addedDate": "2026-08-17", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-17"},
     },
 
     # --- Mastery and evidence -----------------------------------------------
@@ -448,7 +461,7 @@ RESEARCH_CITATIONS = [
             "smaller than the headline figures often quoted. Avoid citing a number. "
             "An unrecorded artifact is also not the same as an unassessed standard."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-mastery-02",
@@ -475,7 +488,7 @@ RESEARCH_CITATIONS = [
             "Strongest evidence is in mathematics; generalization to other subjects "
             "is less well established."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-evidence-01",
@@ -511,7 +524,7 @@ RESEARCH_CITATIONS = [
             "finding about outcomes. It bears on how much weight a mastery rate can "
             "carry, not on whether the students learned."
         ),
-        "metadata": {"addedDate": "2026-08-17", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-17"},
     },
     {
         "id": "cite-variation-01",
@@ -544,7 +557,7 @@ RESEARCH_CITATIONS = [
             "effect. Read as a reason to look inside a building, not as a ranking of "
             "anything inside this one."
         ),
-        "metadata": {"addedDate": "2026-08-17", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-17"},
     },
 
     # --- Interruptions, services, mobility -----------------------------------
@@ -574,7 +587,7 @@ RESEARCH_CITATIONS = [
             "Quality of instructional time matters more than raw quantity; more "
             "minutes alone does not produce gains."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-services-01",
@@ -599,7 +612,7 @@ RESEARCH_CITATIONS = [
             "This is a legal standard as much as an empirical finding. Placement "
             "decisions are individualized and belong to the IEP team."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-prior-01",
@@ -629,6 +642,23 @@ RESEARCH_CITATIONS = [
             "Sparse records reflect data transfer limits, not necessarily gaps in "
             "what the student knows. Read alongside current evidence, not instead of it."
         ),
-        "metadata": {"addedDate": "2026-08-16", "reviewStatus": "needs_human_review"},
+        "metadata": {"addedDate": "2026-08-16"},
     },
 ]
+
+
+# --- The review record ------------------------------------------------------
+#
+# Attached here rather than written into each literal above, so that a claim
+# added to this file without a review entry is reported as `unreviewed` by
+# construction. Writing the status by hand at 18 call sites is how the library
+# came to carry 18 identical `needs_human_review` flags that nobody could tell
+# apart from a review that had happened and found nothing wrong.
+
+def _with_review(citations: list[dict]) -> list[dict]:
+    for citation in citations:
+        citation["review"] = review_for(citation["id"])
+    return citations
+
+
+RESEARCH_CITATIONS = _with_review(_CITATIONS)

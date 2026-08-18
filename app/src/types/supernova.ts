@@ -333,8 +333,46 @@ export interface ResearchCitation {
   confidenceNote: string;
   metadata: {
     addedDate?: string;
-    /// Nothing marked needs_human_review should reach a stakeholder-facing
-    /// view.
-    reviewStatus: "needs_human_review" | "verified";
+  };
+  /// What checking this claim found, and who signed off on it. A source check
+  /// asks whether the cited document exists and says what the claim says; a
+  /// sign-off asks whether the claim is fit to put in front of a stakeholder.
+  /// Only the second produces "verified", and only a named person can give it.
+  review: {
+    /// Derived from sourceCheck and signOff rather than set by hand, so it
+    /// cannot drift out of agreement with them. Nothing but "verified" should
+    /// reach a stakeholder-facing view without its unverified marker, and only
+    /// a signOff produces it.
+    status: "unreviewed" | "source_checked" | "revision_required" | "verified" | "withdrawn";
+    /// Null means nobody has read the source, which is not the same as the
+    /// source being fine.
+    sourceCheck: {
+      checkedOn: string;
+      /// Who or what did the checking. A review with no reviewer is the state
+      /// this library was in for six phases.
+      checkedBy: string;
+      /// Does the URL reach the document the record names?
+      sourceReachable: boolean;
+      /// Are author, title, year and source type right?
+      recordAccurate: boolean;
+      /// Whether the source establishes what the claim sentence says, read
+      /// alone. A stakeholder reads the claim without the confidenceNote under
+      /// it.
+      support: "supported" | "partial" | "unsupported";
+      finding: string;
+      defects: string[];
+    } | null;
+    /// A named person accepting this claim for stakeholder display, and
+    /// accountable for it afterwards. Cannot be produced by a source check
+    /// however thorough. Null on every claim in this library.
+    signOff: {
+      reviewer: string;
+      /// Standing to make the judgement, recorded so a sign-off can be weighed
+      /// rather than trusted.
+      credentials: string;
+      signedOn: string;
+      outcome: "accepted" | "withdrawn";
+      note?: string;
+    } | null;
   };
 }

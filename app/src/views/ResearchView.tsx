@@ -18,6 +18,16 @@
  *   2. **A claim that can never fire.** Half the library was in that state: the
  *      trigger named a metric no view supplied. Anything still inert shows here
  *      as inert rather than as a well-written record nobody reads.
+ *   3. **A claim whose source does not say what it says.** Added in Phase 7,
+ *      when somebody finally opened the sources and found that not one of the
+ *      eighteen claims was clean. Each card now carries what the check found,
+ *      and the page opens with the tally rather than burying it.
+ *
+ * The review state deserves one note. `unverified` used to mean everything at
+ * once — nobody has looked, somebody looked and it is fine, somebody looked and
+ * it is wrong. Those are now three states, and the page reports them separately,
+ * because a library where sixteen claims need rewriting and a library nobody has
+ * opened are different problems with the same headline count.
  *
  * Outside the guard, like `/design`, and for a stronger reason than convenience.
  * The library holds no district data — it is published research and the rules for
@@ -42,6 +52,7 @@ import {
 } from '../ui/primitives'
 import {
   METRICS,
+  REVIEW_LABELS,
   coverageOf,
   describeTrigger,
   exercisableAt,
@@ -50,6 +61,7 @@ import {
   matches,
   triggerOf,
   type MetricBag,
+  type ReviewStatus,
 } from '../ui/research'
 
 const TOPIC_LABELS: Record<string, string> = {
@@ -92,6 +104,13 @@ export function ResearchView() {
 
   const citations = libraryState.value.citations
   const unverified = citations.filter(isUnverified).length
+  const byStatus = tallyReview(citations)
+  const needingRevision = byStatus.revision_required
+  const lastChecked = citations
+    .map((citation) => citation.review.sourceCheck?.checkedOn)
+    .filter((date): date is string => Boolean(date))
+    .sort()
+    .at(-1)
 
   // The district's own figures, so the coverage column reports what each role
   // sees today rather than what it could see against some other district.
@@ -121,7 +140,9 @@ export function ResearchView() {
             <span>·</span>
             <span>{byTopic.length} topics</span>
             <span>·</span>
-            <span>{unverified} awaiting review</span>
+            <span>{unverified} unsigned</span>
+            <span>·</span>
+            <span>{needingRevision} needing revision</span>
           </div>
         </div>
       </header>
@@ -146,17 +167,22 @@ export function ResearchView() {
       {unverified > 0 ? (
         <Notice tone="caution">
           <strong>
-            {unverified} of {citations.length} claims have not been checked against their
-            source.
+            None of the {citations.length} claims below has been signed off, and{' '}
+            {needingRevision} of them need rewriting before anyone could.
           </strong>{' '}
-          The schema is explicit that nothing marked <code>needs_human_review</code> should
-          reach a stakeholder-facing view. They are shown anyway, flagged, on the grounds that
-          an outstanding review which is visible is more honest than a library hidden until
-          somebody gets to it — but the flag means what it says. Every claim below is worded
-          correlationally and carries a note on how far it can be pushed; none of that is a
-          substitute for reading the source.
+          They are shown anyway, flagged, on the grounds that an outstanding review which is
+          visible is more honest than a library hidden until somebody gets to it — but the
+          flags mean what they say. Every claim is worded correlationally and carries a note
+          on how far it can be pushed; none of that is a substitute for reading the source,
+          and the first time anybody did, the results were the ones below.
         </Notice>
       ) : null}
+
+      <ReviewSummary
+        citations={citations}
+        byStatus={byStatus}
+        lastChecked={lastChecked}
+      />
 
       <CoverageTable citations={citations} bag={districtBag} />
 
@@ -176,6 +202,125 @@ export function ResearchView() {
         </section>
       ))}
     </div>
+  )
+}
+
+const REVIEW_TONES: Record<ReviewStatus, 'strong' | 'neutral' | 'caution' | 'critical'> = {
+  verified: 'strong',
+  source_checked: 'neutral',
+  revision_required: 'caution',
+  unreviewed: 'critical',
+  withdrawn: 'critical',
+}
+
+const REVIEW_ORDER: ReviewStatus[] = [
+  'revision_required',
+  'unreviewed',
+  'source_checked',
+  'verified',
+  'withdrawn',
+]
+
+function tallyReview(citations: ResearchCitation[]): Record<ReviewStatus, number> {
+  const counts: Record<ReviewStatus, number> = {
+    unreviewed: 0,
+    source_checked: 0,
+    revision_required: 0,
+    verified: 0,
+    withdrawn: 0,
+  }
+  for (const citation of citations) counts[citation.review.status] += 1
+  return counts
+}
+
+/**
+ * Where the review stands, at the top rather than buried in the cards.
+ *
+ * The distinction this panel exists to hold open is between a source check and a
+ * sign-off. The check below was thorough and it verifies nothing: it establishes
+ * what each source says, which is the evidence a reviewer needs, and the
+ * judgement about whether a claim belongs in front of a school board is not one
+ * that reading can settle. Two claims are checked clean and still unsigned, and
+ * that is the correct state for them to be in, not an oversight.
+ */
+function ReviewSummary({
+  citations,
+  byStatus,
+  lastChecked,
+}: {
+  citations: ResearchCitation[]
+  byStatus: Record<ReviewStatus, number>
+  lastChecked: string | undefined
+}) {
+  const checked = citations.filter((citation) => citation.review.sourceCheck !== null)
+  const unreachable = checked.filter(
+    (citation) => citation.review.sourceCheck?.sourceReachable === false,
+  ).length
+  const inaccurate = checked.filter(
+    (citation) => citation.review.sourceCheck?.recordAccurate === false,
+  ).length
+  const overstated = checked.filter(
+    (citation) => citation.review.sourceCheck?.support !== 'supported',
+  ).length
+
+  return (
+    <section className="card stack-tight">
+      <div className="section-heading">
+        <h2>Where the review stands</h2>
+        <span className="subtle">
+          {lastChecked ? `sources last checked ${lastChecked}` : 'no source check on record'}
+        </span>
+      </div>
+
+      <div className="row">
+        {REVIEW_ORDER.filter((status) => byStatus[status] > 0).map((status) => (
+          <StatusChip key={status} tone={REVIEW_TONES[status]}>
+            {byStatus[status]} {REVIEW_LABELS[status]}
+          </StatusChip>
+        ))}
+      </div>
+
+      <div className="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>What the check asked</th>
+              <th className="numeric">Claims failing it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Does the URL reach the document the record names?</td>
+              <td className="numeric">{unreachable}</td>
+            </tr>
+            <tr>
+              <td>Are the author, title, year and source type right?</td>
+              <td className="numeric">{inaccurate}</td>
+            </tr>
+            <tr>
+              <td>Does the source establish what the claim sentence says?</td>
+              <td className="numeric">{overstated}</td>
+            </tr>
+            <tr>
+              <td>Has a named person signed the claim off?</td>
+              <td className="numeric">{citations.length - byStatus.verified}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p className="prose subtle">
+        The last row is a different kind of question from the three above it, and the
+        difference is the point. Those three are answered by reading: fetch the source, compare
+        it to the record, write down what it says. Anyone careful can do that, and it has now
+        been done. The last one asks whether a claim is fit to put in front of a school board,
+        which is a judgement about educational research that a named person has to make and be
+        accountable for afterwards. No amount of the first kind adds up to the second, so a
+        thorough check leaves every claim exactly as unsigned as it found it — and two claims
+        below are checked clean, sourced correctly, and still carry the marker, because that is
+        what the marker is for.
+      </p>
+    </section>
   )
 }
 
@@ -291,9 +436,7 @@ function CitationCard({
         </a>{' '}
         · {SOURCE_LABELS[citation.source.sourceType] ?? citation.source.sourceType}
         {isUnverified(citation) ? (
-          <span className="research-flag" title="Not yet verified against the source">
-            unverified
-          </span>
+          <span className="research-flag">{REVIEW_LABELS[citation.review.status]}</span>
         ) : null}
       </p>
 
@@ -336,8 +479,52 @@ function CitationCard({
           <dt>On this district</dt>
           <dd>{describeStateHere(citation, bag)}</dd>
         </div>
+        <div>
+          <dt>What checking the source found</dt>
+          <dd>
+            <SourceCheck citation={citation} />
+          </dd>
+        </div>
       </dl>
     </article>
+  )
+}
+
+/**
+ * The finding, next to the claim it is about.
+ *
+ * Kept in the card rather than in a separate review page, because a reader who
+ * has just read a claim is the reader who needs to know the source does not
+ * support it. A review filed elsewhere is a review nobody reads at the moment it
+ * would change their mind.
+ */
+function SourceCheck({ citation }: { citation: ResearchCitation }) {
+  const check = citation.review.sourceCheck
+  if (!check) {
+    return (
+      <span className="caution-text">
+        Nobody has read this source. That is not the same as the source being fine.
+      </span>
+    )
+  }
+
+  return (
+    <div className="stack-tight">
+      <p>{check.finding}</p>
+      {check.defects.length > 0 ? (
+        <ul className="research-defects">
+          {check.defects.map((defect) => (
+            <li key={defect}>{defect}</li>
+          ))}
+        </ul>
+      ) : null}
+      <p className="subtle">
+        Checked {check.checkedOn}.{' '}
+        {citation.review.signOff
+          ? `Signed off by ${citation.review.signOff.reviewer}, ${citation.review.signOff.credentials}, on ${citation.review.signOff.signedOn}.`
+          : 'Not signed off — a source check is evidence for a reviewer, not a reviewer.'}
+      </p>
+    </div>
   )
 }
 
