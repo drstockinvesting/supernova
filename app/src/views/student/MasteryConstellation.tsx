@@ -1,6 +1,6 @@
 /**
- * The mastery map: one star per standard, grouped by subject and then by the unit
- * it was taught in.
+ * The mastery map at the innermost zoom level: one star per standard, grouped by
+ * subject and then by the unit it was taught in.
  *
  * Four states, and the distinction between the last two is the whole point:
  *
@@ -13,14 +13,25 @@
  * Collapsing those last two would make every student look worse in February than
  * they are; `standardsNotYetTaught` is reported separately by the generator
  * precisely so the map can tell them apart.
+ *
+ * Since Phase 4 the picture itself lives in `ui/Constellation` and is shared with
+ * the classroom, building, and district views. What stays here is the only part
+ * that is actually about a student: which record becomes which star.
  */
 
 import { useMemo } from 'react'
 import type { CurriculumUnit, Standard } from '../../types/supernova'
 import type { MasteryRecord } from '../../types/supernova'
 import { bySubjectOrder } from '../../lib/dataset'
+import { Constellation } from '../../ui/Constellation'
+import {
+  EVIDENCE_LEGEND,
+  type StarBrightness,
+  type StarGroup,
+  type StarState,
+} from '../../ui/stars'
 
-export type StarState = 'mastered' | 'in_progress' | 'no_evidence' | 'not_taught'
+export type { StarState } from '../../ui/stars'
 
 export function starStateOf(record: MasteryRecord): StarState {
   const flags = record.metadata?.qualityFlags ?? []
@@ -121,65 +132,36 @@ export function MasteryConstellation({
   selectedId: string | null
   onSelect: (record: MasteryRecord) => void
 }) {
-  const groups = useMemo(() => groupRecords(records, units), [records, units])
+  const groups: StarGroup[] = useMemo(
+    () =>
+      groupRecords(records, units).map((group) => ({
+        id: group.subject,
+        label: group.subject,
+        meta: `${group.mastered} of ${group.taught} taught so far`,
+        clusters: group.units.map((unit) => ({
+          id: unit.unitId,
+          label: unit.unitName,
+          stars: unit.records.map((record) => {
+            const code = standards.get(record.standardId)?.standardCode ?? record.standardId
+            return {
+              id: record.id,
+              state: starStateOf(record),
+              brightness: record.evidenceStrength as StarBrightness,
+              label: `${code}: ${starLabel(record)}`,
+              selected: record.id === selectedId,
+              onSelect: () => onSelect(record),
+            }
+          }),
+        })),
+      })),
+    [records, units, standards, selectedId, onSelect],
+  )
 
   return (
-    <div className="constellation card-deep">
-      <div className="constellation-legend">
-        {(
-          [
-            ['mastered', 'Mastered'],
-            ['in_progress', 'In progress'],
-            ['no_evidence', 'No evidence'],
-            ['not_taught', 'Not yet taught'],
-          ] as [StarState, string][]
-        ).map(([state, label]) => (
-          <span key={state} className="legend-item">
-            <span className="star" data-state={state} data-strength="moderate" aria-hidden />
-            {label}
-          </span>
-        ))}
-      </div>
-
-      {groups.map((group) => (
-        <section key={group.subject} className="constellation-subject">
-          <header>
-            <h3>{group.subject}</h3>
-            <span className="constellation-count">
-              {group.mastered} of {group.taught} taught so far
-            </span>
-          </header>
-
-          <div className="constellation-units">
-            {group.units.map((unit) => (
-              <div key={unit.unitId} className="constellation-unit">
-                <div className="constellation-unit-name" title={unit.unitName}>
-                  {unit.unitName}
-                </div>
-                <div className="star-field">
-                  {unit.records.map((record) => {
-                    const standard = standards.get(record.standardId)
-                    const state = starStateOf(record)
-                    return (
-                      <button
-                        key={record.id}
-                        type="button"
-                        className="star"
-                        data-state={state}
-                        data-strength={record.evidenceStrength}
-                        data-selected={record.id === selectedId}
-                        onClick={() => onSelect(record)}
-                        title={`${standard?.standardCode ?? record.standardId} — ${starLabel(record)}`}
-                        aria-label={`${standard?.standardCode ?? record.standardId}: ${starLabel(record)}`}
-                      />
-                    )
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      ))}
-    </div>
+    <Constellation
+      groups={groups}
+      legend={EVIDENCE_LEGEND}
+      legendNote="One star is one standard. Brightness is how much evidence stands behind the judgement, not how well it was done."
+    />
   )
 }

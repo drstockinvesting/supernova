@@ -38,14 +38,18 @@ import {
   MetricCard,
   NarrativeBlock,
   Notice,
+  StatusChip,
   attendanceTone,
   completionTone,
   masteryTone,
   percent,
 } from '../ui/primitives'
 import { ComparisonTable, type ComparisonRow } from '../ui/ComparisonTable'
+import { Constellation } from '../ui/Constellation'
+import { SHARE_LEGEND } from '../ui/stars'
 import { ResearchContext } from '../ui/ResearchContext'
 import { spreadOf, subjectRows } from './admin/compare'
+import { publicSky } from './constellations'
 import {
   STRENGTH_LABELS,
   discloseCells,
@@ -288,6 +292,32 @@ function PublicSchools({
         </div>
       </section>
 
+      {/* The same picture every other view in this product opens with, made of the
+          largest pieces this audience is allowed. A star is a grade rather than a
+          classroom, because a classroom is a named teacher and twenty named
+          children and neither audience here may reach one.
+
+          It earns its place by answering something the two tables cannot. A table
+          by grade and a table by subject are two projections of one matrix, and
+          "which grades are strong in which subjects" is legible in the matrix and
+          in neither projection. */}
+      <section className="stack-tight">
+        <div className="section-heading">
+          <h2>The district's sky</h2>
+          <span className="subtle">every grade, in every subject</span>
+        </div>
+        <Constellation
+          groups={publicSky(aggregates.grades, schools)}
+          legend={SHARE_LEGEND.concat({
+            state: 'withheld',
+            brightness: 'none',
+            label: 'Withheld',
+          })}
+          legendNote="One star is one grade at one school, in one subject. Brightness is the share of standards taught there that students have demonstrated, on an absolute scale — this district's grades sit between 30% and 50% in every subject, so the field is deliberately even rather than flattened. Nothing here is clickable; this view holds aggregates only."
+          footnote={`A grade with fewer than ${aggregates.publicSuppressionThreshold} students is marked withheld rather than removed: a gap in a row is itself a disclosure, and a reader who can count is owed the acknowledgement.`}
+        />
+      </section>
+
       <section className="card stack-tight">
         <div className="section-heading">
           <h2>By grade level</h2>
@@ -296,7 +326,7 @@ function PublicSchools({
           </span>
         </div>
 
-        <div className="row unit-switch" role="group" aria-label="Filter by subject">
+        <div className="filter-row" role="group" aria-label="Filter by subject">
           <button
             type="button"
             className="button"
@@ -452,37 +482,56 @@ function DisclosureRules({ aggregates }: { aggregates: Aggregates }) {
         <span className="subtle">board view</span>
       </div>
 
-      <dl className="detail-facts">
-        <dt>Individuals</dt>
-        <dd>
-          Never shown, to either audience. No student, classroom, or teacher is named on this
-          page, and this account cannot open one — the boundary is enforced on the route, not
-          on the link.
-        </dd>
+      {/* Each rule carries its state, because "in force" and "in force and it has
+          done something" are different things to govern under, and the previous
+          definition list left that difference inside a sentence. A body asked to
+          act on these figures should be able to see at a glance which protections
+          are load-bearing here and which have never had anything to do. */}
+      <ul className="rule-list">
+        <li className="rule">
+          <span className="rule-name">Individuals</span>
+          <StatusChip tone="strong">Enforced on every route</StatusChip>
+          <span className="rule-body">
+            Never shown, to either audience. No student, classroom, or teacher is named on
+            this page, and this account cannot open one — the boundary is enforced on the
+            route, not on the link.
+          </span>
+        </li>
 
-        <dt>Small cells</dt>
-        <dd>
-          A group of fewer than {threshold} students is withheld, because a rate over a group
-          that small can identify a child at the top or bottom of it. The smallest group
-          published above holds {smallest}, so nothing is withheld on this district — the rule
-          is in force and has had nothing to do.
-        </dd>
+        <li className="rule">
+          <span className="rule-name">Small cells</span>
+          <StatusChip tone="neutral">In force · never fired</StatusChip>
+          <span className="rule-body">
+            A group of fewer than {threshold} students is withheld, because a rate over a
+            group that small can identify a child at the top or bottom of it. The smallest
+            group published above holds {smallest}, so nothing is withheld on this district.
+          </span>
+        </li>
 
-        <dt>What can be subtracted</dt>
-        <dd>
-          A single withheld cell under a published total is recoverable by arithmetic, so a
-          second is withheld alongside it. This has never run here either, for the same reason.
-        </dd>
+        <li className="rule">
+          <span className="rule-name">What can be subtracted</span>
+          <StatusChip tone="neutral">In force · never fired</StatusChip>
+          <span className="rule-body">
+            A single withheld cell under a published total is recoverable by arithmetic, so a
+            second is withheld alongside it. This has never run here either, for the same
+            reason — and a rule that has only ever been reasoned about is not the same as one
+            known to work.
+          </span>
+        </li>
 
-        <dt>The grade dimension</dt>
-        <dd>
-          {everyGrade ? 'Every one of the' : `${identifying.length} of the`}{' '}
-          {aggregates.grades.length} grade levels is taught in exactly one building, so a
-          grade's rate is also a building's rate. On a page that names buildings that reveals
-          nothing further — but it is a property of how this district is organised rather than
-          a fact about grades, and it is computed from the data each time rather than assumed.
-        </dd>
-      </dl>
+        <li className="rule">
+          <span className="rule-name">The grade dimension</span>
+          <StatusChip tone="caution">Computed from this district</StatusChip>
+          <span className="rule-body">
+            {everyGrade ? 'Every one of the' : `${identifying.length} of the`}{' '}
+            {aggregates.grades.length} grade levels is taught in exactly one building, so a
+            grade's rate is also a building's rate. On a page that names buildings that
+            reveals nothing further — but it is a property of how this district is organised
+            rather than a fact about grades, and it is computed from the data each time
+            rather than assumed.
+          </span>
+        </li>
+      </ul>
 
       <p className="prose subtle">
         Until Phase 3 this view showed the board less than it showed the public: the role table

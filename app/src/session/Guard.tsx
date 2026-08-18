@@ -103,6 +103,15 @@ export function Guard({ route, children }: { route: RouteKind; children: ReactNo
  * history entry, so it clears as soon as the viewer navigates anywhere — the
  * notice explains a redirect that just happened rather than becoming a banner
  * the account carries around.
+ *
+ * Phase 4 gave it a shape of its own, because a generic `Notice` was the wrong
+ * one. It read as a note *about the page* — the same object as "no year-over-year
+ * trend is shown" three sections down — when what it actually is is the system's
+ * answer to something the viewer just did. So it sits tight under the header
+ * rather than in the page's flow, and arrives with a short movement, which is the
+ * only thing on screen that distinguishes "this happened just now" from "this was
+ * always here". It stays deliberately quiet: no alarm colour, no icon shouting
+ * refusal. Nothing went wrong, and nothing about the far side is disclosed.
  */
 export function ScopeNotice() {
   const location = useLocation()
@@ -110,8 +119,22 @@ export function ScopeNotice() {
   if (!state?.denied) return null
 
   return (
-    <div className="page">
-      <Notice>{denialMessage(state.denied)}</Notice>
+    <div className="scope-notice" role="status">
+      <div className="scope-notice-inner">
+        <span className="scope-notice-glyph" aria-hidden>
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
+            <circle cx="5" cy="8" r="2.4" fill="currentColor" opacity="0.75" />
+            <path
+              d="M10.5 2.5v11"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeDasharray="2 2"
+              opacity="0.6"
+            />
+          </svg>
+        </span>
+        <p>{denialMessage(state.denied)}</p>
+      </div>
     </div>
   )
 }

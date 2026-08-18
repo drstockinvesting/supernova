@@ -44,9 +44,12 @@ import {
   percent,
   type Tone,
 } from '../ui/primitives'
+import { Constellation } from '../ui/Constellation'
+import { SHARE_LEGEND } from '../ui/stars'
 import { ResearchContext } from '../ui/ResearchContext'
 import { buildNarrative } from './section/narrative'
 import { pacingLabel } from './section/ClassroomCard'
+import { classroomSky } from './constellations'
 
 const PACING_TONE: Record<string, Tone> = {
   ahead: 'strong',
@@ -298,6 +301,30 @@ export function SectionView() {
           </p>
         ) : null}
       </NarrativeBlock>
+
+      {/* The student profile's picture, transposed. There a row of stars is one
+          learner across the standards; here a row is one unit across the roster,
+          and because the roster is ordered once and held, a student keeps the same
+          position in every unit — so a child who is dark all year reads as a
+          column rather than as scattered misses.
+
+          It shows every unit regardless of which one the switch above has
+          selected. The context layers below answer "what happened in this unit";
+          this answers "who is this class losing, and since when", and scoping it
+          to one unit would remove the only part of the page that can. */}
+      <section className="stack-tight">
+        <div className="section-heading">
+          <h2>The classroom's sky</h2>
+          <span className="subtle">every student, every unit, the whole year</span>
+        </div>
+        <Constellation
+          groups={classroomSky(units, roster, {
+            canOpenStudents: session.can('view_student_names'),
+          })}
+          legend={SHARE_LEGEND}
+          legendNote="One star is one student's work in one unit. Brightness is the share of that unit's standards they have demonstrated. The roster is in the same order in every unit, so the star in the same position in each field is the same student — read across the units to follow one child through the year."
+        />
+      </section>
 
       {selfContained ? <SubjectBreakdown section={section} /> : null}
 

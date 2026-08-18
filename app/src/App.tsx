@@ -10,8 +10,10 @@ import { SectionView } from './views/SectionView'
 import { SchoolView } from './views/SchoolView'
 import { DistrictView } from './views/DistrictView'
 import { CommunityView } from './views/CommunityView'
+import { DesignView } from './views/DesignView'
 import { AS_OF_LABEL } from './lib/dataset'
 import { Loading } from './ui/primitives'
+import { SupernovaMark, ThemeToggle } from './ui/ThemeToggle'
 import './ui/theme.css'
 import './ui/app.css'
 
@@ -27,14 +29,18 @@ function Header() {
           className="wordmark"
           onClick={() => session && navigate(homePathFor(session))}
         >
-          <span className="wordmark-name">Supernova</span>
-          <span className="wordmark-sub">Constellation Area School District</span>
+          <SupernovaMark />
+          <span className="wordmark-text">
+            <span className="wordmark-name">Supernova</span>
+            <span className="wordmark-sub">Constellation Area School District</span>
+          </span>
         </button>
 
         <div className="row">
           <span className="as-of subtle" title="Nothing in this dataset is dated later">
             as of {AS_OF_LABEL}
           </span>
+          <ThemeToggle />
           <PersonaPicker />
         </div>
       </div>
@@ -122,6 +128,11 @@ export default function App() {
               </Guard>
             }
           />
+          {/* Outside the guard, and deliberately. It holds no district data —
+              only the visual language the data is drawn in — so there is nothing
+              here to scope to an account, and a design system every role can open
+              is one that gets looked at. */}
+          <Route path="/design" element={<DesignView />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

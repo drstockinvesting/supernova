@@ -12,8 +12,22 @@ rewriting it, so the reasoning behind the build stays legible.
 | **1. Synthetic data generation** | Complete | 2026-08-16 |
 | **2. UI / UX build** | Complete — student through board and community | 2026-08-17 |
 | **3. Permissions enforcement** | Complete — enforced at the route boundary | 2026-08-17 |
-| 4. Visual design system | Not started | — |
+| **4. Visual design system** | Complete — one constellation at every zoom level | 2026-08-17 |
 | 5. Research context layer | Not started | — |
+
+---
+
+## Phase 4 Checklist
+
+- [x] Dark-first tokens — `ui/theme.css`, one light block, resolved in JS not CSS
+- [x] Brand mark and theme control; no flash before first paint
+- [x] Scale-agnostic constellation — `ui/Constellation.tsx`, vocabulary in `ui/stars.ts`
+- [x] Star models as pure functions — `views/constellations.ts`
+- [x] Constellations at classroom, building, district, and public
+- [x] Continuous absolute brightness for aggregates; four named steps kept for evidence
+- [x] The three enforcement states designed: redirect notice, `UnlitSky`, rules-with-state
+- [x] Living style guide at `/design`, outside the guard
+- [x] 10 constellation tests; 41 total, build clean, lint below its recorded baseline
 
 ---
 
@@ -480,6 +494,100 @@ now renders the building header and says what is absent and why. What it cannot 
 give a nurse the thing they actually hold: named students with attendance and health at
 their school, which no view in the app indexes. That is an honest gap, recorded below.
 
+### 2026-08-17 — Session 7 (Phase 4) — the visual design system
+
+**The fractal was a claim, not a feature.** The vision document opens by promising one
+visual language at every zoom level, and through Phase 3 exactly one view had it: the
+student profile. Everything above was cards and ranked tables that happened to share a
+palette. Phase 4's central piece is `ui/Constellation.tsx` — the same picture with the
+student taken out of it — plus `views/constellations.ts`, which decides what a star *is*
+at each level. The rule it applies:
+
+> A star is the smallest thing this viewer is allowed to see at this level, and its
+> brightness is the share of mastery demonstrated inside it.
+
+Which gives one star per standard on a student, per student-in-a-unit on a classroom,
+per classroom on a building and on the district, and per grade on the public page. The
+sky gets coarser as entitlement narrows, which is the honest version of "permission
+boundaries are invisible": the picture is always whole, it is just made of larger pieces.
+
+**Dark is the ground, not a preference.** `theme.css` was inverted so `:root` carries
+the dark palette and light is the override. The product's argument is that mastery is
+light against dark; a light-by-default app makes the constellation a decorated panel
+rather than the thing the interface is about. Light stays first-class for the two places
+a school actually needs it — paper, and a projector in a bright room — and the
+constellation panel stays dark in both, because the sky does not become paper when the
+chrome does. `--lit-ink` carries the lit gold darkened enough to survive on white, for
+the one place a lit colour lands on the chrome: the mark.
+
+**There is one light block, because two would have drifted.** The first version had the
+light palette twice — once under `prefers-color-scheme`, once under `[data-theme]` — and
+the file's own comment warned that a token added to one and forgotten in the other is a
+bug. Rather than trust the warning, `ThemeToggle` now resolves "follow this device" to a
+concrete value in JS and always stamps the attribute, so the media query is consulted in
+exactly one place and the stylesheet needs one rule. An inline script in `index.html`
+does the same resolution before first paint, so a light-preferring reader never sees a
+dark frame.
+
+**The banded ramp could not describe an aggregate, and the data proved it.** The first
+aggregate encoding reused the four evidence steps with `masteryTone`'s thresholds. Then
+the numbers: every grade-by-subject cell in this district falls between 30.3% and 49.6%,
+sd 3.7 — the entire 78-cell matrix inside a single band. The public sky rendered 78
+identical stars and would have rendered 78 identical stars whatever the data said. So
+aggregates now take a continuous `intensity` from 0 to 1, mixed in oklab so equal steps
+of the number are roughly equal steps to the eye. Evidence strength keeps its four named
+steps, because that quantity genuinely has four values.
+
+**The ramp is absolute, and that is the load-bearing decision.** Shading each sky against
+its own spread would have made the variation pop — and would have turned a district that
+is genuinely even into a league table, which is the exact reading the district view spends
+a paragraph arguing against. A star lit at 40% is the same brightness alone and among
+brighter company, and there is a test that says so. The cost is a mid-February district
+that looks uniformly mid-lit. That is what it is.
+
+**The classroom sky is the student profile transposed.** On a student the grid runs
+standards across one learner; on a classroom it runs learners across one unit. The roster
+is sorted once and reused for every cluster, so a student holds the same position in every
+unit's field and reading across the units follows one child through the year. That
+property is a single sort call in the right place, invisible in a screenshot, and tested.
+
+**The three states enforcement created got their own shapes.** The redirect notice was a
+generic `Notice` in the page flow, which made it the same object as "no year-over-year
+trend is shown" — a remark about the page, when it is the system answering something the
+viewer just did. It now sits tight under the header and arrives with a short movement,
+the only cue separating "this just happened" from "this was always here". The nurse's
+building page became `UnlitSky`: the constellation frame, kept intact and dark. A page
+that drops the panel and prints a paragraph says there is nothing here; the frame left
+standing says there is something here and it is not yours, which is the true statement
+and one the product's grammar already had a word for. The board's disclosure panel became
+a list of rules that each carry their state — enforced, or in force and never fired —
+because a protection that has never run has been reasoned about, not proven, and a body
+governing under it is owed that distinction.
+
+**`/design` is outside the guard, deliberately.** It holds no district data, only the
+language the data is drawn in. Every swatch reads the same custom property the app reads
+and every star is the real component, so a renamed token breaks the page in the same
+commit rather than being discovered on a student profile months later.
+
+### Defects found while building Phase 4
+
+- **Both filter rows rendered as a centred vertical column.** The grade filter on the
+  building page and the subject filter on the community page were written as
+  `row unit-switch`, borrowing the unit selector's button styling — but `.unit-switch`
+  sets `flex-direction: column` for its own stack of subject rows, and app.css loads
+  after theme.css, so it won silently. Both now use `.filter-row`.
+- **A full-viewport fixed layer to draw one gradient.** The page wash was a
+  `position: fixed` pseudo-element on `body`, which promoted a compositing layer over the
+  whole app and cost a `z-index` on `#root` to climb back out from under. It is a
+  fixed-attachment background on the body now.
+- **`export *` from a component module.** Re-exporting the star vocabulary through
+  `Constellation.tsx` was convenient and broke Fast Refresh in a way the linter could not
+  reason about at all. Views import the picture from `Constellation` and the words for it
+  from `stars.ts`. The vocabulary lives in a plain `.ts` file for a second reason: Node's
+  test runner strips types but does not transform JSX, so nothing a test touches can live
+  in a `.tsx`.
+- **The page title was `app`.** Vite's default, never changed.
+
 ---
 
 ## Phase 1 Results
@@ -628,28 +736,62 @@ Raised during Phase 3:
   signed-in account should see the public page at all, or see it labelled as what the
   public sees.
 
+Raised during Phase 4:
+
+- ~~**Does the district need a subject × grade matrix rather than two separate tables?**~~
+  **Answered, on the public page.** The sky there is that matrix: one star per grade, per
+  school, per subject. What it revealed is that the question had no interesting answer on
+  this district — the whole matrix spans 30.3% to 49.6% with a standard deviation of 3.7.
+  The tool now exists and this dataset has nothing to show through it, which is a different
+  and more useful state than not knowing.
+- **The absolute ramp is honest and nearly uninformative here.** Every sky above the
+  classroom renders in the narrow band a mid-February district actually occupies, so the
+  pictures are even by construction. The alternative — shading against each sky's own
+  spread — was rejected on principle and the principle still holds. What has not been
+  tried is a second, explicitly labelled *deviation* view: the same stars lit by distance
+  from the district rate, offered as a distinct reading rather than as the default. That
+  would keep the mastery map honest and still answer "where is this building unlike
+  itself".
+- **The district sky renders 252 stars with no virtualization.** Fine at this size and
+  fine at three schools. A district with 2,000 sections would render 2,000 DOM nodes with
+  an inline custom property each, and the grouping does nothing to bound that.
+- **A star's meaning changes with the viewer, and only the caption says so.** The same
+  mark is a standard, a student's unit, a classroom, and a grade at different levels. The
+  legend note on each view carries the whole burden of saying which. That is one sentence
+  of prose defending the product's central claim, and it is worth asking whether the mark
+  itself should differ — in size, or in how the cluster is framed — rather than only the
+  words above it.
+- **The style guide is not checked by anything.** It breaks visibly when a token is
+  renamed, which is the point, but only if somebody opens it. Nothing in `npm test` or the
+  build asserts that a swatch still resolves, so a deleted token is caught by a person or
+  not at all.
+
 ---
 
 ## Notes for the Next Session
 
-**Phase 3 is complete.** Every route in `App.tsx` is wrapped in `Guard`, and a typed
-address outside the viewer's scope returns them to their own dashboard with one line. The
-three decisions that shaped it — refuse-by-redirect over a denial page, the board's limit
-being individuals rather than buildings, and a student's right to their own attendance —
-are in the decision log above with their reasoning.
+**Phase 4 is complete.** The constellation is now one component rendering five zoom
+levels, dark is the base theme, the three enforcement states have shapes of their own, and
+`/design` renders the system from the tokens themselves. The two decisions most worth
+knowing before touching any of it are the continuous absolute ramp and where the star
+models live — both in the decision log above.
 
-**Phase 4 is the visual design system.** Nothing about it is blocked. The one thing worth
-carrying in: the app now has three states that only exist because of enforcement — the
-redirect notice, the aggregate-less building page, and the board's disclosure panel — and
-none of them has had any design attention beyond reusing `Notice` and `detail-facts`.
+**Phase 5 is the research context layer.** The clearest brief for it is already recorded
+as a Stage 6 open question: the citation library is admin-shaped. A community member gets
+no research context at all, because the only two citations tagged for the role trigger
+below 90% and above 95% attendance and the district sits at 93.4% — squarely in the gap. A
+board member gets exactly one. The library was written for views that describe a student
+or a classroom, and the outermost layer has almost nothing to say through it. Phase 5 either
+adds public-facing claims or the role tags are decorative.
 
-**If you would rather close a gap than start a phase**, the strongest candidate is the
-first Phase 3 open question: a nurse and a counselor hold permissions describing a job the
-app has no view for. A caseload view — *the students at my building, filtered to the stream
-I am responsible for* — would give two of the ten roles a real home, and it is the only
-place where the built product currently explains an absence instead of showing something.
+**If you would rather close a gap than start a phase**, the strongest candidate is still
+the first Phase 3 open question: a nurse and a counselor hold permissions describing a job
+the app has no view for. A caseload view — *the students at my building, filtered to the
+stream I am responsible for* — would give two of the ten roles a real home. Phase 4 made
+the nurse's landing page honest rather than empty, but honest about an absence is still an
+absence.
 
-Two things about the code that are easy to get wrong:
+Four things about the code that are easy to get wrong:
 
 - **Never resolve scope from the record being requested.** `scope.ts` expands the
   *viewer's* assignments — a teacher's rosters — precisely so that deciding access never
@@ -657,6 +799,13 @@ Two things about the code that are easy to get wrong:
 - **Any async check must be keyed and its result discarded on mismatch.** The guard held
   scope and target in separate `useAsync` hooks at first, and an account switch rendered a
   new session against the previous account's scope for one frame. See `Guard.tsx`.
+- **Brightness is absolute, everywhere, forever.** `intensityOfRate` in `ui/stars.ts` is
+  the only place a rate becomes a brightness. Shading a sky against its own spread would
+  read better and would turn the mastery map into a ranking; there is a test asserting a
+  star is lit the same alone as among brighter neighbours.
+- **Anything a test touches cannot live in a `.tsx`.** `node --test` strips types but does
+  not transform JSX. That is why the star vocabulary is in `ui/stars.ts` and why
+  `views/constellations.ts` writes its runtime imports with explicit `.ts` extensions.
 
 Running the app:
 
@@ -675,21 +824,29 @@ npm --prefix app run build && npm --prefix app test && npm --prefix app run lint
 ```
 
 `test` is `node --test` over `src/**/*.test.ts`, using Node's own type stripping — there is
-no test framework and nothing to install. 31 tests: the disclosure rules and the access
-rules, which are covered for the same reason — their failures are invisible on screen. A
-guard that wrongly allows renders a page indistinguishable from one the viewer was entitled
-to. Lint reports 12 pre-existing `only-export-components` warnings; that count should not
-grow.
+no test framework and nothing to install. 41 tests, and everything covered is covered for
+the same reason: its failures are invisible on screen. A guard that wrongly allows renders
+a page indistinguishable from one the viewer was entitled to; a suppression rule that never
+fires looks identical to one that works; a sky lit on the wrong scale is still a sky, and
+nobody ever sees two zoom levels at once. Lint reports 11 `only-export-components`
+warnings against a recorded baseline of 12; that count should not grow.
 
 Useful entry points:
 
+- `app/src/ui/stars.ts` — what a star is, and the one function turning a rate into
+  brightness. Plain TypeScript so the scale can be tested
+- `app/src/ui/Constellation.tsx` — the picture, at any scale, plus `UnlitSky`
+- `app/src/views/constellations.ts` — what a star *is* at the classroom, building,
+  district, and public levels, as pure functions
+- `app/src/ui/theme.css` — every token; dark is the base, light is the single override
+- `app/src/views/DesignView.tsx` — the style guide at `/design`, rendered from the tokens
 - `app/src/session/access.ts` — every access decision, as pure functions
 - `app/src/session/scope.ts` — expanding an account's scope into concrete ids
 - `app/src/session/Guard.tsx` — the route boundary, and the redirect notice
 - `app/src/views/StudentView.tsx` — the composed student profile; the family view
   reuses it through `StudentProfileScreen` with a narrower audience
-- `app/src/views/student/MasteryConstellation.tsx` — the four star states and how
-  records are grouped by subject and unit
+- `app/src/views/student/MasteryConstellation.tsx` — which mastery record becomes which
+  star; the picture itself now lives in `ui/Constellation`
 - `app/src/session/roles.ts` — roles, permissions, `can`, and where each role lands
 - `app/src/data/client.ts` — every dataset read, with the eager/lazy split
 - `app/src/views/section/ClassroomCard.tsx` — the classroom card, viewer-agnostic

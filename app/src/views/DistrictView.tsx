@@ -32,8 +32,11 @@ import {
   percent,
 } from '../ui/primitives'
 import { ComparisonTable, type ComparisonRow } from '../ui/ComparisonTable'
+import { Constellation } from '../ui/Constellation'
+import { SHARE_LEGEND } from '../ui/stars'
 import { ResearchContext } from '../ui/ResearchContext'
 import { spreadOf, subjectRows } from './admin/compare'
+import { districtSky } from './constellations'
 
 export function DistrictView() {
   const { session } = useSession()
@@ -159,6 +162,29 @@ export function DistrictView() {
             grades, {sectionSpread.sd.toFixed(2)} across {sectionSpread.count} classrooms.
           </p>
         </NarrativeBlock>
+      ) : null}
+
+      {/* Every classroom in the district, as one picture. The paragraph above says
+          the variation is inside the buildings rather than between them; this is
+          that claim drawn rather than asserted, and each star opens the classroom
+          it describes. */}
+      {sectionsLoaded ? (
+        <section className="stack-tight">
+          <div className="section-heading">
+            <h2>The district's sky</h2>
+            <span className="subtle">
+              {sections.length} classrooms, by building and grade
+            </span>
+          </div>
+          <Constellation
+            groups={districtSky(
+              sections,
+              schools.map((school) => ({ schoolId: school.schoolId, label: school.label })),
+            )}
+            legend={SHARE_LEGEND}
+            legendNote="One star is one classroom. Brightness is the share of standards taught there that students have demonstrated, on the same absolute scale used at every level of this app — never shaded against the other stars in this picture, which would turn a district that is genuinely even into a ranking."
+          />
+        </section>
       ) : null}
 
       <section className="stack-tight">

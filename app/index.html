@@ -4,7 +4,34 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>app</title>
+    <meta
+      name="description"
+      content="Mastery mapping for the Constellation Area School District. Every student in this prototype is synthetic."
+    />
+    <title>Supernova — Constellation Area School District</title>
+    <!--
+      Theme before first paint. The stylesheet's base palette is dark, so a reader
+      who prefers light would otherwise see a dark frame for the time it takes React
+      to mount and stamp the attribute. This is the same resolution ThemeToggle
+      does, run early enough that there is nothing to flash.
+    -->
+    <script>
+      ;(function () {
+        var stored = null
+        try {
+          stored = localStorage.getItem('supernova.theme')
+        } catch (error) {
+          /* Private mode or a blocked store: fall through to the device preference. */
+        }
+        var theme =
+          stored === 'dark' || stored === 'light'
+            ? stored
+            : window.matchMedia('(prefers-color-scheme: light)').matches
+              ? 'light'
+              : 'dark'
+        document.documentElement.setAttribute('data-theme', theme)
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

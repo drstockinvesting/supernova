@@ -12,9 +12,10 @@ See [`docs/supernova-vision.md`](docs/supernova-vision.md) for the full vision.
 
 ## Current Phase
 
-**Phase 4 — Visual Design System.** Phases 1 through 3 are complete: the synthetic dataset,
-the dashboards described in [`docs/supernova-ui-ux-design.md`](docs/supernova-ui-ux-design.md)
-built on top of it, and permissions enforced at the route boundary.
+**Phase 5 — Research Context Layer.** Phases 1 through 4 are complete: the synthetic
+dataset, the dashboards described in
+[`docs/supernova-ui-ux-design.md`](docs/supernova-ui-ux-design.md) built on top of it,
+permissions enforced at the route boundary, and the visual design system.
 
 The interface was built from the inside out — the student profile, then the family view,
 then teacher, administrator, and finally the board and community layer. The student profile
@@ -29,6 +30,18 @@ id in the district and may open nothing but the public page, while a nurse holds
 students at their building and none of the aggregates that building page is made of. A
 refused address returns the viewer to their own dashboard with one neutral line, and nothing
 about what was on the other side.
+
+Phase 4 made the fractal real. Until then one view had the constellation and everything
+above it was cards and tables; now the same picture is drawn at five zoom levels, under one
+rule — **a star is the smallest thing this viewer is allowed to see, and its brightness is
+the share of mastery demonstrated inside it.** So a star is a standard on a student, a
+student's unit on a classroom, a classroom on a building and on the district, and a grade on
+the public page. The sky gets coarser as entitlement narrows; it never gets replaced by
+something else. Brightness is absolute at every level, never shaded against the neighbouring
+stars, because the alternative turns a mastery map into a league table.
+
+The design system renders itself at [`/design`](http://localhost:5173/design) — every swatch
+reads the same custom property the app reads, so it breaks when a token drifts.
 
 Track progress and decisions in [`PROGRESS.md`](PROGRESS.md).
 
@@ -66,6 +79,11 @@ both what renders and what can be reached — a guardian carries `view_attendanc
 `view_evidence_artifacts` but not behaviour or health, so those layers are absent from the
 family view rather than empty, and typing another family's child into the address bar returns
 them to their own.
+
+Beside it, **Auto / Sky / Paper** switches the theme. Dark is the base — the product's claim
+is that mastery is light against dark, so the sky is the default reading surface — and light
+is a first-class alternate for print and for a projector in a bright room. The constellation
+panel stays dark in both.
 
 TypeScript types are generated from the JSON Schema rather than hand-written, so a generator
 change surfaces as a type error instead of as `undefined` at runtime. After any schema change:

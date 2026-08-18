@@ -36,9 +36,12 @@ import {
   percent,
 } from '../ui/primitives'
 import { ComparisonTable, type ComparisonRow } from '../ui/ComparisonTable'
+import { Constellation, UnlitSky } from '../ui/Constellation'
+import { SHARE_LEGEND } from '../ui/stars'
 import { ResearchContext } from '../ui/ResearchContext'
 import { ClassroomCard } from './section/ClassroomCard'
 import { spreadOf, subjectRows } from './admin/compare'
+import { buildingSky } from './constellations'
 
 const ALL_GRADES = '__all__'
 
@@ -159,15 +162,19 @@ export function SchoolView() {
     return (
       <div className="page stack">
         {head}
-        <Notice tone="caution">
-          <strong>This building's rollups are not part of this account's view.</strong> The
-          account is scoped to {building.label} and holds named students, attendance, and
-          health detail — but not aggregate mastery, which is what the building's rates, its
-          comparisons by grade, subject, and teacher, and its classroom index all are. They are
-          absent here rather than empty, which is the same distinction the student profile
-          draws: this account has no claim on them, so the page does not pretend to have
-          checked and found nothing.
-        </Notice>
+        <UnlitSky title="This building's sky is not part of this account's view">
+          <p>
+            The account is scoped to {building.label} and holds named students, attendance,
+            and health detail — but not aggregate mastery, which is what the building's rates,
+            its comparisons by grade, subject, and teacher, and its classroom index all are.
+          </p>
+          <p>
+            The frame is left standing and unlit rather than removed. Absent is not the same
+            as empty, which is the distinction the student profile draws between a dark star
+            and one that was never taught: there is a sky here, and this account has no claim
+            on it. The page does not pretend to have looked and found nothing.
+          </p>
+        </UnlitSky>
       </div>
     )
   }
@@ -220,6 +227,25 @@ export function SchoolView() {
           act on.
         </p>
       </NarrativeBlock>
+
+      {/* The same picture the student profile opens with, one zoom level out: a
+          star is a classroom here rather than a standard. It sits above the ranked
+          tables deliberately — the tables answer "which is lowest", and the sky
+          answers "where is the building dark", which is a different question and
+          usually the one worth acting on first. */}
+      {sectionsLoaded ? (
+        <section className="stack-tight">
+          <div className="section-heading">
+            <h2>The building's sky</h2>
+            <span className="subtle">every classroom, by grade</span>
+          </div>
+          <Constellation
+            groups={buildingSky(sections)}
+            legend={SHARE_LEGEND}
+            legendNote="One star is one classroom. Brightness is the share of standards taught there that students have demonstrated. Open a star to read the classroom."
+          />
+        </section>
+      ) : null}
 
       <section className="card stack-tight">
         <div className="section-heading">
@@ -276,7 +302,7 @@ export function SchoolView() {
               </span>
             </div>
 
-            <div className="row unit-switch" role="group" aria-label="Filter by grade">
+            <div className="filter-row" role="group" aria-label="Filter by grade">
               <button
                 type="button"
                 className="button"
