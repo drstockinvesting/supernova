@@ -349,7 +349,7 @@ export interface ResearchCitation {
     /// cannot drift out of agreement with them. Nothing but "verified" should
     /// reach a stakeholder-facing view without its unverified marker, and only
     /// a signOff produces it.
-    status: "unreviewed" | "stale" | "source_checked" | "revision_required" | "verified" | "withdrawn";
+    status: "unreviewed" | "stale" | "source_checked" | "revision_required" | "verified" | "lapsed" | "withdrawn";
     /// Null means nobody has read the source, which is not the same as the
     /// source being fine.
     sourceCheck: {
@@ -359,6 +359,12 @@ export interface ResearchCitation {
       /// no longer matches the claim, the status is "stale" rather than
       /// whatever the check concluded.
       claimChecked: string;
+      /// The source record as it read when it was checked, rendered as one
+      /// line. Repointing a URL or correcting a title retires the verdict the
+      /// same way rewording the claim does, so a claim cannot be quietly moved
+      /// onto a different document while keeping a signature given for the old
+      /// one.
+      sourceChecked: string;
       /// Who or what did the checking. A review with no reviewer is the state
       /// this library was in for six phases.
       checkedBy: string;
@@ -375,13 +381,24 @@ export interface ResearchCitation {
     } | null;
     /// A named person accepting this claim for stakeholder display, and
     /// accountable for it afterwards. Cannot be produced by a source check
-    /// however thorough. Null on every claim in this library.
+    /// however thorough. Null on every claim in this library. A sign-off
+    /// licenses exactly one thing: the unverified marker is replaced by an
+    /// attribution. It does not license dropping the confidenceNote, which
+    /// states what the research can bear rather than who checked it; it does
+    /// not widen the audience, which applicableRoles decides; and it does not
+    /// cover triggerConditions, which carry no authority from the source.
     signOff: {
       reviewer: string;
       /// Standing to make the judgement, recorded so a sign-off can be weighed
       /// rather than trusted.
       credentials: string;
       signedOn: string;
+      /// When this signature lapses and the unverified marker returns.
+      /// Required: a signature with no horizon is one nobody revisits. The
+      /// signer picks it from the source's shelf life rather than from a house
+      /// constant, because a monograph does not rot and a living webpage is
+      /// revised without notice.
+      reviewBy: string;
       outcome: "accepted" | "withdrawn";
       note?: string;
     } | null;

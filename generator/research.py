@@ -720,7 +720,9 @@ _CITATIONS = [
 
 def _with_review(citations: list[dict]) -> list[dict]:
     for citation in citations:
-        citation["review"] = review_for(citation["id"], citation["claim"])
+        citation["review"] = review_for(
+            citation["id"], citation["claim"], citation["source"]
+        )
     return citations
 
 

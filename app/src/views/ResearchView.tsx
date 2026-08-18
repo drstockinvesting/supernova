@@ -63,6 +63,7 @@ import {
   groupMetrics,
   isUnverified,
   matches,
+  reviewStatusOf,
   sourceDate,
   triggerOf,
   type MetricBag,
@@ -113,7 +114,11 @@ export function ResearchView() {
   // Anything a reader would have to act on: a claim whose check found a problem,
   // one reworded since it was checked, one nobody has read the source for.
   const outstanding =
-    byStatus.revision_required + byStatus.stale + byStatus.unreviewed + byStatus.withdrawn
+    byStatus.revision_required +
+    byStatus.stale +
+    byStatus.lapsed +
+    byStatus.unreviewed +
+    byStatus.withdrawn
   const lastChecked = citations
     .map((citation) => citation.review.sourceCheck?.checkedOn)
     .filter((date): date is string => Boolean(date))
@@ -217,6 +222,7 @@ export function ResearchView() {
 
 const REVIEW_TONES: Record<ReviewStatus, 'strong' | 'neutral' | 'caution' | 'critical'> = {
   verified: 'strong',
+  lapsed: 'caution',
   source_checked: 'neutral',
   revision_required: 'caution',
   stale: 'caution',
@@ -227,6 +233,7 @@ const REVIEW_TONES: Record<ReviewStatus, 'strong' | 'neutral' | 'caution' | 'cri
 const REVIEW_ORDER: ReviewStatus[] = [
   'revision_required',
   'stale',
+  'lapsed',
   'unreviewed',
   'source_checked',
   'verified',
@@ -237,12 +244,13 @@ function tallyReview(citations: ResearchCitation[]): Record<ReviewStatus, number
   const counts: Record<ReviewStatus, number> = {
     unreviewed: 0,
     stale: 0,
+    lapsed: 0,
     source_checked: 0,
     revision_required: 0,
     verified: 0,
     withdrawn: 0,
   }
-  for (const citation of citations) counts[citation.review.status] += 1
+  for (const citation of citations) counts[reviewStatusOf(citation)] += 1
   return counts
 }
 
@@ -322,6 +330,8 @@ function ReviewSummary({
         </table>
       </div>
 
+      <SignOffPolicy />
+
       <p className="prose subtle">
         The last row is a different kind of question from the three above it, and the
         difference is the point. Those three are answered by reading: fetch the source, compare
@@ -336,6 +346,45 @@ function ReviewSummary({
         marker is for.
       </p>
     </section>
+  )
+}
+
+/**
+ * What a sign-off licenses, printed where the claims are.
+ *
+ * Carried as an open question from Phase 5 and decided in Phase 7. It belongs on
+ * this page rather than only in the generator because the audit is the thing a
+ * reader came here to do, and "what would change if somebody signed this" is part
+ * of reading a flag correctly.
+ */
+function SignOffPolicy() {
+  return (
+    <div className="stack-tight">
+      <h3>What signing a claim would license</h3>
+      <p className="prose">
+        One thing: the marker below each claim stops reading <em>source checked</em> and
+        starts reading <em>reviewed</em>, naming who signed it and what standing they had.
+        The marker is replaced rather than removed, because a signed claim and a claim whose
+        marker somebody forgot to render would otherwise look identical — which is the shape
+        of every reporting failure this product has found in itself.
+      </p>
+      <p className="prose subtle">
+        It would not license dropping the note under the claim: that note says what the
+        research can bear, and correlational evidence does not become causal by being read
+        carefully. It would not widen who sees the claim, which is decided by the roles it is
+        tagged for and by the rule that a claim may only fire on a figure the reader could be
+        shown directly. And it would not cover the trigger — signing a claim is agreeing the
+        source says it, not agreeing that the threshold underneath is the right one. Nobody
+        has reviewed the thresholds at all.
+      </p>
+      <p className="prose subtle">
+        A signature is also on a sentence about a document at a time, so all three retire it.
+        Reword the claim or change its source record and the review reads <em>checked, then
+        edited</em>. Every signature carries a date by which it must be renewed, chosen by
+        the person signing rather than by a house rule, and past it the review reads{' '}
+        <em>lapsed</em> and the unverified marker returns.
+      </p>
+    </div>
   )
 }
 
@@ -450,9 +499,11 @@ function CitationCard({
           {citation.source.title}
         </a>{' '}
         · {SOURCE_LABELS[citation.source.sourceType] ?? citation.source.sourceType}
-        {isUnverified(citation) ? (
-          <span className="research-flag">{REVIEW_LABELS[citation.review.status]}</span>
-        ) : null}
+        <span
+          className={isUnverified(citation) ? 'research-flag' : 'research-flag reviewed'}
+        >
+          {REVIEW_LABELS[reviewStatusOf(citation)]}
+        </span>
       </p>
 
       <p className="research-confidence">{citation.confidenceNote}</p>
@@ -536,7 +587,7 @@ function SourceCheck({ citation }: { citation: ResearchCitation }) {
       <p className="subtle">
         Checked {check.checkedOn}.{' '}
         {citation.review.signOff
-          ? `Signed off by ${citation.review.signOff.reviewer}, ${citation.review.signOff.credentials}, on ${citation.review.signOff.signedOn}.`
+          ? `Signed off by ${citation.review.signOff.reviewer}, ${citation.review.signOff.credentials}, on ${citation.review.signOff.signedOn}. Due for review again by ${citation.review.signOff.reviewBy}.`
           : 'Not signed off — a source check is evidence for a reviewer, not a reviewer.'}
       </p>
     </div>

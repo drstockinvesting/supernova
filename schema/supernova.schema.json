@@ -527,19 +527,24 @@
           "required": ["status", "sourceCheck", "signOff"],
           "properties": {
             "status": {
-              "enum": ["unreviewed", "stale", "source_checked", "revision_required", "verified", "withdrawn"],
+              "enum": ["unreviewed", "stale", "source_checked", "revision_required", "verified", "lapsed", "withdrawn"],
               "description": "Derived from sourceCheck and signOff rather than set by hand, so it cannot drift out of agreement with them. Nothing but \"verified\" should reach a stakeholder-facing view without its unverified marker, and only a signOff produces it."
             },
             "sourceCheck": {
               "type": ["object", "null"],
               "description": "Null means nobody has read the source, which is not the same as the source being fine.",
-              "required": ["checkedOn", "checkedBy", "claimChecked", "sourceReachable", "recordAccurate", "support", "finding", "defects"],
+              "required": ["checkedOn", "checkedBy", "claimChecked", "sourceChecked", "sourceReachable", "recordAccurate", "support", "finding", "defects"],
               "properties": {
                 "checkedOn": {"type": "string", "format": "date"},
                 "claimChecked": {
                   "type": "string",
                   "minLength": 1,
                   "description": "The claim sentence as it read when it was checked. A verdict is a verdict about a sentence, so editing the sentence retires it: if this no longer matches the claim, the status is \"stale\" rather than whatever the check concluded."
+                },
+                "sourceChecked": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The source record as it read when it was checked, rendered as one line. Repointing a URL or correcting a title retires the verdict the same way rewording the claim does, so a claim cannot be quietly moved onto a different document while keeping a signature given for the old one."
                 },
                 "checkedBy": {
                   "type": "string",
@@ -558,8 +563,8 @@
             },
             "signOff": {
               "type": ["object", "null"],
-              "description": "A named person accepting this claim for stakeholder display, and accountable for it afterwards. Cannot be produced by a source check however thorough. Null on every claim in this library.",
-              "required": ["reviewer", "credentials", "signedOn", "outcome"],
+              "description": "A named person accepting this claim for stakeholder display, and accountable for it afterwards. Cannot be produced by a source check however thorough. Null on every claim in this library. A sign-off licenses exactly one thing: the unverified marker is replaced by an attribution. It does not license dropping the confidenceNote, which states what the research can bear rather than who checked it; it does not widen the audience, which applicableRoles decides; and it does not cover triggerConditions, which carry no authority from the source.",
+              "required": ["reviewer", "credentials", "signedOn", "reviewBy", "outcome"],
               "properties": {
                 "reviewer": {"type": "string", "minLength": 1},
                 "credentials": {
@@ -568,6 +573,11 @@
                   "description": "Standing to make the judgement, recorded so a sign-off can be weighed rather than trusted."
                 },
                 "signedOn": {"type": "string", "format": "date"},
+                "reviewBy": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "When this signature lapses and the unverified marker returns. Required: a signature with no horizon is one nobody revisits. The signer picks it from the source's shelf life rather than from a house constant, because a monograph does not rot and a living webpage is revised without notice."
+                },
                 "outcome": {"enum": ["accepted", "withdrawn"]},
                 "note": {"type": "string"}
               }

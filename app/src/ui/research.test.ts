@@ -37,6 +37,7 @@ import {
   matches,
   referralsPer100,
   sourceDate,
+  sourceFingerprint,
   selectCitations,
   studentMetrics,
   triggerOf,
@@ -319,27 +320,31 @@ test('the stored review status agrees with the records it is derived from', () =
   for (const entry of LIBRARY) {
     assert.equal(
       entry.review.status,
-      deriveReviewStatus(entry),
+      deriveReviewStatus(entry, entry.review.sourceCheck?.checkedOn ?? NOW),
       `${entry.id}: stored status disagrees with its own review record`,
     )
   }
 })
 
 // A citation carrying whatever review record a case needs.
+const NOW = '2026-08-18'
+
 function reviewed(
   claim: string,
   review: Partial<ResearchCitation['review']>,
   check: Partial<NonNullable<ResearchCitation['review']['sourceCheck']>> = {},
 ): ResearchCitation {
+  const base = citation('cite-x', undefined)
   return {
-    ...citation('cite-x', undefined),
+    ...base,
     claim,
     review: {
       status: 'source_checked',
       sourceCheck: {
-        checkedOn: '2026-08-18',
+        checkedOn: NOW,
         checkedBy: 'a careful reader',
         claimChecked: claim,
+        sourceChecked: sourceFingerprint(base.source),
         sourceReachable: true,
         recordAccurate: true,
         support: 'supported',
@@ -353,6 +358,19 @@ function reviewed(
   }
 }
 
+function signed(claim: string, reviewBy: string): ResearchCitation {
+  return reviewed(claim, {
+    status: 'verified',
+    signOff: {
+      reviewer: 'A. Reviewer',
+      credentials: 'Somebody with standing',
+      signedOn: NOW,
+      reviewBy,
+      outcome: 'accepted',
+    },
+  })
+}
+
 test('a source check cannot verify a claim, however thorough', () => {
   // The load-bearing rule of the review layer. `verified` is reachable only
   // through a named person's sign-off, so a claim whose source checks out
@@ -360,7 +378,7 @@ test('a source check cannot verify a claim, however thorough', () => {
   // ever fails, the marker has stopped meaning anything and the product is
   // asserting educational research on the strength of somebody reading a URL.
   const clean = reviewed('A claim.', {})
-  assert.equal(deriveReviewStatus(clean), 'source_checked')
+  assert.equal(deriveReviewStatus(clean, NOW), 'source_checked')
   assert.ok(isUnverified(clean))
 })
 
@@ -381,7 +399,7 @@ test('a claim added without a review record reports as unreviewed, not as clean'
   // written by hand, indistinguishable from a review that had happened and found
   // nothing wrong. Absence of a check is now its own state.
   const fresh = { ...citation('cite-x', undefined) }
-  assert.equal(deriveReviewStatus(fresh), 'unreviewed')
+  assert.equal(deriveReviewStatus(fresh, NOW), 'unreviewed')
 })
 
 test('a source check that found something wrong reports revision required', () => {
@@ -392,7 +410,7 @@ test('a source check that found something wrong reports revision required', () =
     { support: 'unsupported' as const },
   ]
   for (const check of cases) {
-    assert.equal(deriveReviewStatus(reviewed('A claim.', {}, check)), 'revision_required')
+    assert.equal(deriveReviewStatus(reviewed('A claim.', {}, check), NOW), 'revision_required')
   }
 })
 
@@ -403,27 +421,75 @@ test('editing a claim retires the verdict on it', () => {
   // revisions in this phase would have inherited their own pre-revision
   // findings. `claimChecked` is the enforcement.
   const checked = reviewed('The sentence that was checked.', {})
-  assert.equal(deriveReviewStatus(checked), 'source_checked')
+  assert.equal(deriveReviewStatus(checked, NOW), 'source_checked')
 
   const edited = { ...checked, claim: 'The sentence after somebody edited it.' }
-  assert.equal(deriveReviewStatus(edited), 'stale')
+  assert.equal(deriveReviewStatus(edited, NOW), 'stale')
   assert.ok(isUnverified(edited))
 })
 
 test('editing a claim retires a sign-off on it too', () => {
-  // The only way a signature is revoked without anybody revoking it, and it
+  // One of three ways a signature is revoked without anybody revoking it, and it
   // should be: the signature was on a sentence, and the sentence is gone.
-  const signed = reviewed('The sentence that was signed.', {
-    status: 'verified',
-    signOff: {
-      reviewer: 'A. Reviewer',
-      credentials: 'Somebody with standing',
-      signedOn: '2026-08-18',
-      outcome: 'accepted',
-    },
-  })
-  assert.equal(deriveReviewStatus(signed), 'verified')
-  assert.equal(deriveReviewStatus({ ...signed, claim: 'Reworded.' }), 'stale')
+  const entry = signed('The sentence that was signed.', '2027-08-18')
+  assert.equal(deriveReviewStatus(entry, NOW), 'verified')
+  assert.equal(deriveReviewStatus({ ...entry, claim: 'Reworded.' }, NOW), 'stale')
+})
+
+test('repointing the source retires a sign-off too', () => {
+  // The same hole in a different field. Without this a claim could be moved onto
+  // a different document while keeping a signature given for the old one, which
+  // is worse than rewording it: the sentence a reader sees would not change.
+  const entry = signed('A claim.', '2027-08-18')
+  const moved = {
+    ...entry,
+    source: { ...entry.source, url: 'https://example.invalid/somewhere-else' },
+  }
+  assert.equal(deriveReviewStatus(moved, NOW), 'stale')
+})
+
+test('a sign-off lapses on the horizon its signer chose', () => {
+  // A signature with no expiry is one nobody revisits, and three of these
+  // sources are living webpages revised without notice. Past `reviewBy` the
+  // unverified marker comes back on its own.
+  const entry = signed('A claim.', '2027-08-18')
+  assert.equal(deriveReviewStatus(entry, '2027-08-18'), 'verified')
+  assert.equal(deriveReviewStatus(entry, '2027-08-19'), 'lapsed')
+
+  // And the marker comes back on its own, without a regeneration: the render
+  // path recomputes against today rather than reading the stamped status.
+  const expired = signed('A claim.', '2020-01-01')
+  assert.ok(isUnverified(expired), 'a lapsed sign-off should read as unverified')
+})
+
+test('signing licenses the marker and nothing else', () => {
+  // The Phase 7 decision, as an assertion. A signed claim still carries its
+  // confidence note, still reaches exactly the roles it was tagged for, and
+  // still fires on exactly the trigger it did before — because none of those is
+  // a statement about who checked the source.
+  const before = reviewed('A claim.', {})
+  const after = signed('A claim.', '2027-08-18')
+
+  assert.equal(deriveReviewStatus(after, NOW), 'verified')
+  assert.ok(!isUnverified(after), 'a signed claim should lose the unverified marker')
+
+  assert.equal(after.confidenceNote, before.confidenceNote)
+  assert.ok(after.confidenceNote.length > 0, 'a signed claim still states what it can bear')
+  assert.deepEqual(after.applicableRoles, before.applicableRoles)
+  assert.deepEqual(after.triggerConditions, before.triggerConditions)
+})
+
+test('the source fingerprint agrees with the one the generator wrote', () => {
+  // A contract across two languages, like the metric vocabulary. If these ever
+  // disagree the whole library turns `stale` at once, which is loud rather than
+  // silent and is why the failure is worth pinning here.
+  for (const entry of LIBRARY) {
+    assert.equal(
+      entry.review.sourceCheck?.sourceChecked,
+      sourceFingerprint(entry.source),
+      `${entry.id}: the app and the generator render this source differently`,
+    )
+  }
 })
 
 test('every claim in the shipped library has been checked against its source', () => {

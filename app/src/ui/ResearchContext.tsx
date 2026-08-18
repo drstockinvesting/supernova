@@ -34,6 +34,14 @@
  * second is now marked `revision required` on the page a teacher reads, not only
  * on the audit page an administrator might visit, because that is where the
  * claim is actually doing its work.
+ *
+ * A signed claim keeps a marker too, reading `reviewed` and naming the reviewer
+ * on inspection. Removing it was the obvious alternative and is wrong: a signed
+ * claim and a claim whose marker somebody forgot to render would then look
+ * identical, which is the shape of every reporting failure this product has
+ * found in itself. What signing licenses is this word changing. It does not
+ * license dropping the note below the claim, which is about what the research
+ * can bear and not about who checked it.
  */
 
 import { Link } from 'react-router-dom'
@@ -45,6 +53,7 @@ import {
   REVIEW_LABELS,
   coverageOf,
   isUnverified,
+  reviewStatusOf,
   sourceDate,
   type MetricBag,
 } from './research'
@@ -120,7 +129,14 @@ export function ResearchContext({
  * reader who came to audit rather than to work.
  */
 function whyFlagged(citation: ResearchCitation): string {
-  const check = citation.review.sourceCheck
+  const { signOff, sourceCheck: check } = citation.review
+  const status = reviewStatusOf(citation)
+  if (signOff && status === 'verified') {
+    return `Reviewed by ${signOff.reviewer}, ${signOff.credentials}, on ${signOff.signedOn}. Due for review again by ${signOff.reviewBy}.`
+  }
+  if (signOff && status === 'lapsed') {
+    return `Reviewed by ${signOff.reviewer} on ${signOff.signedOn}, and due for review again by ${signOff.reviewBy}, which has passed.`
+  }
   if (!check) return 'Nobody has read this source.'
   return check.defects.length > 0 ? check.defects.join(' ') : check.finding
 }
@@ -135,11 +151,12 @@ function Claim({ citation }: { citation: ResearchCitation }) {
         <a href={citation.source.url} target="_blank" rel="noreferrer">
           {citation.source.title}
         </a>
-        {isUnverified(citation) ? (
-          <span className="research-flag" title={whyFlagged(citation)}>
-            {REVIEW_LABELS[citation.review.status]}
-          </span>
-        ) : null}
+        <span
+          className={isUnverified(citation) ? 'research-flag' : 'research-flag reviewed'}
+          title={whyFlagged(citation)}
+        >
+          {REVIEW_LABELS[reviewStatusOf(citation)]}
+        </span>
       </p>
     </li>
   )

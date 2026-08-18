@@ -111,6 +111,17 @@ eighteen still carry the unverified marker, waiting for somebody with standing t
 That is the correct state for them to be in, and there is a test asserting a perfectly checked
 claim is still unverified.
 
+**What signing would license was decided too, and narrowly: the marker, and nothing else.** A
+signed claim stops reading *source checked* and starts reading *reviewed*, naming who signed it
+and what standing they had — replaced rather than removed, because a signed claim and a claim
+whose marker somebody forgot to render must not look the same. It would not license dropping
+the note beneath the claim, which states what the research can bear and does not become
+provisional because a professor read the source. It would not widen who sees the claim. And it
+never covered the trigger threshold, which carries no authority from any of this research and
+has had no review at all. A signature is void if the claim is reworded or its source record
+changes, and lapses on a date the signer chooses, because a monograph does not rot and a living
+webpage is revised without notice.
+
 Track progress and decisions in [`PROGRESS.md`](PROGRESS.md).
 
 ---

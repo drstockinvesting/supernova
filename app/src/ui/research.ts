@@ -453,11 +453,20 @@ export function exercisableAt(citation: ResearchCitation, scale: 'student' | 'gr
  * that `isUnverified` is written against the sign-off and never against the
  * source check, so a thorough check cannot quietly promote a claim.
  *
- * A check is also a check of a *sentence*. `claimChecked` records the wording the
- * verdict was reached against, so editing a claim retires its verdict rather than
- * carrying it across the edit — `stale`, not `source_checked`, and not `verified`
- * either. That is the one way a sign-off can be revoked without anybody revoking
- * it, and it should be: a signature is on a sentence.
+ * A check is also a check of a *sentence, sourced a particular way, at a
+ * particular time*, and all three can move. `claimChecked` and `sourceChecked`
+ * record the wording and the source record the verdict was reached against, so
+ * editing either retires it — `stale`, not `source_checked`, and not `verified`
+ * either. `reviewBy` retires it on a horizon the signer chose, which is `lapsed`.
+ * Those are the ways a signature is revoked without anybody revoking it, and they
+ * should be: a signature is on a sentence about a document, and it has a shelf
+ * life the signer is best placed to judge.
+ *
+ * What a sign-off licenses is one thing: this marker is replaced by an
+ * attribution. It does not license dropping the `confidenceNote`, which says what
+ * the research can bear rather than who checked it; it does not widen the
+ * audience, which `applicableRoles` decides; and it never covered the trigger,
+ * which carries no authority from the source. `generator/review.py` argues each.
  *
  * The library today: eighteen claims checked against their sources and revised to
  * match them, and no sign-offs at all.
@@ -469,8 +478,31 @@ export const REVIEW_LABELS: Record<ReviewStatus, string> = {
   stale: 'checked, then edited',
   source_checked: 'source checked',
   revision_required: 'revision required',
-  verified: 'verified',
+  verified: 'reviewed',
+  lapsed: 'review lapsed',
   withdrawn: 'withdrawn',
+}
+
+/**
+ * The source record a check or a signature was given for, as one line.
+ *
+ * Must render byte for byte what `fingerprint` in `generator/review.py` renders,
+ * which is why both skip absent fields rather than printing them empty and both
+ * list the fields in this order. The suite asserts the two agree across the
+ * shipped library; without that this is a convention, and a convention that
+ * silently stops matching turns every claim `stale` at once.
+ */
+export function sourceFingerprint(source: ResearchCitation['source']): string {
+  return [
+    source.authorOrOrganization,
+    source.title,
+    source.publicationYear,
+    source.accessedDate,
+    source.url,
+    source.sourceType,
+  ]
+    .filter((field) => field !== undefined && field !== '')
+    .join(' | ')
 }
 
 /**
@@ -481,7 +513,22 @@ export const REVIEW_LABELS: Record<ReviewStatus, string> = {
  * moment this function starts accepting one the marker stops meaning anything.
  */
 export function isUnverified(citation: ResearchCitation): boolean {
-  return citation.review.status !== 'verified'
+  return reviewStatusOf(citation) !== 'verified'
+}
+
+/**
+ * The status the app renders, recomputed rather than read off the record.
+ *
+ * `review.status` in the dataset is stamped when the generator runs, and one
+ * status depends on the date it is asked about: a sign-off past its `reviewBy` is
+ * `lapsed`. Reading the stamped value would keep rendering `reviewed` until
+ * somebody happened to regenerate, which is the opposite of what a horizon is
+ * for. Every render site goes through here; the stored value is for reading the
+ * dataset without running code, and the test suite pins the two to agree as of
+ * the check date.
+ */
+export function reviewStatusOf(citation: ResearchCitation): ReviewStatus {
+  return deriveReviewStatus(citation, today())
 }
 
 /**
@@ -518,13 +565,16 @@ export function isUnchecked(citation: ResearchCitation): boolean {
  * the same shape as the metric vocabulary contract, and for the same reason: the
  * two sides are edited by different people at different times.
  */
-export function deriveReviewStatus(citation: ResearchCitation): ReviewStatus {
-  const { review, claim } = citation
+export function deriveReviewStatus(citation: ResearchCitation, asOf: string): ReviewStatus {
+  const { review, claim, source } = citation
   const check = review.sourceCheck
-  const stale = check !== null && check.claimChecked !== claim
+  const stale =
+    check !== null &&
+    (check.claimChecked !== claim || check.sourceChecked !== sourceFingerprint(source))
 
   if (review.signOff && !stale) {
-    return review.signOff.outcome === 'withdrawn' ? 'withdrawn' : 'verified'
+    if (review.signOff.outcome === 'withdrawn') return 'withdrawn'
+    return asOf > review.signOff.reviewBy ? 'lapsed' : 'verified'
   }
   if (!check) return 'unreviewed'
   if (stale) return 'stale'
@@ -532,4 +582,9 @@ export function deriveReviewStatus(citation: ResearchCitation): ReviewStatus {
     return 'revision_required'
   }
   return 'source_checked'
+}
+
+/** Today, as the ISO date the review layer compares against. */
+export function today(): string {
+  return new Date().toISOString().slice(0, 10)
 }

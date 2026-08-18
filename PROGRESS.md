@@ -15,7 +15,7 @@ rewriting it, so the reasoning behind the build stays legible.
 | **4. Visual design system** | Complete — one constellation at every zoom level | 2026-08-17 |
 | **5. Research context layer** | Complete — the library is a checked contract | 2026-08-17 |
 | **6. The caseload view** | Complete — three roles have a home | 2026-08-18 |
-| **7. The research review** | Sources checked, 16 claims revised — nothing signed off | 2026-08-18 |
+| **7. The research review** | Checked, revised, and the sign-off rule decided | 2026-08-18 |
 
 ---
 
@@ -32,7 +32,9 @@ rewriting it, so the reasoning behind the build stays legible.
 - [x] All 16 claims revised: 13 by correcting the record, 3 by resourcing or restating
 - [x] `publicationYear` optional, `accessedDate` added — a living page has no year
 - [x] A check records the sentence it checked; rewording a claim retires the verdict
-- [x] 9 new tests, 98 total; build clean, lint at the recorded baseline of 11
+- [x] What a sign-off licenses, decided: the marker, and nothing else
+- [x] A signature is void on a reworded claim, a changed source, or a passed `reviewBy`
+- [x] 13 new tests, 102 total; build clean, lint at the recorded baseline of 11
 - [ ] **Nothing is verified.** All 18 are checked and sourced; none is signed
 
 ---
@@ -987,6 +989,40 @@ a source telling you not to do the thing the record did. `source.accessedDate` c
 instead, and both places that print a citation read the date through `sourceDate` rather than
 reaching for a field three sources do not have.
 
+**What a sign-off licenses, decided: the marker, and nothing else.** Carried open since Phase
+5 and answered narrowly on purpose. A signed claim stops reading *source checked* and starts
+reading *reviewed*, naming who signed it and what standing they had. The marker is **replaced
+rather than removed**, because otherwise a signed claim and a claim whose marker somebody
+forgot to render look identical — which is the shape of every reporting failure this product
+has found in itself, from four untagged roles to eighteen unread sources.
+
+Three things it deliberately does not license. **Not the `confidenceNote`:** the note says what
+the research can bear, and correlational evidence does not become causal by being read
+carefully. Treating it as provisional is exactly the error that produced the library's original
+state, where the note carried the qualification the claim should have carried. **Not the
+audience:** coupling review status to who sees a claim would make signing a way to unlock the
+school board, and would sort the board's library by review status rather than by what bears on
+the figures in front of them. **Not the trigger:** signing `cite-behavior-02` is agreeing the
+Center on PBIS says what the claim says, not agreeing that 25 referrals per 100 students is a
+lot. The thresholds need a different review by different people and none has happened.
+
+**And a signature does not last forever, because it is on a sentence about a document at a
+time.** All three move it. Rewording the claim retires it, which `claimChecked` already did.
+Changing the source record retires it too, which `sourceChecked` now does — without that a
+claim could be quietly moved onto a different document while keeping a signature given for the
+old one, and unlike a reworded claim the sentence a reader sees would not change. And every
+signature carries a required `reviewBy`, chosen by the signer rather than by a house constant,
+because a 2013 cognitive-psychology monograph does not rot and three of these sources are
+living webpages revised without notice.
+
+`lapsed` is the first status that depends on when it is asked, which forced one real change:
+`review.status` in the dataset is stamped at generation, and every render site now recomputes
+through `reviewStatusOf` against today. Reading the stored value would keep printing *reviewed*
+until somebody happened to regenerate, which is the opposite of what a horizon is for. The
+stored value remains so the dataset can be read without running code, and the contract test
+pins the two to agree as of the check date rather than pretending a lapse cannot happen between
+generations.
+
 ### Defects found while building Phase 7
 
 - **The type emitter silently dropped `| null`.** `render` in `scripts/emit_types.py` checked
@@ -1006,6 +1042,15 @@ reaching for a field three sources do not have.
   keeping its old verdict. That was true about file layout and false about behaviour, and the
   very next commit would have demonstrated it. Found by writing the revisions the module was
   built to make safe.
+- **The same hole existed in the source record and was worse.** `claimChecked` caught a
+  reworded claim; nothing caught a repointed URL or a corrected title, so a claim could be
+  moved onto a different document while keeping the verdict — and unlike a reworded claim,
+  nothing a reader sees would change. Found by asking what else a signature is *about*.
+- **`textwrap.wrap` is lossy, and the fingerprint is a string that has to survive
+  reassembly.** Wrapping the transcribed source record broke a URL across lines with a space
+  inserted at the hyphen, and collapsed the double space around an empty `publicationYear`.
+  Both produced a fingerprint that would never match. The literals are now one field per line,
+  which is lossless and shows in a diff which field moved.
 
 ---
 
@@ -1193,15 +1238,13 @@ Raised during Phase 4:
 Raised during Phase 5:
 
 - ~~**Nothing has been verified, and the phase made that more visible rather than less.**~~
-  **Half resolved in Phase 7**, and the half that moved is not the half anybody expected. The
-  sources have now all been checked and the results are recorded per claim; 16 of the 18 need
-  revision before a reviewer could sign them, and 2 are clean and waiting. The first of the
-  two questions under it is answered: `verified` is reachable only through a `signOff` naming
-  a person and their standing, because a source check is careful reading and a sign-off is
-  accountability, and no amount of the first is the second. **The second question is still
-  open** — what a sign-off licenses. Presumably dropping the marker; not obviously showing the
-  claim to a school board, dropping the hedge, or surviving the source being superseded. The
-  hedge is still doing real work and nothing has decided when it may stop.
+  **Resolved in Phase 7 as far as it can be without a reviewer.** All 18 sources were checked,
+  16 claims were revised to what their sources establish, and both questions underneath are
+  now answered. Who may move a claim to `verified`: only a `signOff` naming a person and their
+  standing, because a source check is careful reading and a sign-off is accountability, and no
+  amount of the first is the second. What that flag licenses: the marker, and nothing else —
+  the hedge stays, the audience stays, the threshold was never covered. What remains is a
+  qualified person actually signing something, which is not a coding task.
 - **A triggered citation discloses the figure that triggered it.** The student bag is now
   gated on the viewer's permissions for exactly this reason, but the same property holds at
   group scale and is not gated there: a nurse's building page shows a chronic-absence claim
@@ -1311,11 +1354,15 @@ Raised during Phase 7:
 - ~~**A living webpage cannot be cited to a year.**~~ **Resolved** — `publicationYear` is
   optional, `accessedDate` exists, and `sourceDate` is the single place a citation's date is
   rendered.
-- **What a sign-off licenses is undecided, and now blocks all eighteen claims rather than
-  two.** Every claim is checked and sourced. Somebody could sign one tomorrow and nothing says
-  what would change: whether the marker comes off, whether the `confidenceNote` may be dropped,
-  whether a signed claim may go in front of the board, or what happens when a source is
-  superseded. This is the phase's remaining work and it is not a coding task.
+- ~~**What a sign-off licenses is undecided.**~~ **Decided**, and deliberately narrowly: a
+  sign-off replaces the unverified marker with an attribution and licenses nothing else. It
+  does not license dropping the `confidenceNote`, which states what the research can bear
+  rather than who checked it; it does not widen the audience, which `applicableRoles` and the
+  disclosure rule decide; and it never covered the trigger threshold, which carries no
+  authority from the source. It is void if the claim is reworded, void if the source record
+  changes, and lapses on a horizon the signer chooses. Argued in `generator/review.py`,
+  enforced in `deriveReviewStatus`, and printed at `/research` under *what signing a claim
+  would license*.
 - **A recheck is cheap to skip and nothing schedules one.** `claimChecked` catches a claim
   edited without a recheck. It cannot catch a *source* that changed underneath a claim nobody
   edited, and three of these sources are living pages whose access date is the only record that
@@ -1378,9 +1425,13 @@ prototype and a product asserting educational research to a school board** — t
 after Phase 7 is that a reviewer signing one is agreeing with a specific written argument
 rather than approving a sentence they have no way to check.
 
-**What a sign-off licenses is the one thing this phase did not settle**, and it now blocks
-eighteen claims rather than the two it blocked before the revisions. That question is not a
-coding task.
+**What a sign-off licenses is now decided: the marker, and nothing else.** A signed claim
+reads *reviewed* instead of *source checked* and names who signed it. The `confidenceNote`
+stays — it says what the research can bear, not who checked it. The audience stays. The trigger
+threshold was never covered and still has had no review of any kind. A signature is void if the
+claim is reworded or its source record changes, and lapses on a horizon the signer picks. All
+of which leaves exactly one thing outstanding, and it is the one thing that was never a coding
+task: **somebody qualified has to actually sign something.**
 
 Six things about the code that are easy to get wrong:
 
@@ -1412,11 +1463,19 @@ Six things about the code that are easy to get wrong:
   `ui/research.ts` recomputes the status from them. Widening `isUnverified` to accept a
   checked-but-unsigned claim would take one word and would quietly turn "somebody read the
   URL" into "the product asserts this."
-- **Reword a claim and you retire the verdict on it.** A check records `claimChecked`, the
-  sentence it was reached against, and a claim that no longer matches reads `stale` — including
-  one that had been signed, because a signature is on a sentence. Editing a claim therefore
-  means rechecking it, and the suite fails if the shipped library holds a claim reworded since
-  its check.
+- **Reword a claim or repoint its source and you retire the verdict on it.** A check records
+  `claimChecked` and `sourceChecked`, the sentence and the source record it was reached
+  against, and anything that no longer matches reads `stale` — including a claim that had been
+  signed, because a signature is on a sentence about a document. Editing either means
+  rechecking, and the suite fails if the shipped library holds one that drifted.
+- **Never read `review.status` to render.** Go through `reviewStatusOf`, which recomputes
+  against today. A sign-off past its `reviewBy` is `lapsed`, and the stored status was stamped
+  whenever the generator last ran — trusting it would print `reviewed` on a review that expired
+  eight months ago.
+- **A sign-off licenses the marker and nothing else.** Not the `confidenceNote`, not the
+  audience, not the trigger threshold. There is a test asserting a signed claim keeps its note,
+  its roles, and its trigger unchanged, because each of those would be a tempting and separate
+  mistake.
 - **Never hand the research layer a figure the viewer cannot be shown.** A claim appears
   exactly when a metric crosses a threshold, so its presence publishes that the threshold was
   crossed. `StudentView` builds its bag from `canSeeBehavior` and friends rather than from the
@@ -1439,7 +1498,7 @@ npm --prefix app run build && npm --prefix app test && npm --prefix app run lint
 ```
 
 `test` is `node --test` over `src/**/*.test.ts`, using Node's own type stripping — there is
-no test framework and nothing to install. 98 tests, and everything covered is covered for
+no test framework and nothing to install. 102 tests, and everything covered is covered for
 the same reason: its failures are invisible on screen. A guard that wrongly allows renders
 a page indistinguishable from one the viewer was entitled to; a suppression rule that never
 fires looks identical to one that works; a sky lit on the wrong scale is still a sky, and

@@ -479,6 +479,26 @@ that matters. The rest was reading, and reading is not a signature. The revision
 the same pass that found the problems, which is a check marking its own work and is a reason
 for a reviewer to open the sources rather than to take this document's word for it.
 
-The three questions at the top of this section are still open, and the second one is now the
-binding constraint: **what a sign-off licenses** has never been decided, and eighteen claims are
-now waiting on the answer rather than two.
+Of the three questions at the top of this section, two are now answered.
+
+**What a sign-off licenses** is decided, and narrowly: the unverified marker is replaced by an
+attribution naming the reviewer and their standing, and nothing else changes. Not the
+`confidenceNote`, which says what the research can bear rather than who checked it —
+correlational evidence does not become causal by being read carefully, and treating that note
+as provisional is the error that produced this library's original state. Not the audience,
+which `applicableRoles` and the disclosure rule decide; coupling the two would make signing a
+way to unlock the school board. Not the trigger threshold, which carries no authority from any
+source and has had no review of any kind. A signature is void if the claim is reworded or its
+source record changes, and lapses on a date the signer picks, because the right horizon differs
+between a 2013 monograph and a webpage revised without notice.
+
+**Citing a living webpage to a year** is fixed: `publicationYear` is optional and
+`accessedDate` exists.
+
+What is still open is the third: **ten claims overstated their sources under a test nobody had
+applied**, and the test — *does the source establish the claim sentence, read alone* — is now
+applied by exactly one pass, which also wrote the revisions. That is the reason to read the
+sources rather than this document.
+
+And one thing no part of this touches: **nobody has signed anything.** Every mechanism above
+describes what would happen if they did.

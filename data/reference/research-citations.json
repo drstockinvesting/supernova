@@ -24,6 +24,7 @@
           "defects": [],
           "finding": "Reworded and rechecked. The source says chronic absence can translate into difficulty learning to read by third grade and into not graduating, which is now what the claim says. The intensifier the source does not use is gone, and the page is cited to an access date because it carries no publication year.",
           "recordAccurate": true,
+          "sourceChecked": "Attendance Works | Chronic Absence: The Problem | 2026-08-18 | https://www.attendanceworks.org/chronic-absence/the-problem/ | research_organization",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -68,6 +69,7 @@
           "defects": [],
           "finding": "Resourced. The dead ed.gov data story is replaced by Keppens 2023, which measured 62,841 secondary students and found that unexcused absence early and late in the school year is more strongly associated with lower end-of-year results. The claim now states that finding rather than the key-instruction-day mechanism nothing was ever found to support.",
           "recordAccurate": true,
+          "sourceChecked": "Keppens, G. | School Absenteeism and Academic Achievement: Does the Timing of the Absence Matter? | 2023 | https://doi.org/10.1016/j.learninstruc.2023.101769 | peer_reviewed",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -109,6 +111,7 @@
           "defects": [],
           "finding": "Reworded to the study the report actually is: a comparison of attendance against national assessment scores across states and 21 large urban districts. The growth language and the matched-schools language are gone, and the authors are credited in the order the report credits them.",
           "recordAccurate": true,
+          "sourceChecked": "Ginsburg, A., Chang, H., & Jordan, P. | Absences Add Up: How School Attendance Influences Student Success | 2014 | https://www.attendanceworks.org/absences-add-up/ | research_organization",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -153,6 +156,7 @@
           "defects": [],
           "finding": "Unchanged and still supported: the arithmetic half is not in dispute and the outcome half is the source's central argument. The invented publication year is replaced by an access date.",
           "recordAccurate": true,
+          "sourceChecked": "Attendance Works | Chronic Absence: The Problem | 2026-08-18 | https://www.attendanceworks.org/chronic-absence/the-problem/ | research_organization",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -195,6 +199,7 @@
           "defects": [],
           "finding": "Unchanged and still supported as framed. The note already said this is a statement about how averages behave, illustrated by the source rather than established by it. Author order corrected.",
           "recordAccurate": true,
+          "sourceChecked": "Ginsburg, A., Chang, H., & Jordan, P. | Absences Add Up: How School Attendance Influences Student Success | 2014 | https://www.attendanceworks.org/absences-add-up/ | research_organization",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -237,6 +242,7 @@
           "defects": [],
           "finding": "Reworded to Basch's own seven: uncorrected vision, asthma, inattention and hyperactivity, aggression and violence, teen pregnancy, physical inactivity and skipped breakfast. Dental problems, which are not among them, are gone, and so is the ranking of causes of absence the paper does not make.",
           "recordAccurate": true,
+          "sourceChecked": "Basch, C. E. | Healthier Students Are Better Learners: A Missing Link in School Reforms to Close the Achievement Gap | 2011 | https://doi.org/10.1111/j.1746-1561.2011.00632.x | peer_reviewed",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -279,6 +285,7 @@
           "defects": [],
           "finding": "Reworded to what the task force concluded, that the available data tend to contradict the assumptions behind zero tolerance and do not show improved safety or academic outcomes. The dropout clause, which is well supported elsewhere and is not what this report is about, is gone. Full title restored.",
           "recordAccurate": true,
+          "sourceChecked": "American Psychological Association Zero Tolerance Task Force | Are Zero Tolerance Policies Effective in the Schools? An Evidentiary Review and Recommendations | 2008 | https://www.apa.org/pubs/reports/zero-tolerance | peer_reviewed",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -321,6 +328,7 @@
           "defects": [],
           "finding": "Retitled to the page that exists, What is PBIS?, and cited to an access date because the site's own citation guidance leaves the year blank. The claim now says what the page says, attributed as the framework reporting on itself, which the note now states plainly.",
           "recordAccurate": true,
+          "sourceChecked": "Center on PBIS, US Department of Education | What is PBIS? | 2026-08-18 | https://www.pbis.org/pbis/what-is-pbis | research_organization",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -363,6 +371,7 @@
           "defects": [],
           "finding": "Claim unchanged and supported. The source type is corrected: this is a narrative synthesis of 51 studies by a research organization, not a statistical meta-analysis.",
           "recordAccurate": true,
+          "sourceChecked": "Henderson, A. T., & Mapp, K. L. | A New Wave of Evidence: The Impact of School, Family, and Community Connections on Student Achievement | 2002 | https://sedl.org/connections/resources/evidence.pdf | research_organization",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -404,6 +413,7 @@
           "defects": [],
           "finding": "Claim unchanged and fully supported. The synthesis found the correlation much stronger for secondary students in grades 7 through 12 than for elementary students. The published title's date range is restored.",
           "recordAccurate": true,
+          "sourceChecked": "Cooper, H., Robinson, J. C., & Patall, E. A. | Does Homework Improve Academic Achievement? A Synthesis of Research, 1987-2003 | 2006 | https://doi.org/10.3102/00346543076001001 | meta_analysis",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -445,6 +455,7 @@
           "defects": [],
           "finding": "Supported, and the record was already exact. Practice testing and distributed practice are the two techniques the monograph rates high utility; rereading and highlighting are among the low-utility techniques it singles out because students rely on them so heavily. Unchanged in Phase 7.",
           "recordAccurate": true,
+          "sourceChecked": "Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T. | Improving Students' Learning With Effective Learning Techniques: Promising Directions From Cognitive and Educational Psychology | 2013 | https://doi.org/10.1177/1529100612453266 | peer_reviewed",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -486,6 +497,7 @@
           "defects": [],
           "finding": "Supported and correctly hedged, and the record was already exact. The note carries the caveat that this literature's effect sizes have been disputed, and the claim avoids citing a number, which is what that caveat requires. Unchanged in Phase 7.",
           "recordAccurate": true,
+          "sourceChecked": "Black, P., & Wiliam, D. | Assessment and Classroom Learning | 1998 | https://doi.org/10.1080/0969595980050102 | peer_reviewed",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -529,6 +541,7 @@
           "defects": [],
           "finding": "Repointed at ERIC accession ED500486, which survives a department reorganisation as the ed.gov path did not. The claim is now the panel's Critical Foundations for Algebra, stated as the mathematics finding it is; the compounding clause the panel never made is gone.",
           "recordAccurate": true,
+          "sourceChecked": "National Mathematics Advisory Panel | Foundations for Success: The Final Report | 2008 | https://files.eric.ed.gov/fulltext/ED500486.pdf | government_report",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -572,6 +585,7 @@
           "defects": [],
           "finding": "Source type corrected to other: a professional standard agreed by three associations is not peer-reviewed research. On reachability, the URL is the document's official home and the 2014 edition is a book that is not free anywhere, which is the right citation target for a book rather than a broken link. A reviewer who disagrees should say so, and should ask for a chapter and standard number besides.",
           "recordAccurate": true,
+          "sourceChecked": "American Educational Research Association, American Psychological Association, & National Council on Measurement in Education | Standards for Educational and Psychological Testing | 2014 | https://www.testingstandards.net/ | other",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -613,6 +627,7 @@
           "defects": [],
           "finding": "Reworded to what Rivkin, Hanushek and Kain report: teacher effects on reading and mathematics achievement are large, and little of the variation is explained by observable characteristics such as degrees or experience. The within-school against between-school comparison, which is their identification strategy and not a result they publish, is gone.",
           "recordAccurate": true,
+          "sourceChecked": "Rivkin, S. G., Hanushek, E. A., & Kain, J. F. | Teachers, Schools, and Academic Achievement | 2005 | https://doi.org/10.1111/j.1468-0262.2005.00584.x | peer_reviewed",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -654,6 +669,7 @@
           "defects": [],
           "finding": "Reworded to the report's own conclusion: allocated time and engaged time are not the same, and scheduled time alone has little relationship to achievement. The claim no longer asserts the opposite of the note beneath it.",
           "recordAccurate": true,
+          "sourceChecked": "Aronson, J., Zimmerman, J., & Carlos, L. | Improving Student Achievement by Extending School: Is It Just a Matter of Time? | 1999 | https://files.eric.ed.gov/fulltext/ED435127.pdf | research_organization",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -696,6 +712,7 @@
           "defects": [],
           "finding": "Reworded as the legal requirement it is. Section 1412(a)(5) obliges education with children who are not disabled to the maximum extent appropriate; it makes no claim about outcomes, because a statute contains no evidence. Cited to the 2004 reauthorisation, a date somebody can check.",
           "recordAccurate": true,
+          "sourceChecked": "US Department of Education, Office of Special Education Programs | Individuals with Disabilities Education Act, 20 U.S.C. 1412(a)(5): Least Restrictive Environment | 2004 | https://sites.ed.gov/idea/statute-chapter-33/subchapter-ii/1412/a/5 | government_report",
           "sourceReachable": true,
           "support": "supported"
         },
@@ -740,6 +757,7 @@
           "defects": [],
           "finding": "Retitled to the report that exists and reworded to the finding it reports, that students changing schools frequently show lower achievement and that high-mobility schools struggle to meet their needs. The recovery clause, which the GAO does not establish, is gone.",
           "recordAccurate": true,
+          "sourceChecked": "US Government Accountability Office | K-12 Education: Many Challenges Arise in Educating Students Who Change Schools Frequently | 2010 | https://www.gao.gov/products/gao-11-40 | government_report",
           "sourceReachable": true,
           "support": "supported"
         },

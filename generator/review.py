@@ -72,6 +72,75 @@ was reading, and reading does not sign anything.
 
 The full findings, with the sources consulted and what each decision was, are in
 `docs/supernova-research-review.md`.
+
+-------------------------------------------------------------------------------
+What a sign-off licenses
+-------------------------------------------------------------------------------
+
+Carried open from Phase 5, and left open through the revisions because it blocks
+nothing until somebody wants to sign. Decided here.
+
+**A sign-off licenses exactly one thing: the claim stops being marked unverified,
+and is marked with who reviewed it instead.** That is the whole of it, and the
+narrowness is the decision rather than an omission.
+
+The marker is *replaced*, not removed. An unsigned claim reads `source checked`;
+a signed one reads `reviewed`, and names the reviewer and their standing on
+inspection. Silence was available and is wrong for the reason this project keeps
+rediscovering: a signed claim and a claim whose marker somebody forgot to render
+would look identical, which is the failure that hid four untagged roles for four
+phases and eighteen unread sources for six. A protection that never announces
+itself is not thereby present.
+
+Three things a sign-off explicitly does **not** license.
+
+**It does not license dropping the `confidenceNote`.** The note is not a hedge
+about review status; it is a statement about what the research can bear. "Association,
+not causation" does not stop being true because a professor agrees the claim is
+well sourced, and correlational evidence does not become causal by being read
+carefully. Treating the note as provisional is the exact error that produced this
+library's original state, where the note carried the qualification the claim
+should have carried. A verified claim renders its note, and there is a test.
+
+**It does not license widening the audience.** Who sees a claim is decided by
+`applicableRoles` and by the rule that a claim may only trigger on a figure the
+viewer could be shown directly. Coupling audience to review status would make
+signing a way to unlock the school board, which is an incentive nobody should be
+handed, and would sort the board's library by review status rather than by what
+bears on the figures in front of them.
+
+**It does not cover the trigger.** `triggerConditions` carries no authority from
+the source and never did -- that is stated at the top of `research.py` and printed
+on `/research`. Signing `cite-behavior-02` is agreeing that the Center on PBIS
+says what the claim says. It is not agreeing that 25 referrals per 100 students is
+a lot. The thresholds need a different review by different people, and none has
+happened.
+
+-------------------------------------------------------------------------------
+And it does not last forever
+-------------------------------------------------------------------------------
+
+A signature is on a sentence, sourced a particular way, at a particular time. All
+three can move, so all three void it:
+
+1. **Reword the claim** and the sign-off is `stale`. Already enforced through
+   `claimChecked`.
+2. **Change the source record** -- repoint the URL, correct the title, change the
+   year -- and the sign-off is `stale` too. `sourceChecked` fingerprints the
+   record the reviewer was looking at. Without it a claim could be quietly moved
+   onto a different document while keeping a signature given for the old one,
+   which is the same hole as the first in a different field.
+3. **Pass `reviewBy`** and the sign-off is `lapsed`, and the unverified marker
+   comes back. The signer chooses that horizon and it is required, because a
+   signature with no expiry is one nobody ever revisits. The right horizon is not
+   a constant: a 2013 cognitive-psychology monograph does not rot, and three of
+   these sources are living webpages that are revised without notice.
+
+`lapsed` is the one status that depends on the date it is asked about, so
+`statusOf` takes `as_of`. The generator stamps the status as of generation and the
+app recomputes it against today, which means the two legitimately disagree once a
+review lapses. The contract test pins the agreement to the generation date rather
+than pretending that cannot happen.
 """
 
 from __future__ import annotations
@@ -97,9 +166,43 @@ SOURCE_CHECK_DATE = "2026-08-18"
 SUPPORT_VERDICTS = ("supported", "partial", "unsupported")
 
 
+# The source record a reviewer was looking at, as one readable line.
+#
+# Written out in each check below rather than computed from the citation, which
+# would make it agree with itself always and catch nothing. It is a transcription,
+# the same as `claimChecked`: what the checker believed the source to be. The app
+# recomputes it from the shipped citation and compares, so a record edited without
+# a recheck reads `stale`.
+#
+# Readable rather than hashed, because somebody diffing this file should be able
+# to see which field moved.
+_FINGERPRINT_FIELDS = (
+    "authorOrOrganization",
+    "title",
+    "publicationYear",
+    "accessedDate",
+    "url",
+    "sourceType",
+)
+_FINGERPRINT_SEPARATOR = " | "
+
+
+def fingerprint(source: dict) -> str:
+    """A stable rendering of the source record a check or signature was given for.
+
+    Absent fields are skipped rather than rendered empty. Three of these sources
+    carry no `publicationYear`, and a blank between two separators is the kind of
+    whitespace that does not survive being reflowed by hand.
+    """
+    return _FINGERPRINT_SEPARATOR.join(
+        str(source[field]) for field in _FINGERPRINT_FIELDS if source.get(field)
+    )
+
+
 def _check(
     *,
     claim: str,
+    source: str,
     source_reachable: bool,
     record_accurate: bool,
     support: str,
@@ -116,6 +219,10 @@ def _check(
         # module's docstring claimed that separation prevented exactly that and
         # nothing enforced it until the first round of revisions was written.
         "claimChecked": claim,
+        # The source record as it read when it was checked. Repoint the URL or
+        # correct the title and the verdict is about a different document, which
+        # is `stale` for the same reason rewording the claim is.
+        "sourceChecked": source,
         # Does the URL reach the document the record names?
         "sourceReachable": source_reachable,
         # Are author, title, year and source type right?
@@ -136,6 +243,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "Students who miss 10 percent or more of the school year are less "
             "likely to read proficiently and to graduate on time."
         ),
+        source=(
+            "Attendance Works | "
+            "Chronic Absence: The Problem | "
+            "2026-08-18 | "
+            "https://www.attendanceworks.org/chronic-absence/the-problem/ | "
+            "research_organization"
+        ),
         source_reachable=True,
         record_accurate=True,
         support="supported",
@@ -155,6 +269,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "and late in the year tracks more strongly with lower end-of-year "
             "results than the same number of days missed in between."
         ),
+        source=(
+            "Keppens, G. | "
+            "School Absenteeism and Academic Achievement: Does the Timing of the Absence Matter? | "
+            "2023 | "
+            "https://doi.org/10.1016/j.learninstruc.2023.101769 | "
+            "peer_reviewed"
+        ),
         source_reachable=True,
         record_accurate=True,
         support="supported",
@@ -172,6 +293,13 @@ SOURCE_CHECKS: dict[str, dict] = {
         claim=(
             "Across states and large urban districts, higher student attendance "
             "goes with higher scores on the national assessment."
+        ),
+        source=(
+            "Ginsburg, A., Chang, H., & Jordan, P. | "
+            "Absences Add Up: How School Attendance Influences Student Success | "
+            "2014 | "
+            "https://www.attendanceworks.org/absences-add-up/ | "
+            "research_organization"
         ),
         source_reachable=True,
         record_accurate=True,
@@ -193,6 +321,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "range while a substantial minority of students are chronically "
             "absent."
         ),
+        source=(
+            "Attendance Works | "
+            "Chronic Absence: The Problem | "
+            "2026-08-18 | "
+            "https://www.attendanceworks.org/chronic-absence/the-problem/ | "
+            "research_organization"
+        ),
         source_reachable=True,
         record_accurate=True,
         support="supported",
@@ -209,6 +344,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "large share of absence being concentrated in relatively few "
             "students, because a small number missing many days moves the "
             "average very little."
+        ),
+        source=(
+            "Ginsburg, A., Chang, H., & Jordan, P. | "
+            "Absences Add Up: How School Attendance Influences Student Success | "
+            "2014 | "
+            "https://www.attendanceworks.org/absences-add-up/ | "
+            "research_organization"
         ),
         source_reachable=True,
         record_accurate=True,
@@ -228,6 +370,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "inattention and hyperactivity, aggression and violence, teen "
             "pregnancy, physical inactivity, and skipped breakfast."
         ),
+        source=(
+            "Basch, C. E. | "
+            "Healthier Students Are Better Learners: A Missing Link in School Reforms to Close the Achievement Gap | "
+            "2011 | "
+            "https://doi.org/10.1111/j.1746-1561.2011.00632.x | "
+            "peer_reviewed"
+        ),
         source_reachable=True,
         record_accurate=True,
         support="supported",
@@ -245,6 +394,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "Exclusionary discipline removes students from instruction, and the "
             "available evidence does not show that zero tolerance approaches "
             "improve school safety or academic outcomes."
+        ),
+        source=(
+            "American Psychological Association Zero Tolerance Task Force | "
+            "Are Zero Tolerance Policies Effective in the Schools? An Evidentiary Review and Recommendations | "
+            "2008 | "
+            "https://www.apa.org/pubs/reports/zero-tolerance | "
+            "peer_reviewed"
         ),
         source_reachable=True,
         record_accurate=True,
@@ -264,6 +420,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "and supports well report reduced use of exclusionary discipline "
             "and improved school climate."
         ),
+        source=(
+            "Center on PBIS, US Department of Education | "
+            "What is PBIS? | "
+            "2026-08-18 | "
+            "https://www.pbis.org/pbis/what-is-pbis | "
+            "research_organization"
+        ),
         source_reachable=True,
         record_accurate=True,
         support="supported",
@@ -282,6 +445,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "higher achievement, better attendance, and improved social "
             "outcomes across income levels and backgrounds."
         ),
+        source=(
+            "Henderson, A. T., & Mapp, K. L. | "
+            "A New Wave of Evidence: The Impact of School, Family, and Community Connections on Student Achievement | "
+            "2002 | "
+            "https://sedl.org/connections/resources/evidence.pdf | "
+            "research_organization"
+        ),
         source_reachable=True,
         record_accurate=True,
         support="supported",
@@ -296,6 +466,13 @@ SOURCE_CHECKS: dict[str, dict] = {
         claim=(
             "Homework completion correlates with achievement more strongly at "
             "secondary than at elementary level."
+        ),
+        source=(
+            "Cooper, H., Robinson, J. C., & Patall, E. A. | "
+            "Does Homework Improve Academic Achievement? A Synthesis of Research, 1987-2003 | "
+            "2006 | "
+            "https://doi.org/10.3102/00346543076001001 | "
+            "meta_analysis"
         ),
         source_reachable=True,
         record_accurate=True,
@@ -313,6 +490,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "Practice distributed over time and self-testing are among the "
             "better-supported study techniques across a wide range of subjects "
             "and ages; rereading and highlighting are among the weakest."
+        ),
+        source=(
+            "Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T. | "
+            "Improving Students' Learning With Effective Learning Techniques: Promising Directions From Cognitive and Educational Psychology | "
+            "2013 | "
+            "https://doi.org/10.1177/1529100612453266 | "
+            "peer_reviewed"
         ),
         source_reachable=True,
         record_accurate=True,
@@ -332,6 +516,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "the more effective instructional practices for improving "
             "achievement."
         ),
+        source=(
+            "Black, P., & Wiliam, D. | "
+            "Assessment and Classroom Learning | "
+            "1998 | "
+            "https://doi.org/10.1080/0969595980050102 | "
+            "peer_reviewed"
+        ),
         source_reachable=True,
         record_accurate=True,
         support="supported",
@@ -348,6 +539,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "In mathematics, proficiency with whole numbers, fractions, and "
             "particular aspects of geometry and measurement is identified as "
             "the critical foundation for success in algebra."
+        ),
+        source=(
+            "National Mathematics Advisory Panel | "
+            "Foundations for Success: The Final Report | "
+            "2008 | "
+            "https://files.eric.ed.gov/fulltext/ED500486.pdf | "
+            "government_report"
         ),
         source_reachable=True,
         record_accurate=True,
@@ -367,6 +565,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "as the evidence documented to support it; documentation of that "
             "evidence is treated as part of the judgement rather than as a "
             "record-keeping afterthought."
+        ),
+        source=(
+            "American Educational Research Association, American Psychological Association, & National Council on Measurement in Education | "
+            "Standards for Educational and Psychological Testing | "
+            "2014 | "
+            "https://www.testingstandards.net/ | "
+            "other"
         ),
         source_reachable=True,
         record_accurate=True,
@@ -389,6 +594,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "explained by observable characteristics such as degrees or years "
             "of experience."
         ),
+        source=(
+            "Rivkin, S. G., Hanushek, E. A., & Kain, J. F. | "
+            "Teachers, Schools, and Academic Achievement | "
+            "2005 | "
+            "https://doi.org/10.1111/j.1468-0262.2005.00584.x | "
+            "peer_reviewed"
+        ),
         source_reachable=True,
         record_accurate=True,
         support="supported",
@@ -407,6 +619,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "Time allocated for instruction and time students spend engaged in "
             "learning are not the same thing, and the amount of time scheduled "
             "has little relationship to achievement on its own."
+        ),
+        source=(
+            "Aronson, J., Zimmerman, J., & Carlos, L. | "
+            "Improving Student Achievement by Extending School: Is It Just a Matter of Time? | "
+            "1999 | "
+            "https://files.eric.ed.gov/fulltext/ED435127.pdf | "
+            "research_organization"
         ),
         source_reachable=True,
         record_accurate=True,
@@ -427,6 +646,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "only where education there with supplementary aids and services "
             "cannot be achieved satisfactorily."
         ),
+        source=(
+            "US Department of Education, Office of Special Education Programs | "
+            "Individuals with Disabilities Education Act, 20 U.S.C. 1412(a)(5): Least Restrictive Environment | "
+            "2004 | "
+            "https://sites.ed.gov/idea/statute-chapter-33/subchapter-ii/1412/a/5 | "
+            "government_report"
+        ),
         source_reachable=True,
         record_accurate=True,
         support="supported",
@@ -445,6 +671,13 @@ SOURCE_CHECKS: dict[str, dict] = {
             "schools serving high-mobility populations face particular "
             "difficulty meeting their needs."
         ),
+        source=(
+            "US Government Accountability Office | "
+            "K-12 Education: Many Challenges Arise in Educating Students Who Change Schools Frequently | "
+            "2010 | "
+            "https://www.gao.gov/products/gao-11-40 | "
+            "government_report"
+        ),
         source_reachable=True,
         record_accurate=True,
         support="supported",
@@ -461,29 +694,53 @@ SOURCE_CHECKS: dict[str, dict] = {
 
 # Sign-offs, keyed by citation id. Empty, and that is the finding.
 #
-# A sign-off is `{"reviewer", "credentials", "signedOn", "outcome", "note"}` where
-# outcome is "accepted" or "withdrawn". Nothing may be written here on the
-# strength of a source check, however thorough -- see the module docstring.
+# A sign-off is:
+#
+#   {
+#       "reviewer":    who signed it,
+#       "credentials": their standing to, recorded so a signature can be weighed
+#                      rather than trusted,
+#       "signedOn":    the date,
+#       "reviewBy":    when this signature lapses. Required. The signer picks it
+#                      from the source's shelf life, not from a house constant.
+#       "outcome":     "accepted" or "withdrawn",
+#       "note":        optional, and the place to say what they were unsure about.
+#   }
+#
+# Nothing may be written here on the strength of a source check, however thorough
+# -- see the module docstring, which also sets out what signing does and does not
+# license. In short: the unverified marker is replaced by an attribution, and
+# nothing else changes. The confidenceNote stays, the audience stays, and the
+# trigger threshold was never covered.
 SIGN_OFFS: dict[str, dict] = {}
 
-
-def statusOf(citation_id: str, claim: str) -> str:  # noqa: N802 - matches the field
-    """Derive review status from the two records rather than storing a third.
+def statusOf(  # noqa: N802 - matches the emitted field
+    citation_id: str, claim: str, source: dict, as_of: str
+) -> str:
+    """Derive review status from the records rather than storing a third field.
 
     Stored alongside them at emit time so the dataset is readable without this
-    function, and recomputed by the app's test suite so the two cannot drift.
+    function, and recomputed by the app so the two cannot drift.
 
-    Takes the claim because a check is a check of a sentence. Reword the claim
-    and the verdict is about a sentence that no longer exists, which is `stale`
-    and not `source_checked` -- the state the whole module is arranged to make
-    impossible to reach by accident.
+    Takes the claim and the source because a verdict is a verdict about a
+    sentence, sourced a particular way. Edit either and the verdict is about
+    something that no longer exists, which is `stale`.
+
+    Takes `as_of` because a signature has a horizon. Past `reviewBy` it is
+    `lapsed` and the unverified marker comes back. This is the one status that
+    depends on when it is asked, which is why the date is an argument rather than
+    a call to `today()` buried inside.
     """
     check = SOURCE_CHECKS.get(citation_id)
-    is_stale = check is not None and check["claimChecked"] != claim
+    is_stale = check is not None and (
+        check["claimChecked"] != claim or check["sourceChecked"] != fingerprint(source)
+    )
 
     sign_off = SIGN_OFFS.get(citation_id)
     if sign_off is not None and not is_stale:
-        return "withdrawn" if sign_off["outcome"] == "withdrawn" else "verified"
+        if sign_off["outcome"] == "withdrawn":
+            return "withdrawn"
+        return "lapsed" if as_of > sign_off["reviewBy"] else "verified"
 
     if check is None:
         return "unreviewed"
@@ -498,10 +755,16 @@ def statusOf(citation_id: str, claim: str) -> str:  # noqa: N802 - matches the f
     return "source_checked"
 
 
-def review_for(citation_id: str, claim: str) -> dict:
-    """The review record attached to a citation at emit time."""
+def review_for(citation_id: str, claim: str, source: dict) -> dict:
+    """The review record attached to a citation at emit time.
+
+    Status is stamped as of the check date rather than as of the moment the
+    generator runs, so a regeneration is deterministic. A lapse that happens
+    between generations is caught by the app, which asks the same question about
+    today.
+    """
     return {
-        "status": statusOf(citation_id, claim),
+        "status": statusOf(citation_id, claim, source, SOURCE_CHECK_DATE),
         "sourceCheck": SOURCE_CHECKS.get(citation_id),
         "signOff": SIGN_OFFS.get(citation_id),
     }

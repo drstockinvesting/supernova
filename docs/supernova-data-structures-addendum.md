@@ -493,6 +493,7 @@ ResearchCitation
     ├── sourceCheck (null until somebody reads the source)
     │   ├── checkedOn, checkedBy
     │   ├── claimChecked (the sentence the verdict is about)
+    │   ├── sourceChecked (the source record it was given for)
     │   ├── sourceReachable (does the URL reach the document the record names?)
     │   ├── recordAccurate (are author, title, year and source type right?)
     │   ├── support (enum: supported, partial, unsupported)
@@ -500,6 +501,7 @@ ResearchCitation
     │   └── defects (what a reviewer would have to fix or decide)
     └── signOff (null on every claim in this library)
         ├── reviewer, credentials, signedOn
+        ├── reviewBy (required: when this signature lapses)
         ├── outcome (enum: accepted, withdrawn)
         └── note
 ```
@@ -527,11 +529,20 @@ call sites. Three problems with that, all of which showed up the first time anyb
 3. **A hand-written status drifts.** `status` is derived from `sourceCheck` and `signOff` by
    the generator, written into the dataset so it can be read without running code, and
    recomputed by the app's test suite so the two cannot disagree.
-4. **A verdict is a verdict about a sentence.** `claimChecked` records the wording the check
-   was performed against. Reword a claim and its status becomes `stale` rather than carrying
-   the old conclusion across the edit — including a claim that had been signed off, because a
-   signature is on a sentence. This is the only route by which a sign-off is revoked without
-   anybody revoking it.
+4. **A verdict is a verdict about a sentence, sourced a particular way, at a particular
+   time.** `claimChecked` and `sourceChecked` record the wording and the source record the
+   check was performed against; edit either and the status becomes `stale` rather than
+   carrying the old conclusion across. `reviewBy` retires a signature on a horizon its signer
+   chose, which is `lapsed`. These are the routes by which a sign-off is revoked without
+   anybody revoking it, and `status` is therefore recomputed by the app against today rather
+   than read off the record.
+
+**What a sign-off licenses**, decided in Phase 7 and stated here because the schema is where
+somebody will look for it: the `unverified` marker is replaced by an attribution, and nothing
+else changes. It does not license dropping `confidenceNote`, which describes what the research
+can bear rather than who checked it. It does not license widening `applicableRoles`. And it
+does not cover `triggerConditions`, which carry no authority from the source and have had no
+review of any kind.
 
 The first check ran 2026-08-18 and no claim in the library came through it clean — three URLs
 that no longer reached the document they named, twelve records with a wrong title, year, author

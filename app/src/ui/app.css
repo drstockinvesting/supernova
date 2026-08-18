@@ -905,6 +905,14 @@ a.star:hover {
   white-space: nowrap;
 }
 
+/* A signed claim keeps a marker rather than losing one, so that a signature and
+   a forgotten render never look the same. It reads as settled instead of as a
+   warning: same shape, the strong tone rather than the caution one. */
+.research-flag.reviewed {
+  background: var(--status-strong-bg);
+  color: var(--status-strong);
+}
+
 /* What the source check found, under the claim it is about. Set quietly: it is
    an admission the product is making about its own library, not a warning to be
    shouted at somebody reading a dashboard. */
