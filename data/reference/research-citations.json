@@ -9,7 +9,7 @@
         "district_administrator",
         "guardian"
       ],
-      "claim": "Students who miss 10 percent or more of the school year are substantially less likely to read proficiently and to graduate on time.",
+      "claim": "Students who miss 10 percent or more of the school year are less likely to read proficiently and to graduate on time.",
       "confidenceNote": "Association, not causation. Chronic absence co-occurs with factors such as housing instability and chronic health conditions that independently affect achievement. Read as context for support, never as a prediction about this student.",
       "id": "cite-attendance-01",
       "metadata": {
@@ -18,24 +18,22 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "publicationYear 2018 was supplied by us; the page is undated and continuously revised, and needs an access date rather than a year.",
-            "'substantially' is an intensifier the source does not use."
-          ],
-          "finding": "The source says chronic absence can translate into difficulty learning to read by third grade and into not graduating, which is the claim. It does not say 'substantially', and its own figure is around four percentage points fewer students proficient in grade 3 reading.",
-          "recordAccurate": false,
+          "claimChecked": "Students who miss 10 percent or more of the school year are less likely to read proficiently and to graduate on time.",
+          "defects": [],
+          "finding": "Reworded and rechecked. The source says chronic absence can translate into difficulty learning to read by third grade and into not graduating, which is now what the claim says. The intensifier the source does not use is gone, and the page is cited to an access date because it carries no publication year.",
+          "recordAccurate": true,
           "sourceReachable": true,
           "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
+        "accessedDate": "2026-08-18",
         "authorOrOrganization": "Attendance Works",
-        "publicationYear": 2018,
         "sourceType": "research_organization",
-        "title": "Chronic Absence: Research and Data",
+        "title": "Chronic Absence: The Problem",
         "url": "https://www.attendanceworks.org/chronic-absence/the-problem/"
       },
       "topic": "attendance",
@@ -55,8 +53,8 @@
         "building_administrator",
         "district_administrator"
       ],
-      "claim": "Missing instruction when a skill is first introduced is associated with slower mastery of that skill than missing an equivalent number of review days.",
-      "confidenceNote": "The general link between absence and achievement is well documented; the specific key-instruction-day effect is a reasonable inference that should be verified against a direct source before being surfaced.",
+      "claim": "Absences are not interchangeable. When in the school year an absence falls is associated with how much it costs: absence early and late in the year tracks more strongly with lower end-of-year results than the same number of days missed in between.",
+      "confidenceNote": "Measured on 62,841 secondary students, and on position in the school year rather than position within a unit. The days marked here are the ones that carried new instruction, which is a different question the source does not answer. Read this as a reason to look at which days were missed, not as a measure of what missing them cost.",
       "id": "cite-attendance-02",
       "metadata": {
         "addedDate": "2026-08-16"
@@ -64,26 +62,23 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "www2.ed.gov/datastory/chronicabsenteeism.html redirects twice and the 2019 data story it named no longer exists.",
-            "The confidenceNote predicted exactly this and the claim shipped anyway.",
-            "This is the only attendance claim a student sees about their own record, so withdrawing it is a product decision as well as a citation one."
-          ],
-          "finding": "The URL is dead and the page at the end of its redirect chain is about chronic absenteeism generally, saying nothing about when in a unit an absence falls. The key-instruction-day effect is currently uncited.",
-          "recordAccurate": false,
-          "sourceReachable": false,
-          "support": "unsupported"
+          "claimChecked": "Absences are not interchangeable. When in the school year an absence falls is associated with how much it costs: absence early and late in the year tracks more strongly with lower end-of-year results than the same number of days missed in between.",
+          "defects": [],
+          "finding": "Resourced. The dead ed.gov data story is replaced by Keppens 2023, which measured 62,841 secondary students and found that unexcused absence early and late in the school year is more strongly associated with lower end-of-year results. The claim now states that finding rather than the key-instruction-day mechanism nothing was ever found to support.",
+          "recordAccurate": true,
+          "sourceReachable": true,
+          "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
-        "authorOrOrganization": "US Department of Education",
-        "publicationYear": 2019,
-        "sourceType": "government_report",
-        "title": "Chronic Absenteeism in the Nation's Schools",
-        "url": "https://www2.ed.gov/datastory/chronicabsenteeism.html"
+        "authorOrOrganization": "Keppens, G.",
+        "publicationYear": 2023,
+        "sourceType": "peer_reviewed",
+        "title": "School Absenteeism and Academic Achievement: Does the Timing of the Absence Matter?",
+        "url": "https://doi.org/10.1016/j.learninstruc.2023.101769"
       },
       "topic": "attendance",
       "triggerConditions": {
@@ -99,8 +94,8 @@
         "school_board_member",
         "community_member"
       ],
-      "claim": "Schools sustaining attendance rates above 95 percent tend to show stronger achievement growth than otherwise comparable schools.",
-      "confidenceNote": "School-level correlation. Attendance rates track community factors, so this should not be read as an isolated lever.",
+      "claim": "Across states and large urban districts, higher student attendance goes with higher scores on the national assessment.",
+      "confidenceNote": "A correlation across states and districts, not a finding about any one school. Attendance rates track community factors, so this is not an isolated lever, and a building above 95 percent has not thereby been shown to be doing anything in particular.",
       "id": "cite-attendance-03",
       "metadata": {
         "addedDate": "2026-08-16"
@@ -108,22 +103,19 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "'growth' describes an analysis the report does not perform.",
-            "'otherwise comparable schools' describes a matching the report does not do.",
-            "Authors are credited Ginsburg, Chang, Jordan; the record has Jordan second."
-          ],
-          "finding": "Absences Add Up compares NAEP scores against attendance across states and cities. That is a cross-sectional score comparison at student level, not achievement growth, and it matches no schools to each other.",
-          "recordAccurate": false,
+          "claimChecked": "Across states and large urban districts, higher student attendance goes with higher scores on the national assessment.",
+          "defects": [],
+          "finding": "Reworded to the study the report actually is: a comparison of attendance against national assessment scores across states and 21 large urban districts. The growth language and the matched-schools language are gone, and the authors are credited in the order the report credits them.",
+          "recordAccurate": true,
           "sourceReachable": true,
-          "support": "partial"
+          "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
-        "authorOrOrganization": "Ginsburg, A., Jordan, P., & Chang, H.",
+        "authorOrOrganization": "Ginsburg, A., Chang, H., & Jordan, P.",
         "publicationYear": 2014,
         "sourceType": "research_organization",
         "title": "Absences Add Up: How School Attendance Influences Student Success",
@@ -155,23 +147,22 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "publicationYear 2018 was supplied by us, as with cite-attendance-01."
-          ],
-          "finding": "The best-argued claim in the library. The arithmetic half is not in dispute and the note says so; the outcome half is the source's own central argument for preferring chronic absence to average attendance.",
-          "recordAccurate": false,
+          "claimChecked": "Chronic absence, defined as missing a tenth or more of school days, tracks achievement and graduation more closely than a school's average daily attendance, which can sit in a healthy range while a substantial minority of students are chronically absent.",
+          "defects": [],
+          "finding": "Unchanged and still supported: the arithmetic half is not in dispute and the outcome half is the source's central argument. The invented publication year is replaced by an access date.",
+          "recordAccurate": true,
           "sourceReachable": true,
           "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
+        "accessedDate": "2026-08-18",
         "authorOrOrganization": "Attendance Works",
-        "publicationYear": 2018,
         "sourceType": "research_organization",
-        "title": "Chronic Absence: Research and Data",
+        "title": "Chronic Absence: The Problem",
         "url": "https://www.attendanceworks.org/chronic-absence/the-problem/"
       },
       "topic": "attendance",
@@ -198,21 +189,19 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "Author order, as with cite-attendance-03.",
-            "A claim whose warrant is arithmetic rather than research may not belong in a research library at all. It is honest here; it may belong elsewhere."
-          ],
-          "finding": "Supported as framed. The note already says this is a statement about how averages behave, illustrated by the source rather than established by it, and the source does recommend chronic absence over average attendance.",
-          "recordAccurate": false,
+          "claimChecked": "An average attendance rate in the low 90s is consistent with a large share of absence being concentrated in relatively few students, because a small number missing many days moves the average very little.",
+          "defects": [],
+          "finding": "Unchanged and still supported as framed. The note already said this is a statement about how averages behave, illustrated by the source rather than established by it. Author order corrected.",
+          "recordAccurate": true,
           "sourceReachable": true,
           "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
-        "authorOrOrganization": "Ginsburg, A., Jordan, P., & Chang, H.",
+        "authorOrOrganization": "Ginsburg, A., Chang, H., & Jordan, P.",
         "publicationYear": 2014,
         "sourceType": "research_organization",
         "title": "Absences Add Up: How School Attendance Influences Student Success",
@@ -233,7 +222,7 @@
         "building_administrator",
         "district_administrator"
       ],
-      "claim": "Health conditions such as asthma, vision and dental problems, and unaddressed mental health needs are consistently found to be among the more common causes of missed instruction, and are concentrated in the same populations as low achievement.",
+      "claim": "A small number of highly prevalent health problems affect educational outcomes and fall disproportionately on the same populations as low achievement: uncorrected vision, asthma, inattention and hyperactivity, aggression and violence, teen pregnancy, physical inactivity, and skipped breakfast.",
       "confidenceNote": "A synthesis arguing for attention to health as an educational lever, not an estimate of how much of this district's absence is health-driven. Nothing here identifies which students are affected.",
       "id": "cite-health-01",
       "metadata": {
@@ -242,19 +231,16 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "The claim lists dental problems, which the source does not.",
-            "'among the more common causes of missed instruction' is a ranking the paper does not make.",
-            "topic is 'attendance' because the topic enum has no health value."
-          ],
-          "finding": "Basch names seven educationally relevant health disparities: vision, asthma, teen pregnancy, aggression and violence, physical activity, breakfast, and inattention and hyperactivity. Dental problems are not among them, and absenteeism is one pathway he describes rather than a ranking of causes.",
+          "claimChecked": "A small number of highly prevalent health problems affect educational outcomes and fall disproportionately on the same populations as low achievement: uncorrected vision, asthma, inattention and hyperactivity, aggression and violence, teen pregnancy, physical inactivity, and skipped breakfast.",
+          "defects": [],
+          "finding": "Reworded to Basch's own seven: uncorrected vision, asthma, inattention and hyperactivity, aggression and violence, teen pregnancy, physical inactivity and skipped breakfast. Dental problems, which are not among them, are gone, and so is the ranking of causes of absence the paper does not make.",
           "recordAccurate": true,
           "sourceReachable": true,
-          "support": "partial"
+          "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "Basch, C. E.",
@@ -278,7 +264,7 @@
         "building_administrator",
         "district_administrator"
       ],
-      "claim": "Exclusionary discipline removes students from instruction and is associated with lower achievement and higher dropout risk.",
+      "claim": "Exclusionary discipline removes students from instruction, and the available evidence does not show that zero tolerance approaches improve school safety or academic outcomes.",
       "confidenceNote": "Present this as context for support, never as a prediction about an individual student. The design principle is accountable, not punitive.",
       "id": "cite-behavior-01",
       "metadata": {
@@ -287,24 +273,22 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "Title truncated; the published title ends 'An Evidentiary Review and Recommendations', American Psychologist 63(9).",
-            "The dropout clause needs its own source or should be dropped."
-          ],
-          "finding": "The task force found the available data tend to contradict the assumptions behind zero tolerance and that such policies are not associated with improved academics. The dropout half is well established in the wider literature but is not what this report is about.",
-          "recordAccurate": false,
+          "claimChecked": "Exclusionary discipline removes students from instruction, and the available evidence does not show that zero tolerance approaches improve school safety or academic outcomes.",
+          "defects": [],
+          "finding": "Reworded to what the task force concluded, that the available data tend to contradict the assumptions behind zero tolerance and do not show improved safety or academic outcomes. The dropout clause, which is well supported elsewhere and is not what this report is about, is gone. Full title restored.",
+          "recordAccurate": true,
           "sourceReachable": true,
-          "support": "partial"
+          "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "American Psychological Association Zero Tolerance Task Force",
         "publicationYear": 2008,
         "sourceType": "peer_reviewed",
-        "title": "Are Zero Tolerance Policies Effective in the Schools?",
+        "title": "Are Zero Tolerance Policies Effective in the Schools? An Evidentiary Review and Recommendations",
         "url": "https://www.apa.org/pubs/reports/zero-tolerance"
       },
       "topic": "behavior",
@@ -322,8 +306,8 @@
         "school_board_member",
         "community_member"
       ],
-      "claim": "School-wide positive behavioral interventions and supports are associated with reduced office discipline referrals and improved school climate.",
-      "confidenceNote": "Effects vary considerably with implementation fidelity. The threshold is an editorial choice about when this is worth showing, not a rate the source identifies as high.",
+      "claim": "Schools implementing school-wide positive behavioral interventions and supports well report reduced use of exclusionary discipline and improved school climate.",
+      "confidenceNote": "The source is the framework's own site rather than an independent evidence review, so read it as what PBIS reports of itself. Effects vary considerably with implementation fidelity. The threshold is an editorial choice about when this is worth showing, not a rate the source identifies as high.",
       "id": "cite-behavior-02",
       "metadata": {
         "addedDate": "2026-08-16"
@@ -331,25 +315,22 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "The page is titled 'What is PBIS?'.",
-            "publicationYear 2022 was supplied by us; the site's own citation guidance leaves the year blank because the page is living.",
-            "The implementation-fidelity caveat in the note comes from elsewhere."
-          ],
-          "finding": "The page states that schools implementing PBIS well reduce exclusionary discipline and improve climate, which is the claim. But it is the framework's own advocacy page, not the evidence base the record names, and no document called 'Evidence Base' exists at that address.",
-          "recordAccurate": false,
+          "claimChecked": "Schools implementing school-wide positive behavioral interventions and supports well report reduced use of exclusionary discipline and improved school climate.",
+          "defects": [],
+          "finding": "Retitled to the page that exists, What is PBIS?, and cited to an access date because the site's own citation guidance leaves the year blank. The claim now says what the page says, attributed as the framework reporting on itself, which the note now states plainly.",
+          "recordAccurate": true,
           "sourceReachable": true,
-          "support": "partial"
+          "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
+        "accessedDate": "2026-08-18",
         "authorOrOrganization": "Center on PBIS, US Department of Education",
-        "publicationYear": 2022,
         "sourceType": "research_organization",
-        "title": "Positive Behavioral Interventions and Supports: Evidence Base",
+        "title": "What is PBIS?",
         "url": "https://www.pbis.org/pbis/what-is-pbis"
       },
       "topic": "behavior",
@@ -376,22 +357,21 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "sourceType is meta_analysis; this is a narrative synthesis of 51 studies, not a statistical meta-analysis, and a citation library exists to keep exactly that distinction."
-          ],
-          "finding": "The synthesis's own summary is that the evidence of families' influence is consistent, positive and convincing, and the across-backgrounds point is one it makes explicitly.",
-          "recordAccurate": false,
+          "claimChecked": "Family engagement in schooling is consistently associated with higher achievement, better attendance, and improved social outcomes across income levels and backgrounds.",
+          "defects": [],
+          "finding": "Claim unchanged and supported. The source type is corrected: this is a narrative synthesis of 51 studies by a research organization, not a statistical meta-analysis.",
+          "recordAccurate": true,
           "sourceReachable": true,
           "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "Henderson, A. T., & Mapp, K. L.",
         "publicationYear": 2002,
-        "sourceType": "meta_analysis",
+        "sourceType": "research_organization",
         "title": "A New Wave of Evidence: The Impact of School, Family, and Community Connections on Student Achievement",
         "url": "https://sedl.org/connections/resources/evidence.pdf"
       },
@@ -418,23 +398,22 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "Title truncated; the published title ends 'A Synthesis of Research, 1987-2003', Review of Educational Research 76(1), 1-62."
-          ],
-          "finding": "Fully supported. The synthesis found the correlation much stronger for secondary students in grades 7 through 12 than for elementary students, which is what the note's warning about elementary dashboards rests on.",
-          "recordAccurate": false,
+          "claimChecked": "Homework completion correlates with achievement more strongly at secondary than at elementary level.",
+          "defects": [],
+          "finding": "Claim unchanged and fully supported. The synthesis found the correlation much stronger for secondary students in grades 7 through 12 than for elementary students. The published title's date range is restored.",
+          "recordAccurate": true,
           "sourceReachable": true,
           "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "Cooper, H., Robinson, J. C., & Patall, E. A.",
         "publicationYear": 2006,
         "sourceType": "meta_analysis",
-        "title": "Does Homework Improve Academic Achievement? A Synthesis of Research",
+        "title": "Does Homework Improve Academic Achievement? A Synthesis of Research, 1987-2003",
         "url": "https://doi.org/10.3102/00346543076001001"
       },
       "topic": "engagement",
@@ -460,10 +439,11 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
+          "claimChecked": "Practice distributed over time and self-testing are among the better-supported study techniques across a wide range of subjects and ages; rereading and highlighting are among the weakest.",
           "defects": [],
-          "finding": "Supported, and the record is exact. Practice testing and distributed practice are the two techniques the monograph rates high utility; rereading and highlighting are among the low-utility techniques it singles out because students rely on them so heavily.",
+          "finding": "Supported, and the record was already exact. Practice testing and distributed practice are the two techniques the monograph rates high utility; rereading and highlighting are among the low-utility techniques it singles out because students rely on them so heavily. Unchanged in Phase 7.",
           "recordAccurate": true,
           "sourceReachable": true,
           "support": "supported"
@@ -500,10 +480,11 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
+          "claimChecked": "Frequent formative assessment with actionable feedback is among the more effective instructional practices for improving achievement.",
           "defects": [],
-          "finding": "Supported and correctly hedged. The note already carries the right caveat, that the effect sizes from this literature have been disputed and are likely smaller than the quoted figures, and the claim avoids citing a number, which is what that caveat requires.",
+          "finding": "Supported and correctly hedged, and the record was already exact. The note carries the caveat that this literature's effect sizes have been disputed, and the claim avoids citing a number, which is what that caveat requires. Unchanged in Phase 7.",
           "recordAccurate": true,
           "sourceReachable": true,
           "support": "supported"
@@ -533,8 +514,8 @@
         "district_administrator",
         "guardian"
       ],
-      "claim": "Prerequisite skills strongly shape readiness for later content; gaps in foundational standards tend to compound across grade levels.",
-      "confidenceNote": "Strongest evidence is in mathematics; generalization to other subjects is less well established.",
+      "claim": "In mathematics, proficiency with whole numbers, fractions, and particular aspects of geometry and measurement is identified as the critical foundation for success in algebra.",
+      "confidenceNote": "The panel examined mathematics and nothing else, while the figure this appears against covers every subject. Whether other subjects depend on prerequisites the same way is a reasonable expectation and not something this source establishes.",
       "id": "cite-mastery-02",
       "metadata": {
         "addedDate": "2026-08-16"
@@ -542,26 +523,23 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "The www2.ed.gov path 404s. The report is permanently available as ERIC ED500486, which does not rot when a department reorganises its site.",
-            "The compounding clause needs its own source or should be dropped.",
-            "The evidence is mathematics-specific and the claim fires on a mastery rate across all subjects."
-          ],
-          "finding": "The panel's Critical Foundations for Algebra is precisely an argument that prerequisites shape readiness. It does not make the compounding argument; that is an extrapolation.",
-          "recordAccurate": false,
-          "sourceReachable": false,
-          "support": "partial"
+          "claimChecked": "In mathematics, proficiency with whole numbers, fractions, and particular aspects of geometry and measurement is identified as the critical foundation for success in algebra.",
+          "defects": [],
+          "finding": "Repointed at ERIC accession ED500486, which survives a department reorganisation as the ed.gov path did not. The claim is now the panel's Critical Foundations for Algebra, stated as the mathematics finding it is; the compounding clause the panel never made is gone.",
+          "recordAccurate": true,
+          "sourceReachable": true,
+          "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "National Mathematics Advisory Panel",
         "publicationYear": 2008,
         "sourceType": "government_report",
         "title": "Foundations for Success: The Final Report",
-        "url": "https://www2.ed.gov/about/bdscomm/list/mathpanel/report/final-report.pdf"
+        "url": "https://files.eric.ed.gov/fulltext/ED500486.pdf"
       },
       "topic": "mastery_progression",
       "triggerConditions": {
@@ -588,24 +566,21 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "testingstandards.net is the official home of the Standards but is an informational and purchasing page; the 2014 edition is not free there and the URL does not reach the cited text.",
-            "sourceType is peer_reviewed; a professional standards document produced by three associations is not peer-reviewed research.",
-            "No chapter or standard number is given, so nobody holding the book can check the claim against it."
-          ],
-          "finding": "Supported in substance, and the note is unusually good: it says plainly that this is a professional standard rather than an empirical finding, and that it bears on how much weight a mastery rate can carry rather than on whether students learned.",
-          "recordAccurate": false,
-          "sourceReachable": false,
+          "claimChecked": "An interpretation drawn from an assessment is only as defensible as the evidence documented to support it; documentation of that evidence is treated as part of the judgement rather than as a record-keeping afterthought.",
+          "defects": [],
+          "finding": "Source type corrected to other: a professional standard agreed by three associations is not peer-reviewed research. On reachability, the URL is the document's official home and the 2014 edition is a book that is not free anywhere, which is the right citation target for a book rather than a broken link. A reviewer who disagrees should say so, and should ask for a chapter and standard number besides.",
+          "recordAccurate": true,
+          "sourceReachable": true,
           "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "American Educational Research Association, American Psychological Association, & National Council on Measurement in Education",
         "publicationYear": 2014,
-        "sourceType": "peer_reviewed",
+        "sourceType": "other",
         "title": "Standards for Educational and Psychological Testing",
         "url": "https://www.testingstandards.net/"
       },
@@ -623,8 +598,8 @@
         "school_board_member",
         "community_member"
       ],
-      "claim": "Differences in achievement between classrooms within the same school are typically larger than differences between schools, so schools with near-identical averages can contain substantially different classrooms.",
-      "confidenceNote": "Measured on test-score gains in one state, not on mastery of standards, and the within-school variation it decomposes is not solely a teacher effect. Read as a reason to look inside a building, not as a ranking of anything inside this one.",
+      "claim": "Teachers differ substantially in their effect on reading and mathematics achievement, and little of that difference is explained by observable characteristics such as degrees or years of experience.",
+      "confidenceNote": "Measured on test-score gains in one state, not on mastery of standards, and the estimate is a lower bound identified from differences within schools. It says teacher effects are large and poorly predicted by credentials. It does not say which teachers, and nothing here identifies any. Read as a reason to look inside a building, never as a ranking of anyone in this one.",
       "id": "cite-variation-01",
       "metadata": {
         "addedDate": "2026-08-17"
@@ -632,19 +607,16 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "The comparison the claim makes is absent from the paper.",
-            "The claim fires on masterySpreadPoints, so it is one of the claims a school board and the public see.",
-            "The proposition is defensible and well supported elsewhere; it is not supported here."
-          ],
-          "finding": "Rivkin, Hanushek and Kain estimate a semiparametric lower bound on the variance of teacher quality, identified from within-school heterogeneity in order to strip out school-level confounding. They do not decompose achievement variance into within-school and between-school parts and report the former as larger. The claim reads the method as the finding.",
+          "claimChecked": "Teachers differ substantially in their effect on reading and mathematics achievement, and little of that difference is explained by observable characteristics such as degrees or years of experience.",
+          "defects": [],
+          "finding": "Reworded to what Rivkin, Hanushek and Kain report: teacher effects on reading and mathematics achievement are large, and little of the variation is explained by observable characteristics such as degrees or experience. The within-school against between-school comparison, which is their identification strategy and not a result they publish, is gone.",
           "recordAccurate": true,
           "sourceReachable": true,
-          "support": "unsupported"
+          "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "Rivkin, S. G., Hanushek, E. A., & Kain, J. F.",
@@ -667,8 +639,8 @@
         "building_administrator",
         "district_administrator"
       ],
-      "claim": "Protected, uninterrupted instructional time is associated with greater learning gains; fragmentation of instructional blocks reduces effective time on task.",
-      "confidenceNote": "Quality of instructional time matters more than raw quantity; more minutes alone does not produce gains.",
+      "claim": "Time allocated for instruction and time students spend engaged in learning are not the same thing, and the amount of time scheduled has little relationship to achievement on its own.",
+      "confidenceNote": "A synthesis of research on extending school time, so it speaks to how much time is scheduled rather than to interruptions specifically. It gives a reason to treat lost minutes as a question about engaged time rather than as a quantity to be recovered.",
       "id": "cite-interruptions-01",
       "metadata": {
         "addedDate": "2026-08-16"
@@ -676,18 +648,16 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "The confidenceNote contradicts the claim it is attached to, and the claim is the sentence a teacher reads.",
-            "The allocated-versus-engaged distinction is what the source establishes and is also the more useful thing to tell a teacher reading lost minutes."
-          ],
-          "finding": "The report concludes that time exhibits little impact on performance when considered alone, and that there is no consistent relationship between time allocated for instruction and time students spend engaged. That supports the claim's second clause and undercuts its first.",
+          "claimChecked": "Time allocated for instruction and time students spend engaged in learning are not the same thing, and the amount of time scheduled has little relationship to achievement on its own.",
+          "defects": [],
+          "finding": "Reworded to the report's own conclusion: allocated time and engaged time are not the same, and scheduled time alone has little relationship to achievement. The claim no longer asserts the opposite of the note beneath it.",
           "recordAccurate": true,
           "sourceReachable": true,
-          "support": "partial"
+          "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "Aronson, J., Zimmerman, J., & Carlos, L.",
@@ -711,8 +681,8 @@
         "building_administrator",
         "district_administrator"
       ],
-      "claim": "Students with disabilities show stronger outcomes when instruction is delivered in the least restrictive environment appropriate to their needs.",
-      "confidenceNote": "This is a legal standard as much as an empirical finding. Placement decisions are individualized and belong to the IEP team.",
+      "claim": "Federal law requires that students with disabilities be educated with children who are not disabled to the maximum extent appropriate, and that removal from the regular classroom happen only where education there with supplementary aids and services cannot be achieved satisfactorily.",
+      "confidenceNote": "A legal requirement, not a research finding: a statute contains no evidence about outcomes and this one makes no claim about them. Placement decisions are individualized and belong to the IEP team.",
       "id": "cite-services-01",
       "metadata": {
         "addedDate": "2026-08-16"
@@ -720,24 +690,22 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "The claim is worded as an empirical finding and the source is a legal mandate. The note concedes half of this by saying it is a legal standard 'as much as' an empirical finding.",
-            "Restating it as the legal requirement would be genuinely useful context for the caseload page. Doing both in one sentence is what went wrong."
-          ],
-          "finding": "Section 1412(a)(5) requires that children with disabilities be educated with children who are not disabled to the maximum extent appropriate. It establishes an obligation and makes no claim about outcomes, because there is no evidence in a statute.",
+          "claimChecked": "Federal law requires that students with disabilities be educated with children who are not disabled to the maximum extent appropriate, and that removal from the regular classroom happen only where education there with supplementary aids and services cannot be achieved satisfactorily.",
+          "defects": [],
+          "finding": "Reworded as the legal requirement it is. Section 1412(a)(5) obliges education with children who are not disabled to the maximum extent appropriate; it makes no claim about outcomes, because a statute contains no evidence. Cited to the 2004 reauthorisation, a date somebody can check.",
           "recordAccurate": true,
           "sourceReachable": true,
-          "support": "unsupported"
+          "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "US Department of Education, Office of Special Education Programs",
-        "publicationYear": 2023,
+        "publicationYear": 2004,
         "sourceType": "government_report",
-        "title": "Individuals with Disabilities Education Act: Least Restrictive Environment",
+        "title": "Individuals with Disabilities Education Act, 20 U.S.C. 1412(a)(5): Least Restrictive Environment",
         "url": "https://sites.ed.gov/idea/statute-chapter-33/subchapter-ii/1412/a/5"
       },
       "topic": "special_services",
@@ -757,7 +725,7 @@
         "building_administrator",
         "district_administrator"
       ],
-      "claim": "Mobility between schools is associated with short-term achievement disruption, with effects that typically diminish as students stabilize.",
+      "claim": "Students who change schools frequently show lower achievement, and schools serving high-mobility populations face particular difficulty meeting their needs.",
       "confidenceNote": "Sparse records reflect data transfer limits, not necessarily gaps in what the student knows. Read alongside current evidence, not instead of it.",
       "id": "cite-prior-01",
       "metadata": {
@@ -766,24 +734,22 @@
       "review": {
         "signOff": null,
         "sourceCheck": {
-          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text.",
+          "checkedBy": "Automated retrieval and reading pass, not a qualified reviewer. Every URL requested; DOIs resolved through Crossref; paywalled articles confirmed through the publisher record, the ERIC catalogue entry, or the abstract rather than full text. Claims revised on the strength of that reading and rechecked against their new wording, which is a check marking its own work and is a reason for a reviewer to read the sources too.",
           "checkedOn": "2026-08-18",
-          "defects": [
-            "There is no GAO report called 'Student Mobility'. GAO-11-40 is titled 'K-12 Education: Many Challenges Arise in Educating Students Who Change Schools Frequently'.",
-            "The recovery clause is not decoration: the note builds on it to reassure a transfer student, and that reassurance is currently uncited."
-          ],
-          "finding": "The GAO found achievement can be negatively affected by changing schools often. The recovery half, that effects diminish as students stabilise, is not established by this report.",
-          "recordAccurate": false,
+          "claimChecked": "Students who change schools frequently show lower achievement, and schools serving high-mobility populations face particular difficulty meeting their needs.",
+          "defects": [],
+          "finding": "Retitled to the report that exists and reworded to the finding it reports, that students changing schools frequently show lower achievement and that high-mobility schools struggle to meet their needs. The recovery clause, which the GAO does not establish, is gone.",
+          "recordAccurate": true,
           "sourceReachable": true,
-          "support": "partial"
+          "support": "supported"
         },
-        "status": "revision_required"
+        "status": "source_checked"
       },
       "source": {
         "authorOrOrganization": "US Government Accountability Office",
         "publicationYear": 2010,
         "sourceType": "government_report",
-        "title": "K-12 Education: Student Mobility",
+        "title": "K-12 Education: Many Challenges Arise in Educating Students Who Change Schools Frequently",
         "url": "https://www.gao.gov/products/gao-11-40"
       },
       "topic": "prior_achievement",

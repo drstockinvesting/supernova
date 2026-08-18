@@ -20,13 +20,17 @@
  *      as inert rather than as a well-written record nobody reads.
  *   3. **A claim whose source does not say what it says.** Added in Phase 7,
  *      when somebody finally opened the sources and found that not one of the
- *      eighteen claims was clean. Each card now carries what the check found,
- *      and the page opens with the tally rather than burying it.
+ *      eighteen claims was clean. Sixteen were then revised and all eighteen
+ *      rechecked; each card carries the verdict and the page opens with the
+ *      tally rather than burying it.
+ *   4. **A claim reworded after it was checked.** The verdict was about a
+ *      sentence, and the sentence changed. Those read `checked, then edited`
+ *      rather than keeping a conclusion nobody reached about them.
  *
  * The review state deserves one note. `unverified` used to mean everything at
  * once — nobody has looked, somebody looked and it is fine, somebody looked and
- * it is wrong. Those are now three states, and the page reports them separately,
- * because a library where sixteen claims need rewriting and a library nobody has
+ * it is wrong. Those are separate states now, and the page reports them
+ * separately, because a library that needs rewriting and a library nobody has
  * opened are different problems with the same headline count.
  *
  * Outside the guard, like `/design`, and for a stronger reason than convenience.
@@ -59,6 +63,7 @@ import {
   groupMetrics,
   isUnverified,
   matches,
+  sourceDate,
   triggerOf,
   type MetricBag,
   type ReviewStatus,
@@ -105,7 +110,10 @@ export function ResearchView() {
   const citations = libraryState.value.citations
   const unverified = citations.filter(isUnverified).length
   const byStatus = tallyReview(citations)
-  const needingRevision = byStatus.revision_required
+  // Anything a reader would have to act on: a claim whose check found a problem,
+  // one reworded since it was checked, one nobody has read the source for.
+  const outstanding =
+    byStatus.revision_required + byStatus.stale + byStatus.unreviewed + byStatus.withdrawn
   const lastChecked = citations
     .map((citation) => citation.review.sourceCheck?.checkedOn)
     .filter((date): date is string => Boolean(date))
@@ -141,8 +149,12 @@ export function ResearchView() {
             <span>{byTopic.length} topics</span>
             <span>·</span>
             <span>{unverified} unsigned</span>
-            <span>·</span>
-            <span>{needingRevision} needing revision</span>
+            {outstanding > 0 ? (
+              <>
+                <span>·</span>
+                <span>{outstanding} not yet checked out</span>
+              </>
+            ) : null}
           </div>
         </div>
       </header>
@@ -166,15 +178,13 @@ export function ResearchView() {
 
       {unverified > 0 ? (
         <Notice tone="caution">
-          <strong>
-            None of the {citations.length} claims below has been signed off, and{' '}
-            {needingRevision} of them need rewriting before anyone could.
-          </strong>{' '}
-          They are shown anyway, flagged, on the grounds that an outstanding review which is
-          visible is more honest than a library hidden until somebody gets to it — but the
-          flags mean what they say. Every claim is worded correlationally and carries a note
-          on how far it can be pushed; none of that is a substitute for reading the source,
-          and the first time anybody did, the results were the ones below.
+          <strong>None of the {citations.length} claims below has been signed off.</strong>{' '}
+          Each has been read against its source and reworded where the source did not support
+          it, and that is not the same thing: checking is reading, and signing is a named
+          person putting their standing behind a claim in front of a school board. They are
+          shown anyway, flagged, on the grounds that an outstanding review which is visible is
+          more honest than a library hidden until somebody gets to it — and the flag means what
+          it says.
         </Notice>
       ) : null}
 
@@ -209,12 +219,14 @@ const REVIEW_TONES: Record<ReviewStatus, 'strong' | 'neutral' | 'caution' | 'cri
   verified: 'strong',
   source_checked: 'neutral',
   revision_required: 'caution',
+  stale: 'caution',
   unreviewed: 'critical',
   withdrawn: 'critical',
 }
 
 const REVIEW_ORDER: ReviewStatus[] = [
   'revision_required',
+  'stale',
   'unreviewed',
   'source_checked',
   'verified',
@@ -224,6 +236,7 @@ const REVIEW_ORDER: ReviewStatus[] = [
 function tallyReview(citations: ResearchCitation[]): Record<ReviewStatus, number> {
   const counts: Record<ReviewStatus, number> = {
     unreviewed: 0,
+    stale: 0,
     source_checked: 0,
     revision_required: 0,
     verified: 0,
@@ -313,12 +326,14 @@ function ReviewSummary({
         The last row is a different kind of question from the three above it, and the
         difference is the point. Those three are answered by reading: fetch the source, compare
         it to the record, write down what it says. Anyone careful can do that, and it has now
-        been done. The last one asks whether a claim is fit to put in front of a school board,
+        been done — the first pass found no clean claim in this library, sixteen were reworded
+        to what their sources actually establish, and everything was rechecked against its new
+        wording. The last one asks whether a claim is fit to put in front of a school board,
         which is a judgement about educational research that a named person has to make and be
-        accountable for afterwards. No amount of the first kind adds up to the second, so a
-        thorough check leaves every claim exactly as unsigned as it found it — and two claims
-        below are checked clean, sourced correctly, and still carry the marker, because that is
-        what the marker is for.
+        accountable for afterwards. No amount of the first kind adds up to the second, so all
+        that work left every claim exactly as unsigned as it found it. Every claim below is
+        sourced, and every claim below still carries the marker, because that is what the
+        marker is for.
       </p>
     </section>
   )
@@ -430,7 +445,7 @@ function CitationCard({
       <p className="research-claim">{citation.claim}</p>
 
       <p className="research-source subtle">
-        {citation.source.authorOrOrganization}, {citation.source.publicationYear}.{' '}
+        {citation.source.authorOrOrganization}, {sourceDate(citation.source)}.{' '}
         <a href={citation.source.url} target="_blank" rel="noreferrer">
           {citation.source.title}
         </a>{' '}

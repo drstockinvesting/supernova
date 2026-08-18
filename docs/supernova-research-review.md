@@ -1,6 +1,15 @@
 # The research review
 
-**Source check completed 2026-08-18. No claim in this library is signed off.**
+**Source check completed 2026-08-18. Sixteen claims revised. No claim in this library is
+signed off.**
+
+> **Update, later the same day.** The check below was written first and the revisions were
+> made against it. Every claim named here has since been reworded, resourced, or had its
+> record corrected, and every one has been rechecked against the wording it now has. The
+> findings are left as they were written: this document is the argument the revisions rest on,
+> and rewriting it to describe the fixed library would destroy the record of what was wrong.
+> What each claim says *now* is in `generator/research.py`; what was wrong with it is here.
+> A summary of what changed is at the end.
 
 The citation library has carried `reviewStatus: needs_human_review` on all 18 claims since
 Phase 1. Phase 5 built the page that makes checking possible; Phase 6 put the claims in front
@@ -420,8 +429,56 @@ because that is how it is read.
 
 ---
 
+---
+
+## What was done about it
+
+All sixteen were revised the same day. Most needed no research judgement at all — a title, a
+year, an author order, an intensifier the source does not use, a clause struck. Three could not
+be fixed by editing:
+
+- **`cite-attendance-02`** now cites Keppens (2023), *School Absenteeism and Academic
+  Achievement: Does the Timing of the Absence Matter?*, *Learning and Instruction* 86, 101769
+  — 62,841 secondary students, finding that absence early and late in the school year is more
+  strongly associated with lower end-of-year results. The claim states that. It does not state
+  the key-instruction-day mechanism, which nothing was ever found to support; the note says
+  plainly that the source measures position in the year while the app's figure marks days
+  within a unit, and that the claim is a reason to look at which days were missed rather than a
+  measure of what missing them cost. **The student keeps a claim about their own attendance,
+  and it is now sourced.**
+- **`cite-variation-01`** keeps Rivkin, Hanushek and Kain and states what they report: teacher
+  effects on reading and mathematics achievement are large, and little of the variation is
+  explained by degrees or years of experience. The within-school against between-school
+  comparison — their identification strategy, not a published result — is gone. The claim still
+  does its job on a page showing a spread: it says the spread is real and cannot be read off a
+  staff roster.
+- **`cite-services-01`** is now the legal requirement §1412(a)(5) contains, rather than an
+  outcome claim over a statute that contains no evidence about outcomes. That is honest context
+  for a caseload in its own right.
+
+Two structural fixes came with them. `source.publicationYear` is now optional and
+`source.accessedDate` exists, because three records were citing continuously revised webpages
+to a year this repository supplied. And a check now records the claim sentence it was performed
+against, so rewording a claim retires the verdict on it — `stale`, not `source_checked`, and
+not `verified` either. Without that, these sixteen revisions would have inherited their own
+pre-revision findings, which is exactly the failure `review.py` claimed its structure prevented
+and did not.
+
+| | Before | After |
+|---|---|---|
+| Source URL does not reach the cited document | 3 | 0 |
+| Record metadata wrong | 12 | 0 |
+| Claim overstates what its source establishes | 10 | 0 |
+| Clean on both source and wording | 0 | 18 |
+| **Signed off by a named reviewer** | **0** | **0** |
+
 ## Status
 
-Every claim in this library remains **unsigned**. The source check above is recorded against
-each claim in `generator/research.py` and shown at `/research`; it is not a verification and
-does not license dropping the `unverified` marker anywhere in the product.
+Every claim in this library remains **unsigned**, and the last row of that table is the one
+that matters. The rest was reading, and reading is not a signature. The revisions were made by
+the same pass that found the problems, which is a check marking its own work and is a reason
+for a reviewer to open the sources rather than to take this document's word for it.
+
+The three questions at the top of this section are still open, and the second one is now the
+binding constraint: **what a sign-off licenses** has never been decided, and eighteen claims are
+now waiting on the answer rather than two.

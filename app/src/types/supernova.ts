@@ -321,7 +321,13 @@ export interface ResearchCitation {
   source: {
     authorOrOrganization: string;
     title: string;
-    publicationYear: number;
+    /// Omitted for a continuously revised webpage, which has no publication
+    /// year. Supplying one for such a source misrepresents it as a snapshot
+    /// that can be checked; three records did exactly that before Phase 7.
+    publicationYear?: number;
+    /// When an undated source was last read. Required in practice for any
+    /// source carrying no publicationYear.
+    accessedDate?: string;
     url: string;
     sourceType: "peer_reviewed" | "government_report" | "research_organization" | "meta_analysis" | "other";
   };
@@ -343,11 +349,16 @@ export interface ResearchCitation {
     /// cannot drift out of agreement with them. Nothing but "verified" should
     /// reach a stakeholder-facing view without its unverified marker, and only
     /// a signOff produces it.
-    status: "unreviewed" | "source_checked" | "revision_required" | "verified" | "withdrawn";
+    status: "unreviewed" | "stale" | "source_checked" | "revision_required" | "verified" | "withdrawn";
     /// Null means nobody has read the source, which is not the same as the
     /// source being fine.
     sourceCheck: {
       checkedOn: string;
+      /// The claim sentence as it read when it was checked. A verdict is a
+      /// verdict about a sentence, so editing the sentence retires it: if this
+      /// no longer matches the claim, the status is "stale" rather than
+      /// whatever the check concluded.
+      claimChecked: string;
       /// Who or what did the checking. A review with no reviewer is the state
       /// this library was in for six phases.
       checkedBy: string;

@@ -15,7 +15,7 @@ rewriting it, so the reasoning behind the build stays legible.
 | **4. Visual design system** | Complete — one constellation at every zoom level | 2026-08-17 |
 | **5. Research context layer** | Complete — the library is a checked contract | 2026-08-17 |
 | **6. The caseload view** | Complete — three roles have a home | 2026-08-18 |
-| **7. The research review** | Sources checked — nothing signed off | 2026-08-18 |
+| **7. The research review** | Sources checked, 16 claims revised — nothing signed off | 2026-08-18 |
 
 ---
 
@@ -29,8 +29,11 @@ rewriting it, so the reasoning behind the build stays legible.
 - [x] A claim added without a review record reports `unreviewed`, not as clean
 - [x] The finding shown next to the claim at `/research`, and on the flag a teacher hovers
 - [x] The type emitter dropped `| null`; found by the schema's first nullable object
-- [x] 6 new tests, 95 total; build clean, lint at the recorded baseline of 11
-- [ ] **Nothing is verified.** 16 claims need revision, 2 are clean and unsigned
+- [x] All 16 claims revised: 13 by correcting the record, 3 by resourcing or restating
+- [x] `publicationYear` optional, `accessedDate` added — a living page has no year
+- [x] A check records the sentence it checked; rewording a claim retires the verdict
+- [x] 9 new tests, 98 total; build clean, lint at the recorded baseline of 11
+- [ ] **Nothing is verified.** All 18 are checked and sourced; none is signed
 
 ---
 
@@ -951,6 +954,39 @@ why it is flagged, and the finding can read as reassuring on a claim whose *reco
 wrong. `/research` shows both, in that order, for a reader who came to audit rather than to
 work.
 
+**The revisions were made in the same session, and that is worth being explicit about.**
+Sixteen claims were reworded, resourced, or had their records corrected, and all eighteen were
+rechecked against the wording they now have. Most of it needed no research judgement at all: a
+title, a year, an author order, an intensifier the source does not use, a clause struck. Three
+did not yield to editing. `cite-attendance-02` now cites Keppens 2023 on the timing of absence
+within the school year — 62,841 secondary students, absence early and late in the year more
+strongly associated with lower end-of-year results — and states that finding rather than the
+key-instruction-day mechanism nothing was ever found to support, so the student keeps a claim
+about their own attendance and it is now sourced. `cite-variation-01` keeps Rivkin, Hanushek and
+Kain and states what they report. `cite-services-01` is now the legal requirement §1412(a)(5)
+contains, which is honest context for a caseload in its own right.
+
+This is a check marking its own work, and the record says so — `SOURCE_CHECK_AGENT` carries the
+admission, and it is a reason for a reviewer to open the sources rather than take the finding's
+word for it.
+
+**A verdict is a verdict about a sentence, and nothing enforced that for one commit.**
+`review.py` opened by arguing that keeping the review separate from the library stops a claim
+being edited while its old verdict rides along. It was an argument about file layout and it
+prevented nothing: the sixteen revisions would have inherited their own pre-revision findings,
+still reading `revision_required`, with the findings describing sentences that no longer
+existed. A check now records `claimChecked`, the wording it was reached against, and `statusOf`
+reports `stale` when the current claim differs. It applies to sign-offs too, which is the only
+way a signature gets revoked without anybody revoking it — and it should be, because the
+signature was on a sentence.
+
+**A living webpage cannot be cited to a year, so `publicationYear` is now optional.** Three
+records cited continuously revised pages — Attendance Works twice, PBIS once — to a year this
+repository supplied. The PBIS site leaves the year blank in its own citation guidance, which is
+a source telling you not to do the thing the record did. `source.accessedDate` carries it
+instead, and both places that print a citation read the date through `sourceDate` rather than
+reaching for a field three sources do not have.
+
 ### Defects found while building Phase 7
 
 - **The type emitter silently dropped `| null`.** `render` in `scripts/emit_types.py` checked
@@ -965,6 +1001,11 @@ work.
 - **`cite-health-01` is filed under `attendance`.** The topic enum has no health value, so a
   claim about asthma and vision sits under attendance. It is not wrong — the claim is about
   missed instruction — but the enum is shaping the record rather than describing it.
+- **The separation `review.py` argued for was not enforced by anything.** Its docstring opened
+  by saying that keeping the review out of `research.py` stops a claim being edited while
+  keeping its old verdict. That was true about file layout and false about behaviour, and the
+  very next commit would have demonstrated it. Found by writing the revisions the module was
+  built to make safe.
 
 ---
 
@@ -1257,35 +1298,40 @@ Raised during Phase 6:
 
 Raised during Phase 7:
 
-- **Sixteen claims need rewriting and this session rewrote none of them.** That was
-  deliberate — a source check that also edits the claims is a check marking its own work, and
-  the record of what was found would have been destroyed by the fixing. But it leaves the
-  product shipping ten claims that overstate their sources, now with the overstatement
-  documented next to them, which is more honest and not better. The rewriting is the obvious
-  next piece of work and most of it needs no research judgement at all: a title, a year, an
-  author order, a clause struck.
-- **Three claims cannot be fixed by editing.** `cite-attendance-02` has no source,
-  `cite-variation-01` needs a different paper, and `cite-services-01` needs to decide whether
-  it is making a legal statement or an empirical one. Each is a product decision as much as a
-  citation one — withdrawing `cite-attendance-02` returns a student's own page to silence on
-  attendance, which is the state Phase 5 worked to get out of.
-- **A living webpage cannot be cited to a year, and four records do it.** Attendance Works
-  twice and PBIS once carry a `publicationYear` this repository supplied for a page that has
-  none. The schema's `source` has no field for an access date, so recording it honestly means
-  changing the shape rather than the value.
-- **What a sign-off licenses is undecided, and now blocks two claims.**
-  `cite-engagement-03` and `cite-mastery-01` are checked clean. Somebody could sign them
-  tomorrow and nothing says what would change: whether the marker comes off, whether the
-  `confidenceNote` may be dropped, whether a signed claim may go in front of the board, or what
-  happens when the 2013 monograph is superseded. The two claims are a small enough set to
-  answer the question concretely for once.
+- ~~**Sixteen claims need rewriting and this session rewrote none of them.**~~ **Done**, in the
+  same session, once the findings were written down. The ordering mattered: the check was
+  recorded first and the revisions made against it, so the argument survives independently of
+  the fix. It is still a check marking its own work, which `SOURCE_CHECK_AGENT` now says out
+  loud.
+- ~~**Three claims cannot be fixed by editing.**~~ **Resolved**, each differently.
+  `cite-attendance-02` was resourced to Keppens 2023 and restated at the level that source
+  supports, so a student's own page keeps a claim about attendance rather than going quiet.
+  `cite-variation-01` keeps its paper and states what the paper reports. `cite-services-01` is
+  now a legal requirement rather than an outcome claim over a statute.
+- ~~**A living webpage cannot be cited to a year.**~~ **Resolved** — `publicationYear` is
+  optional, `accessedDate` exists, and `sourceDate` is the single place a citation's date is
+  rendered.
+- **What a sign-off licenses is undecided, and now blocks all eighteen claims rather than
+  two.** Every claim is checked and sourced. Somebody could sign one tomorrow and nothing says
+  what would change: whether the marker comes off, whether the `confidenceNote` may be dropped,
+  whether a signed claim may go in front of the board, or what happens when a source is
+  superseded. This is the phase's remaining work and it is not a coding task.
+- **A recheck is cheap to skip and nothing schedules one.** `claimChecked` catches a claim
+  edited without a recheck. It cannot catch a *source* that changed underneath a claim nobody
+  edited, and three of these sources are living pages whose access date is the only record that
+  the reading has an age.
 - **The check was reading, and five sources were read at one remove.** Wiley, Sage, Taylor &
   Francis and GAO serve a browser and refuse an automated request. Their metadata is confirmed
   exact through Crossref and their headline findings through the publisher record or abstract,
   which is enough to catch a claim that misattributes a result and not enough to catch one that
-  misreads a qualification on page 40. `cite-mastery-01` and `cite-engagement-02` are both in
-  that group and both are currently the library's best claims, which is a reason to have
-  somebody with library access confirm them rather than a reason to doubt them.
+  misreads a qualification on page 40. Keppens 2023, which `cite-attendance-02` now rests on
+  entirely, is in that group. Somebody with library access should read the full texts.
+- **`cite-evidence-01` calls its URL reachable on a judgement call.** The 2014 Standards are a
+  book that is not free anywhere. The URL reaches the document's official home, which is the
+  right citation target for a book and is not the text. The first pass recorded that as a
+  defect and the recheck recorded it as acceptable, with the reasoning written into the finding
+  so a reviewer can disagree. It still carries no chapter or standard number, so nobody holding
+  the book can check it quickly.
 - **`SOURCE_CHECKS` is keyed by citation id and nothing enforces the join.** A claim renamed
   in `research.py` silently loses its review and reports `unreviewed`, which is the safe
   direction to fail but is silent about it. A stale key in `review.py` pointing at no claim is
@@ -1313,22 +1359,28 @@ as a provisioning error rather than as the missing view it was. Worth rememberin
 shape — the honest error message was accurate, unremarkable, and hid a real gap for three
 phases.
 
-**The sources have now been checked and it went badly.** Not one of the 18 claims came
-through clean: three URLs no longer reach the document they name, twelve records carry a wrong
-title, year, author order or source type, and ten claims describe their source as establishing
-more than it does. `docs/supernova-research-review.md` has the findings claim by claim and what
-each would take to fix. Most of the fixing needs no research judgement — a title, a year, a
-struck clause — and three claims cannot be fixed by editing at all.
+**The sources have been checked, and the library has been rewritten to match them.** The
+first pass found no clean claim in it: three URLs no longer reached the document they named,
+twelve records carried a wrong title, year, author order or source type, and ten claims
+described their source as establishing more than it does. All sixteen were then revised, three
+of them requiring a new source or a restatement rather than an edit.
+`docs/supernova-research-review.md` keeps the findings as they were written, because that
+argument is what the revisions rest on and rewriting it to describe the fixed library would
+destroy the record of what was wrong.
 
 **Nothing is verified, and that is the correct state rather than unfinished business.** A
 source check establishes what a source says; a sign-off is a named person accepting that a
 claim belongs in front of a school board and being accountable for it afterwards. Only the
 second produces `verified`, `isUnverified` is written against the sign-off, and there is a test
-asserting a perfectly checked claim is still unverified. Two claims are checked clean and
-waiting for a signature. **The flag remains the only thing standing between a synthetic
+asserting a perfectly checked claim is still unverified. All eighteen are now checked, sourced,
+and waiting for a signature. **The flag remains the only thing standing between a synthetic
 prototype and a product asserting educational research to a school board** — the difference
-after Phase 7 is that a reviewer signing one is now agreeing with a specific written argument
+after Phase 7 is that a reviewer signing one is agreeing with a specific written argument
 rather than approving a sentence they have no way to check.
+
+**What a sign-off licenses is the one thing this phase did not settle**, and it now blocks
+eighteen claims rather than the two it blocked before the revisions. That question is not a
+coding task.
 
 Six things about the code that are easy to get wrong:
 
@@ -1360,6 +1412,11 @@ Six things about the code that are easy to get wrong:
   `ui/research.ts` recomputes the status from them. Widening `isUnverified` to accept a
   checked-but-unsigned claim would take one word and would quietly turn "somebody read the
   URL" into "the product asserts this."
+- **Reword a claim and you retire the verdict on it.** A check records `claimChecked`, the
+  sentence it was reached against, and a claim that no longer matches reads `stale` — including
+  one that had been signed, because a signature is on a sentence. Editing a claim therefore
+  means rechecking it, and the suite fails if the shipped library holds a claim reworded since
+  its check.
 - **Never hand the research layer a figure the viewer cannot be shown.** A claim appears
   exactly when a metric crosses a threshold, so its presence publishes that the threshold was
   crossed. `StudentView` builds its bag from `canSeeBehavior` and friends rather than from the
@@ -1382,7 +1439,7 @@ npm --prefix app run build && npm --prefix app test && npm --prefix app run lint
 ```
 
 `test` is `node --test` over `src/**/*.test.ts`, using Node's own type stripping — there is
-no test framework and nothing to install. 95 tests, and everything covered is covered for
+no test framework and nothing to install. 98 tests, and everything covered is covered for
 the same reason: its failures are invisible on screen. A guard that wrongly allows renders
 a page indistinguishable from one the viewer was entitled to; a suppression rule that never
 fires looks identical to one that works; a sky lit on the wrong scale is still a sky, and

@@ -83,22 +83,33 @@ gets. Both are outside the permission guard, because an audit only insiders can 
 one.
 
 Phase 7 opened all 18 sources, which nobody had done. **Not one claim came through clean:**
-three URLs no longer reach the document they name, twelve records carry a wrong title, year,
-author order or source type, and ten claims describe their source as establishing more than it
-does. Four are contradicted by their own confidence note — the claim states the strong general
-version, the qualification goes underneath, and the reader of a dashboard reads the claim. The
-findings are in [`docs/supernova-research-review.md`](docs/supernova-research-review.md), and
-`/research` now shows each one next to the claim it is about.
+three URLs no longer reached the document they named, twelve records carried a wrong title,
+year, author order or source type, and ten claims described their source as establishing more
+than it does. Four were contradicted by their own confidence note — the claim states the strong
+general version, the qualification goes underneath, and the reader of a dashboard reads the
+claim. The findings are in
+[`docs/supernova-research-review.md`](docs/supernova-research-review.md), and `/research` shows
+each one next to the claim it is about.
+
+All sixteen were then revised. Most of that needed no research judgement — a title, a year, an
+author order, an intensifier the source does not use, a clause struck. Three did not yield to
+editing: a claim with no source at all now cites research on the timing of absence within the
+school year; a claim attributing to Rivkin, Hanushek and Kain a result they never published now
+states what they do report; and a claim worded as an empirical finding over a statute is now the
+legal requirement that statute contains. Rewording a claim retires the verdict on it — a check
+records the sentence it was performed against, so a claim edited since it was checked reads
+**checked, then edited** rather than carrying a conclusion nobody reached about it.
 
 The phase's architecture is one distinction. **A source check is not a sign-off.** A check asks
 whether the cited document exists and says what the claim says — careful reading, which anyone
 can do, and whose result is a written finding somebody else can disagree with. A sign-off asks
 whether a claim is fit to put in front of a school board, which is a judgement a named person
 makes and is accountable for afterwards. Only the second produces `verified`, and no amount of
-the first adds up to it. So this phase did thorough work and verified nothing: two claims are
-sourced correctly, worded within what their sources establish, and still carry the unverified
-marker, waiting for somebody with standing to sign them. That is the correct state for them to
-be in, and there is a test asserting a perfectly checked claim is still unverified.
+the first adds up to it. So this phase did thorough work and verified nothing: all eighteen
+claims are now sourced correctly and worded within what their sources establish, and all
+eighteen still carry the unverified marker, waiting for somebody with standing to sign them.
+That is the correct state for them to be in, and there is a test asserting a perfectly checked
+claim is still unverified.
 
 Track progress and decisions in [`PROGRESS.md`](PROGRESS.md).
 

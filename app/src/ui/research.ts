@@ -453,13 +453,20 @@ export function exercisableAt(citation: ResearchCitation, scale: 'student' | 'gr
  * that `isUnverified` is written against the sign-off and never against the
  * source check, so a thorough check cannot quietly promote a claim.
  *
- * The library today: no sign-offs, sixteen claims needing revision, two checked
- * clean and waiting for somebody with standing to sign them.
+ * A check is also a check of a *sentence*. `claimChecked` records the wording the
+ * verdict was reached against, so editing a claim retires its verdict rather than
+ * carrying it across the edit — `stale`, not `source_checked`, and not `verified`
+ * either. That is the one way a sign-off can be revoked without anybody revoking
+ * it, and it should be: a signature is on a sentence.
+ *
+ * The library today: eighteen claims checked against their sources and revised to
+ * match them, and no sign-offs at all.
  */
 export type ReviewStatus = ResearchCitation['review']['status']
 
 export const REVIEW_LABELS: Record<ReviewStatus, string> = {
   unreviewed: 'unreviewed',
+  stale: 'checked, then edited',
   source_checked: 'source checked',
   revision_required: 'revision required',
   verified: 'verified',
@@ -475,6 +482,21 @@ export const REVIEW_LABELS: Record<ReviewStatus, string> = {
  */
 export function isUnverified(citation: ResearchCitation): boolean {
   return citation.review.status !== 'verified'
+}
+
+/**
+ * How a source is dated, which is not always by year.
+ *
+ * Three of these sources are continuously revised webpages carrying no
+ * publication year at all. Until Phase 7 the records supplied one anyway, which
+ * presented a living page as a snapshot somebody could go and check. They now
+ * carry an access date instead, and both places that print a citation read it
+ * through here rather than reaching for `publicationYear` and rendering
+ * `undefined` on the three that lack it.
+ */
+export function sourceDate(source: ResearchCitation['source']): string {
+  if (source.publicationYear !== undefined) return String(source.publicationYear)
+  return source.accessedDate ? `accessed ${source.accessedDate}` : 'undated'
 }
 
 /** A claim a source check found something wrong with. */
@@ -496,12 +518,16 @@ export function isUnchecked(citation: ResearchCitation): boolean {
  * the same shape as the metric vocabulary contract, and for the same reason: the
  * two sides are edited by different people at different times.
  */
-export function deriveReviewStatus(review: ResearchCitation['review']): ReviewStatus {
-  if (review.signOff) {
+export function deriveReviewStatus(citation: ResearchCitation): ReviewStatus {
+  const { review, claim } = citation
+  const check = review.sourceCheck
+  const stale = check !== null && check.claimChecked !== claim
+
+  if (review.signOff && !stale) {
     return review.signOff.outcome === 'withdrawn' ? 'withdrawn' : 'verified'
   }
-  const check = review.sourceCheck
   if (!check) return 'unreviewed'
+  if (stale) return 'stale'
   if (!check.sourceReachable || !check.recordAccurate || check.support !== 'supported') {
     return 'revision_required'
   }

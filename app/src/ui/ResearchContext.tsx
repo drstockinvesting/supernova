@@ -41,7 +41,13 @@ import type { ResearchCitation } from '../types/supernova'
 import { useAsync } from '../data/useAsync'
 import { loadResearchCitations } from '../data/client'
 import type { Role } from '../session/roles'
-import { REVIEW_LABELS, coverageOf, isUnverified, type MetricBag } from './research'
+import {
+  REVIEW_LABELS,
+  coverageOf,
+  isUnverified,
+  sourceDate,
+  type MetricBag,
+} from './research'
 
 export function ResearchContext({
   metrics,
@@ -125,7 +131,7 @@ function Claim({ citation }: { citation: ResearchCitation }) {
       <p className="research-claim">{citation.claim}</p>
       <p className="research-confidence">{citation.confidenceNote}</p>
       <p className="research-source subtle">
-        {citation.source.authorOrOrganization}, {citation.source.publicationYear}.{' '}
+        {citation.source.authorOrOrganization}, {sourceDate(citation.source)}.{' '}
         <a href={citation.source.url} target="_blank" rel="noreferrer">
           {citation.source.title}
         </a>

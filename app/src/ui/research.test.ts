@@ -36,6 +36,7 @@ import {
   isUnverified,
   matches,
   referralsPer100,
+  sourceDate,
   selectCitations,
   studentMetrics,
   triggerOf,
@@ -309,7 +310,7 @@ test('every claim carries a confidence note and a review record', () => {
   }
 })
 
-test('the stored review status agrees with the two records it is derived from', () => {
+test('the stored review status agrees with the records it is derived from', () => {
   // The generator writes `status` next to `sourceCheck` and `signOff` so the
   // dataset can be read without running code, which makes it a third field that
   // can drift. This is the same contract as the metric vocabulary and it exists
@@ -318,11 +319,39 @@ test('the stored review status agrees with the two records it is derived from', 
   for (const entry of LIBRARY) {
     assert.equal(
       entry.review.status,
-      deriveReviewStatus(entry.review),
-      `${entry.id}: stored status disagrees with its sourceCheck and signOff`,
+      deriveReviewStatus(entry),
+      `${entry.id}: stored status disagrees with its own review record`,
     )
   }
 })
+
+// A citation carrying whatever review record a case needs.
+function reviewed(
+  claim: string,
+  review: Partial<ResearchCitation['review']>,
+  check: Partial<NonNullable<ResearchCitation['review']['sourceCheck']>> = {},
+): ResearchCitation {
+  return {
+    ...citation('cite-x', undefined),
+    claim,
+    review: {
+      status: 'source_checked',
+      sourceCheck: {
+        checkedOn: '2026-08-18',
+        checkedBy: 'a careful reader',
+        claimChecked: claim,
+        sourceReachable: true,
+        recordAccurate: true,
+        support: 'supported',
+        finding: 'The source says exactly this.',
+        defects: [],
+        ...check,
+      },
+      signOff: null,
+      ...review,
+    },
+  }
+}
 
 test('a source check cannot verify a claim, however thorough', () => {
   // The load-bearing rule of the review layer. `verified` is reachable only
@@ -330,22 +359,9 @@ test('a source check cannot verify a claim, however thorough', () => {
   // perfectly is still unverified and still renders with its marker. If this
   // ever fails, the marker has stopped meaning anything and the product is
   // asserting educational research on the strength of somebody reading a URL.
-  const clean: ResearchCitation['review'] = {
-    status: 'source_checked',
-    sourceCheck: {
-      checkedOn: '2026-08-18',
-      checkedBy: 'a careful reader',
-      sourceReachable: true,
-      recordAccurate: true,
-      support: 'supported',
-      finding: 'The source says exactly this.',
-      defects: [],
-    },
-    signOff: null,
-  }
-
+  const clean = reviewed('A claim.', {})
   assert.equal(deriveReviewStatus(clean), 'source_checked')
-  assert.ok(isUnverified({ ...citation('cite-x', undefined), review: clean }))
+  assert.ok(isUnverified(clean))
 })
 
 test('nothing in the shipped library is signed off', () => {
@@ -364,58 +380,88 @@ test('a claim added without a review record reports as unreviewed, not as clean'
   // The failure this replaces: eighteen identical `needs_human_review` flags
   // written by hand, indistinguishable from a review that had happened and found
   // nothing wrong. Absence of a check is now its own state.
-  assert.equal(
-    deriveReviewStatus({ status: 'unreviewed', sourceCheck: null, signOff: null }),
-    'unreviewed',
-  )
+  const fresh = { ...citation('cite-x', undefined) }
+  assert.equal(deriveReviewStatus(fresh), 'unreviewed')
 })
 
 test('a source check that found something wrong reports revision required', () => {
-  const base: NonNullable<ResearchCitation['review']['sourceCheck']> = {
-    checkedOn: '2026-08-18',
-    checkedBy: 'a careful reader',
-    sourceReachable: true,
-    recordAccurate: true,
-    support: 'supported',
-    finding: 'Fine.',
-    defects: [],
-  }
-  const cases: NonNullable<ResearchCitation['review']['sourceCheck']>[] = [
-    { ...base, sourceReachable: false },
-    { ...base, recordAccurate: false },
-    { ...base, support: 'partial' },
-    { ...base, support: 'unsupported' },
+  const cases = [
+    { sourceReachable: false },
+    { recordAccurate: false },
+    { support: 'partial' as const },
+    { support: 'unsupported' as const },
   ]
-  for (const sourceCheck of cases) {
-    assert.equal(
-      deriveReviewStatus({ status: 'revision_required', sourceCheck, signOff: null }),
-      'revision_required',
-    )
+  for (const check of cases) {
+    assert.equal(deriveReviewStatus(reviewed('A claim.', {}, check)), 'revision_required')
   }
 })
 
-test('the shipped library records what the first source check found', () => {
-  // Phase 7's result, pinned. Sixteen claims need rewriting and two are checked
-  // clean; if a later edit changes those counts, it should be because somebody
-  // fixed a claim, and this line is where they say so.
-  const needing = LIBRARY.filter((entry) => entry.review.status === 'revision_required')
-  const checked = LIBRARY.filter((entry) => entry.review.status === 'source_checked')
-  assert.equal(needing.length + checked.length, LIBRARY.length)
-  assert.ok(
-    checked.length > 0,
-    'no claim survived the source check; the library would have nothing to sign',
-  )
+test('editing a claim retires the verdict on it', () => {
+  // A verdict is a verdict about a sentence. `review.py` said keeping the review
+  // separate from the library prevented a claim being edited while its old
+  // verdict rode along, and for one commit nothing enforced that -- the sixteen
+  // revisions in this phase would have inherited their own pre-revision
+  // findings. `claimChecked` is the enforcement.
+  const checked = reviewed('The sentence that was checked.', {})
+  assert.equal(deriveReviewStatus(checked), 'source_checked')
 
+  const edited = { ...checked, claim: 'The sentence after somebody edited it.' }
+  assert.equal(deriveReviewStatus(edited), 'stale')
+  assert.ok(isUnverified(edited))
+})
+
+test('editing a claim retires a sign-off on it too', () => {
+  // The only way a signature is revoked without anybody revoking it, and it
+  // should be: the signature was on a sentence, and the sentence is gone.
+  const signed = reviewed('The sentence that was signed.', {
+    status: 'verified',
+    signOff: {
+      reviewer: 'A. Reviewer',
+      credentials: 'Somebody with standing',
+      signedOn: '2026-08-18',
+      outcome: 'accepted',
+    },
+  })
+  assert.equal(deriveReviewStatus(signed), 'verified')
+  assert.equal(deriveReviewStatus({ ...signed, claim: 'Reworded.' }), 'stale')
+})
+
+test('every claim in the shipped library has been checked against its source', () => {
+  // Phase 7's result, pinned. The first pass found no clean claim in the
+  // library; sixteen were revised and all eighteen rechecked against the wording
+  // they now have. If a later edit drops one of these to `stale` it is because
+  // somebody reworded a claim without rechecking it, which is the failure this
+  // whole record exists to make visible.
   for (const entry of LIBRARY) {
     const check = entry.review.sourceCheck
     assert.ok(check, `${entry.id} has no source check`)
     assert.ok(check.finding.length > 0, `${entry.id} records a verdict with no finding`)
     assert.ok(check.checkedBy.length > 0, `${entry.id} was checked by nobody`)
+    assert.equal(
+      check.claimChecked,
+      entry.claim,
+      `${entry.id} was reworded after it was checked`,
+    )
     if (entry.review.status === 'revision_required') {
       assert.ok(
         check.defects.length > 0,
         `${entry.id} needs revision and does not say what is wrong with it`,
       )
+    }
+  }
+})
+
+test('a citation prints a date even when its source has no publication year', () => {
+  // Three sources are continuously revised webpages carrying no year. The
+  // records used to supply one anyway; both places that print a citation now
+  // read the date through one function, which is what stops the fix from
+  // rendering `undefined` on a stakeholder page.
+  for (const entry of LIBRARY) {
+    const printed = sourceDate(entry.source)
+    assert.ok(printed.length > 0, `${entry.id} prints no date`)
+    assert.doesNotMatch(printed, /undefined|NaN/, `${entry.id}: ${printed}`)
+    if (entry.source.publicationYear === undefined) {
+      assert.match(printed, /^accessed \d{4}-\d{2}-\d{2}$/, `${entry.id}: ${printed}`)
     }
   }
 })

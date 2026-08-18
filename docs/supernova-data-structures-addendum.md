@@ -474,7 +474,8 @@ ResearchCitation
 ├── source
 │   ├── authorOrOrganization
 │   ├── title
-│   ├── publicationYear
+│   ├── publicationYear (omitted for a continuously revised webpage)
+│   ├── accessedDate (when an undated source was last read)
 │   ├── url
 │   └── sourceType (enum: peer_reviewed, government_report,
 │                    research_organization, meta_analysis, other)
@@ -491,6 +492,7 @@ ResearchCitation
     │           verified, withdrawn)
     ├── sourceCheck (null until somebody reads the source)
     │   ├── checkedOn, checkedBy
+    │   ├── claimChecked (the sentence the verdict is about)
     │   ├── sourceReachable (does the URL reach the document the record names?)
     │   ├── recordAccurate (are author, title, year and source type right?)
     │   ├── support (enum: supported, partial, unsupported)
@@ -525,12 +527,18 @@ call sites. Three problems with that, all of which showed up the first time anyb
 3. **A hand-written status drifts.** `status` is derived from `sourceCheck` and `signOff` by
    the generator, written into the dataset so it can be read without running code, and
    recomputed by the app's test suite so the two cannot disagree.
+4. **A verdict is a verdict about a sentence.** `claimChecked` records the wording the check
+   was performed against. Reword a claim and its status becomes `stale` rather than carrying
+   the old conclusion across the edit — including a claim that had been signed off, because a
+   signature is on a sentence. This is the only route by which a sign-off is revoked without
+   anybody revoking it.
 
 The first check ran 2026-08-18 and no claim in the library came through it clean — three URLs
-that no longer reach the document they name, twelve records with a wrong title, year, author
+that no longer reached the document they named, twelve records with a wrong title, year, author
 order or source type, and ten claims describing their source as establishing more than it does.
-The findings are in `supernova-research-review.md`. **Nothing in the library is verified**, and
-nothing marked otherwise should reach a stakeholder-facing view without its unverified marker.
+All sixteen were revised and all eighteen rechecked against the wording they now have. The
+findings are in `supernova-research-review.md`. **Nothing in the library is verified**, and
+nothing unverified should reach a stakeholder-facing view without its marker.
 
 **On `triggerConditions`, added in Phase 5.** Three rules, each learned by measuring what the
 library actually showed:

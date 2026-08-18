@@ -489,11 +489,19 @@
         },
         "source": {
           "type": "object",
-          "required": ["authorOrOrganization", "title", "publicationYear", "url", "sourceType"],
+          "required": ["authorOrOrganization", "title", "url", "sourceType"],
           "properties": {
             "authorOrOrganization": {"type": "string"},
             "title": {"type": "string"},
-            "publicationYear": {"type": "integer"},
+            "publicationYear": {
+              "type": "integer",
+              "description": "Omitted for a continuously revised webpage, which has no publication year. Supplying one for such a source misrepresents it as a snapshot that can be checked; three records did exactly that before Phase 7."
+            },
+            "accessedDate": {
+              "type": "string",
+              "format": "date",
+              "description": "When an undated source was last read. Required in practice for any source carrying no publicationYear."
+            },
             "url": {"type": "string"},
             "sourceType": {
               "enum": ["peer_reviewed", "government_report", "research_organization", "meta_analysis", "other"]
@@ -519,15 +527,20 @@
           "required": ["status", "sourceCheck", "signOff"],
           "properties": {
             "status": {
-              "enum": ["unreviewed", "source_checked", "revision_required", "verified", "withdrawn"],
+              "enum": ["unreviewed", "stale", "source_checked", "revision_required", "verified", "withdrawn"],
               "description": "Derived from sourceCheck and signOff rather than set by hand, so it cannot drift out of agreement with them. Nothing but \"verified\" should reach a stakeholder-facing view without its unverified marker, and only a signOff produces it."
             },
             "sourceCheck": {
               "type": ["object", "null"],
               "description": "Null means nobody has read the source, which is not the same as the source being fine.",
-              "required": ["checkedOn", "checkedBy", "sourceReachable", "recordAccurate", "support", "finding", "defects"],
+              "required": ["checkedOn", "checkedBy", "claimChecked", "sourceReachable", "recordAccurate", "support", "finding", "defects"],
               "properties": {
                 "checkedOn": {"type": "string", "format": "date"},
+                "claimChecked": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The claim sentence as it read when it was checked. A verdict is a verdict about a sentence, so editing the sentence retires it: if this no longer matches the claim, the status is \"stale\" rather than whatever the check concluded."
+                },
                 "checkedBy": {
                   "type": "string",
                   "minLength": 1,

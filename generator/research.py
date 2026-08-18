@@ -76,14 +76,16 @@ _CITATIONS = [
     {
         "id": "cite-attendance-01",
         "claim": (
-            "Students who miss 10 percent or more of the school year are "
-            "substantially less likely to read proficiently and to graduate on time."
+            "Students who miss 10 percent or more of the school year are less "
+            "likely to read proficiently and to graduate on time."
         ),
         "topic": "attendance",
         "source": {
             "authorOrOrganization": "Attendance Works",
-            "title": "Chronic Absence: Research and Data",
-            "publicationYear": 2018,
+            "title": "Chronic Absence: The Problem",
+            # No publication year: the page is continuously revised and carries
+            # none. Supplying one presented it as a snapshot somebody could check.
+            "accessedDate": "2026-08-18",
             "url": "https://www.attendanceworks.org/chronic-absence/the-problem/",
             "sourceType": "research_organization",
         },
@@ -108,18 +110,34 @@ _CITATIONS = [
     },
     {
         "id": "cite-attendance-02",
+        # Resourced in Phase 7. The claim used to assert that missing a skill's
+        # first introduction costs more than missing review days, sourced to an
+        # ed.gov data story that has since been removed and that never said it --
+        # the confidenceNote predicted exactly that and the claim shipped anyway.
+        #
+        # What the literature does establish is the general form: absences are not
+        # interchangeable, and when one falls is associated with what it costs.
+        # Keppens measures position in the school *year* rather than position in a
+        # unit, so the claim is stated at that level and the note says where the
+        # gap is. The figure the app supplies is still which days carried new
+        # instruction, and the claim's job is to say that asking which days is
+        # worth doing -- not to price this student's absence.
         "claim": (
-            "Missing instruction when a skill is first introduced is associated "
-            "with slower mastery of that skill than missing an equivalent number "
-            "of review days."
+            "Absences are not interchangeable. When in the school year an absence "
+            "falls is associated with how much it costs: absence early and late in "
+            "the year tracks more strongly with lower end-of-year results than the "
+            "same number of days missed in between."
         ),
         "topic": "attendance",
         "source": {
-            "authorOrOrganization": "US Department of Education",
-            "title": "Chronic Absenteeism in the Nation's Schools",
-            "publicationYear": 2019,
-            "url": "https://www2.ed.gov/datastory/chronicabsenteeism.html",
-            "sourceType": "government_report",
+            "authorOrOrganization": "Keppens, G.",
+            "title": (
+                "School Absenteeism and Academic Achievement: "
+                "Does the Timing of the Absence Matter?"
+            ),
+            "publicationYear": 2023,
+            "url": "https://doi.org/10.1016/j.learninstruc.2023.101769",
+            "sourceType": "peer_reviewed",
         },
         # This one *is* tagged for the student, where attendance-01 is not. It
         # says which days carried the most instruction rather than what missing
@@ -134,21 +152,23 @@ _CITATIONS = [
             "metric": "missedKeyInstructionDays", "comparator": "above", "threshold": 0
         },
         "confidenceNote": (
-            "The general link between absence and achievement is well documented; "
-            "the specific key-instruction-day effect is a reasonable inference that "
-            "should be verified against a direct source before being surfaced."
+            "Measured on 62,841 secondary students, and on position in the school "
+            "year rather than position within a unit. The days marked here are the "
+            "ones that carried new instruction, which is a different question the "
+            "source does not answer. Read this as a reason to look at which days "
+            "were missed, not as a measure of what missing them cost."
         ),
         "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-attendance-03",
         "claim": (
-            "Schools sustaining attendance rates above 95 percent tend to show "
-            "stronger achievement growth than otherwise comparable schools."
+            "Across states and large urban districts, higher student attendance "
+            "goes with higher scores on the national assessment."
         ),
         "topic": "attendance",
         "source": {
-            "authorOrOrganization": "Ginsburg, A., Jordan, P., & Chang, H.",
+            "authorOrOrganization": "Ginsburg, A., Chang, H., & Jordan, P.",
             "title": "Absences Add Up: How School Attendance Influences Student Success",
             "publicationYear": 2014,
             "url": "https://www.attendanceworks.org/absences-add-up/",
@@ -162,8 +182,10 @@ _CITATIONS = [
             "metric": "schoolAttendanceRate", "comparator": "above", "threshold": 95
         },
         "confidenceNote": (
-            "School-level correlation. Attendance rates track community factors, so "
-            "this should not be read as an isolated lever."
+            "A correlation across states and districts, not a finding about any "
+            "one school. Attendance rates track community factors, so this is "
+            "not an isolated lever, and a building above 95 percent has not "
+            "thereby been shown to be doing anything in particular."
         ),
         "metadata": {"addedDate": "2026-08-16"},
     },
@@ -179,8 +201,10 @@ _CITATIONS = [
         "topic": "attendance",
         "source": {
             "authorOrOrganization": "Attendance Works",
-            "title": "Chronic Absence: Research and Data",
-            "publicationYear": 2018,
+            "title": "Chronic Absence: The Problem",
+            # No publication year: the page is continuously revised and carries
+            # none. Supplying one presented it as a snapshot somebody could check.
+            "accessedDate": "2026-08-18",
             "url": "https://www.attendanceworks.org/chronic-absence/the-problem/",
             "sourceType": "research_organization",
         },
@@ -210,7 +234,7 @@ _CITATIONS = [
         ),
         "topic": "attendance",
         "source": {
-            "authorOrOrganization": "Ginsburg, A., Jordan, P., & Chang, H.",
+            "authorOrOrganization": "Ginsburg, A., Chang, H., & Jordan, P.",
             "title": "Absences Add Up: How School Attendance Influences Student Success",
             "publicationYear": 2014,
             "url": "https://www.attendanceworks.org/absences-add-up/",
@@ -240,10 +264,11 @@ _CITATIONS = [
     {
         "id": "cite-health-01",
         "claim": (
-            "Health conditions such as asthma, vision and dental problems, and "
-            "unaddressed mental health needs are consistently found "
-            "to be among the more common causes of missed instruction, and are "
-            "concentrated in the same populations as low achievement."
+            "A small number of highly prevalent health problems affect educational "
+            "outcomes and fall disproportionately on the same populations as low "
+            "achievement: uncorrected vision, asthma, inattention and "
+            "hyperactivity, aggression and violence, teen pregnancy, physical "
+            "inactivity, and skipped breakfast."
         ),
         "topic": "attendance",
         "source": {
@@ -279,13 +304,17 @@ _CITATIONS = [
     {
         "id": "cite-behavior-01",
         "claim": (
-            "Exclusionary discipline removes students from instruction and is "
-            "associated with lower achievement and higher dropout risk."
+            "Exclusionary discipline removes students from instruction, and the "
+            "available evidence does not show that zero tolerance approaches "
+            "improve school safety or academic outcomes."
         ),
         "topic": "behavior",
         "source": {
             "authorOrOrganization": "American Psychological Association Zero Tolerance Task Force",
-            "title": "Are Zero Tolerance Policies Effective in the Schools?",
+            "title": (
+                "Are Zero Tolerance Policies Effective in the Schools? "
+                "An Evidentiary Review and Recommendations"
+            ),
             "publicationYear": 2008,
             "url": "https://www.apa.org/pubs/reports/zero-tolerance",
             "sourceType": "peer_reviewed",
@@ -304,15 +333,17 @@ _CITATIONS = [
     {
         "id": "cite-behavior-02",
         "claim": (
-            "School-wide positive behavioral interventions and supports are "
-            "associated with reduced office discipline referrals and improved "
-            "school climate."
+            "Schools implementing school-wide positive behavioral interventions "
+            "and supports well report reduced use of exclusionary discipline and "
+            "improved school climate."
         ),
         "topic": "behavior",
         "source": {
             "authorOrOrganization": "Center on PBIS, US Department of Education",
-            "title": "Positive Behavioral Interventions and Supports: Evidence Base",
-            "publicationYear": 2022,
+            "title": "What is PBIS?",
+            # The site's own citation guidance leaves the year blank, because the
+            # page is living. 2022 was supplied here and by nobody else.
+            "accessedDate": "2026-08-18",
             "url": "https://www.pbis.org/pbis/what-is-pbis",
             "sourceType": "research_organization",
         },
@@ -331,9 +362,11 @@ _CITATIONS = [
             "threshold": 25,
         },
         "confidenceNote": (
-            "Effects vary considerably with implementation fidelity. The threshold "
-            "is an editorial choice about when this is worth showing, not a rate "
-            "the source identifies as high."
+            "The source is the framework's own site rather than an independent "
+            "evidence review, so read it as what PBIS reports of itself. "
+            "Effects vary considerably with implementation fidelity. The "
+            "threshold is an editorial choice about when this is worth showing, "
+            "not a rate the source identifies as high."
         ),
         "metadata": {"addedDate": "2026-08-16"},
     },
@@ -355,7 +388,9 @@ _CITATIONS = [
             ),
             "publicationYear": 2002,
             "url": "https://sedl.org/connections/resources/evidence.pdf",
-            "sourceType": "meta_analysis",
+            # A narrative synthesis of 51 studies, not a statistical meta-analysis.
+            # Keeping that distinction is most of what a citation library is for.
+            "sourceType": "research_organization",
         },
         "applicableRoles": [
             "teacher", "counselor", "building_administrator",
@@ -378,7 +413,10 @@ _CITATIONS = [
         "topic": "engagement",
         "source": {
             "authorOrOrganization": "Cooper, H., Robinson, J. C., & Patall, E. A.",
-            "title": "Does Homework Improve Academic Achievement? A Synthesis of Research",
+            "title": (
+                "Does Homework Improve Academic Achievement? "
+                "A Synthesis of Research, 1987-2003"
+            ),
             "publicationYear": 2006,
             "url": "https://doi.org/10.3102/00346543076001001",
             "sourceType": "meta_analysis",
@@ -466,15 +504,18 @@ _CITATIONS = [
     {
         "id": "cite-mastery-02",
         "claim": (
-            "Prerequisite skills strongly shape readiness for later content; gaps "
-            "in foundational standards tend to compound across grade levels."
+            "In mathematics, proficiency with whole numbers, fractions, and "
+            "particular aspects of geometry and measurement is identified as the "
+            "critical foundation for success in algebra."
         ),
         "topic": "mastery_progression",
         "source": {
             "authorOrOrganization": "National Mathematics Advisory Panel",
             "title": "Foundations for Success: The Final Report",
             "publicationYear": 2008,
-            "url": "https://www2.ed.gov/about/bdscomm/list/mathpanel/report/final-report.pdf",
+            # ERIC rather than ed.gov: the department's own path 404s after a site
+            # reorganisation, and an accession number survives one.
+            "url": "https://files.eric.ed.gov/fulltext/ED500486.pdf",
             "sourceType": "government_report",
         },
         "applicableRoles": [
@@ -485,8 +526,10 @@ _CITATIONS = [
             "metric": "priorYearMasteryRate", "comparator": "below", "threshold": 60
         },
         "confidenceNote": (
-            "Strongest evidence is in mathematics; generalization to other subjects "
-            "is less well established."
+            "The panel examined mathematics and nothing else, while the figure "
+            "this appears against covers every subject. Whether other subjects "
+            "depend on prerequisites the same way is a reasonable expectation "
+            "and not something this source establishes."
         ),
         "metadata": {"addedDate": "2026-08-16"},
     },
@@ -507,7 +550,9 @@ _CITATIONS = [
             "title": "Standards for Educational and Psychological Testing",
             "publicationYear": 2014,
             "url": "https://www.testingstandards.net/",
-            "sourceType": "peer_reviewed",
+            # A professional standard agreed by three associations is not
+            # peer-reviewed research, whatever its authority.
+            "sourceType": "other",
         },
         # The claim behind the "What the rate rests on" panel the public and the
         # board already read. Thirty percent of this district's standards carry no
@@ -529,9 +574,9 @@ _CITATIONS = [
     {
         "id": "cite-variation-01",
         "claim": (
-            "Differences in achievement between classrooms within the same school "
-            "are typically larger than differences between schools, so schools with "
-            "near-identical averages can contain substantially different classrooms."
+            "Teachers differ substantially in their effect on reading and "
+            "mathematics achievement, and little of that difference is explained "
+            "by observable characteristics such as degrees or years of experience."
         ),
         "topic": "mastery_progression",
         "source": {
@@ -552,10 +597,12 @@ _CITATIONS = [
             "metric": "masterySpreadPoints", "comparator": "above", "threshold": 5
         },
         "confidenceNote": (
-            "Measured on test-score gains in one state, not on mastery of standards, "
-            "and the within-school variation it decomposes is not solely a teacher "
-            "effect. Read as a reason to look inside a building, not as a ranking of "
-            "anything inside this one."
+            "Measured on test-score gains in one state, not on mastery of "
+            "standards, and the estimate is a lower bound identified from "
+            "differences within schools. It says teacher effects are large and "
+            "poorly predicted by credentials. It does not say which teachers, "
+            "and nothing here identifies any. Read as a reason to look inside a "
+            "building, never as a ranking of anyone in this one."
         ),
         "metadata": {"addedDate": "2026-08-17"},
     },
@@ -564,9 +611,9 @@ _CITATIONS = [
     {
         "id": "cite-interruptions-01",
         "claim": (
-            "Protected, uninterrupted instructional time is associated with greater "
-            "learning gains; fragmentation of instructional blocks reduces effective "
-            "time on task."
+            "Time allocated for instruction and time students spend engaged in "
+            "learning are not the same thing, and the amount of time scheduled has "
+            "little relationship to achievement on its own."
         ),
         "topic": "interruptions",
         "source": {
@@ -584,22 +631,33 @@ _CITATIONS = [
             "metric": "totalMinutesLost", "comparator": "above", "threshold": 120
         },
         "confidenceNote": (
-            "Quality of instructional time matters more than raw quantity; more "
-            "minutes alone does not produce gains."
+            "A synthesis of research on extending school time, so it speaks to "
+            "how much time is scheduled rather than to interruptions "
+            "specifically. It gives a reason to treat lost minutes as a "
+            "question about engaged time rather than as a quantity to be "
+            "recovered."
         ),
         "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-services-01",
         "claim": (
-            "Students with disabilities show stronger outcomes when instruction is "
-            "delivered in the least restrictive environment appropriate to their needs."
+            "Federal law requires that students with disabilities be educated with "
+            "children who are not disabled to the maximum extent appropriate, and "
+            "that removal from the regular classroom happen only where education "
+            "there with supplementary aids and services cannot be achieved "
+            "satisfactorily."
         ),
         "topic": "special_services",
         "source": {
             "authorOrOrganization": "US Department of Education, Office of Special Education Programs",
-            "title": "Individuals with Disabilities Education Act: Least Restrictive Environment",
-            "publicationYear": 2023,
+            "title": (
+                "Individuals with Disabilities Education Act, 20 U.S.C. 1412(a)(5): "
+                "Least Restrictive Environment"
+            ),
+            # The 2004 reauthorisation, which is a date somebody can check. The
+            # record previously carried 2023, which was the year it was typed.
+            "publicationYear": 2004,
             "url": "https://sites.ed.gov/idea/statute-chapter-33/subchapter-ii/1412/a/5",
             "sourceType": "government_report",
         },
@@ -609,21 +667,26 @@ _CITATIONS = [
         ],
         "triggerConditions": {"metric": "hasActiveIEP", "comparator": "equals", "threshold": 1},
         "confidenceNote": (
-            "This is a legal standard as much as an empirical finding. Placement "
-            "decisions are individualized and belong to the IEP team."
+            "A legal requirement, not a research finding: a statute contains no "
+            "evidence about outcomes and this one makes no claim about them. "
+            "Placement decisions are individualized and belong to the IEP team."
         ),
         "metadata": {"addedDate": "2026-08-16"},
     },
     {
         "id": "cite-prior-01",
         "claim": (
-            "Mobility between schools is associated with short-term achievement "
-            "disruption, with effects that typically diminish as students stabilize."
+            "Students who change schools frequently show lower achievement, and "
+            "schools serving high-mobility populations face particular difficulty "
+            "meeting their needs."
         ),
         "topic": "prior_achievement",
         "source": {
             "authorOrOrganization": "US Government Accountability Office",
-            "title": "K-12 Education: Student Mobility",
+            "title": (
+                "K-12 Education: Many Challenges Arise in Educating Students "
+                "Who Change Schools Frequently"
+            ),
             "publicationYear": 2010,
             "url": "https://www.gao.gov/products/gao-11-40",
             "sourceType": "government_report",
@@ -657,7 +720,7 @@ _CITATIONS = [
 
 def _with_review(citations: list[dict]) -> list[dict]:
     for citation in citations:
-        citation["review"] = review_for(citation["id"])
+        citation["review"] = review_for(citation["id"], citation["claim"])
     return citations
 
 
