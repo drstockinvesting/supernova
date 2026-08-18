@@ -1054,6 +1054,136 @@ generations.
 
 ---
 
+### 2026-08-18 — Session 11 — the thresholds, measured
+
+Phase 7 opened all eighteen sources and could not touch a single number in a trigger. That was
+not an omission: a threshold carries no authority from a source by construction, so there is
+nothing in a document to check "above 25 referrals per 100 students" against. `/research` has
+said so on the page since Phase 5, and `THRESHOLDS` has said it about the caseload since Phase
+6, and both admissions have sat there unexamined because the review they call for needs people
+this repository does not have.
+
+**The review still has not happened. This session did the other kind of check, which is the
+kind a computer can do.** Not *is this number right*, which needs somebody with standing, but
+*does this number distinguish anything at all in the data it is applied to*. A threshold can
+be defensible and still fail that. A threshold cannot pass it and be doing nothing. The
+distinction is the same shape as Phase 7's: reading is not signing, and measuring is not
+reviewing.
+
+Two test files, because there are two threshold surfaces and they fail differently.
+
+**`app/src/ui/thresholds.test.ts`** builds a `MetricBag` for every cell the app really renders
+research against — 1,102 students, 252 classrooms, 72 teacher rollups, three buildings, the
+district — and measures each trigger's firing rate over the cells that *supply* the metric,
+because a null is not a non-firing. Grades are deliberately absent from that list: they are
+broken out in tables on three pages and no view ever hands one to the research layer, so a
+grade is not a place a claim can fire.
+
+**Seven measurements fall outside any band a trigger could be working in**, and they are
+recorded in `UNCALIBRATED` with their counts and a reason:
+
+| Claim | Trigger | Fires on |
+|---|---|---|
+| `cite-interruptions-01` | minutes lost above 120 | 252/252 classrooms, 72/72 teachers |
+| `cite-evidence-01` | above 20% of standards with no evidence | 72/72 teachers, 245/252 classrooms |
+| `cite-attendance-05` | attendance between 90 and 95 | 71/72 teachers |
+| `cite-behavior-02` | above 25 referrals per 100 | 71/72 teachers |
+| `cite-attendance-03` | attendance above 95 | 1/72 teachers |
+
+The interruptions threshold is the clearest: the quietest classroom in this district lost 173
+minutes and the median lost 472, so **120 sits below the floor of the distribution and the
+trigger cannot be off**. The quantity that would survive the change of scale is a share of
+instructional time rather than a raw total over a year — which is the same fix Phase 5 made to
+`disciplineReferralCount`, arrived at again from the other direction.
+
+`cite-attendance-03` is the same failure inverted and is worse than it looks. Attendance above
+95 is reached by one teacher and no building. It is the only claim in the library framed as
+something going well, and it is tagged to the board and the community — who read district
+figures and **so will never meet it at all**. Those two roles get five permanent concerns and
+one encouragement they cannot reach.
+
+**Two further checks fell out of the same populations, and both found something.** Two pairs
+of claims share one trigger: `cite-engagement-02` and `-03` on homework below 70, and
+`cite-attendance-04` and `cite-health-01` on chronic absence above 10. The second pair's roles
+are *nested*, so the health claim has never once appeared on its own — and a nurse, whose
+entire library is those two claims, meets both or neither. Separately, `cite-evidence-01`
+above 20% strictly implies `cite-mastery-01` above 25%, so two of the three slots the panel
+has go to one figure, ordered by whoever typed the library.
+
+**`app/src/views/caseload/thresholds.test.ts`** does the same job for the caseload and mirrors
+nothing: `concernsOf`, `streamsFor` and `buildCaseload` are plain TypeScript, so the test calls
+them and measures what a page renders. The permission sets are read off the accounts the
+district issues rather than written into the test, with an assertion that each caseload role
+issues exactly one set — without that, "the nurse's caseload" names more than one page and
+every count is a measurement of whichever account sorted first.
+
+Its finding is a different pathology and got its own assertion. **`tardyWatch: 8` catches 58
+students and not one of them is above it.** The district's median student has three late
+arrivals; its most-late student has exactly eight. A threshold of nine would name nobody. So
+the rule is not naming students who crossed a line — it is naming the top of the generator's
+range with a line drawn under it, and a real district, where a student can be late thirty
+times, would behave nothing like this. It is the sole entry in `NO_HEADROOM`. The other six
+hold up: attendance below 93 catches 115 beyond the 164 already chronic, the referral pair
+gives 51 and 64, formal plans split 105 of 176 service records, and five health-office visits
+is thin rather than broken at 13 students with four above the line.
+
+Three assertions there are about the list rather than about any one number, and they are the
+ones worth keeping when the thresholds do get reviewed:
+
+- **Priority stays under half a building** for every role — 17.9%–36.9% today, against full
+  lists of 43%–63%. That gap is the argument for the filter defaulting on, and it is now
+  pinned rather than asserted in a comment.
+- **Every stream a role holds can actually raise a priority concern.** One that cannot is a
+  column of decoration: the viewer holds the permission, the page draws the heading, and the
+  filter that matters never sees it.
+- **Holding more streams never removes a student from your priority list.** Monotonic by
+  construction, and worth pinning because the day it breaks, a counselor stops seeing a child
+  the nurse can see and both pages look right.
+
+**Both registries assert their recorded counts rather than decorating with them.** Generation
+is deterministic, so those numbers move only when the generator changes or somebody edits a
+threshold — both moments when the list should be read again. An entry that has come back
+inside the band fails as loudly as one that has left it, because **a stale exemption is how a
+fixed problem goes on looking unfixed and an unfixed one goes on looking known**. That is the
+same rule as `claimChecked` retiring a verdict on a reworded claim, applied to a measurement
+instead of a sentence.
+
+**Nothing was checked by a green run.** Every assertion was mutation-tested: making a trigger
+constant, making one dead, "fixing" the interruptions threshold, pinning nurse visits to the
+ceiling, and collapsing `referralPriority` to zero each fail the intended test and nothing
+else. The caseload file writes its predicates twice, which is a real cost, so a test over all
+1,102 students pins each one to the chip `concernsOf` actually produces — changing the tardy
+comparison from `>=` to `>` in `caseload.ts` fails it by name.
+
+**No threshold was changed, and that is deliberate.** Every number in both registries is
+waiting on a review by people this repository does not have, and moving one to make a test
+green would be the measurement quietly promoting itself into a judgement — the same error the
+sign-off rule exists to prevent.
+
+### Defects found while building Session 11
+
+- **The walkthrough's first threshold review was measured against the wrong section list.**
+  `aggregates/current-year.json` carries a thin section entry — mastery and counts only — while
+  the classroom page reads `aggregates/sections-context.json`, which carries attendance,
+  chronic absence, homework and evidence counts. Measured against the thin one, three claims
+  looked dead or constant that are neither: `cite-attendance-03` fires on 29 of 252 classrooms
+  rather than nowhere, and chronic absence and homework both discriminate at section level.
+  Corrected in `docs/walkthrough_alpha.md`. Worth recording because the error is the one this
+  product keeps finding in itself — **a figure that was never supplied reads exactly like a
+  figure that was supplied and did not fire**, and the fix in both cases is to count what
+  supplied a value rather than what failed a comparison.
+- **`cite-attendance-04` and `cite-health-01` have been one claim for two phases.** Identical
+  triggers, and `health-01`'s roles are a subset of `attendance-04`'s, so it has never once
+  been shown alone. Phase 5 measured coverage by role and Phase 7 read every source; neither
+  asks whether two claims are the same claim, because both look at claims one at a time.
+- **`masterySpreadPoints` is supplied by no section**, so the teacher-variation claim is the
+  only trigger in the library that cannot fire on a classroom page. That is correct — a
+  section has no sub-breakdown to spread — but it means the claim is judged on 72 teacher
+  cells, and it was described in the walkthrough's first draft as constant on the strength of
+  three buildings and one district.
+
+---
+
 ## Phase 1 Results
 
 - **593 standards** across CCSS Math, CCSS ELA, NGSS, C3, NCAS, and SHAPE America
@@ -1268,7 +1398,11 @@ Raised during Phase 5:
   by construction, so there is nothing to check it against. It needs a different kind of
   review from the one that has now happened. "Above 25 referrals per 100 students" and
   "above 20% of standards without evidence" were both chosen in this session by reading the
-  district's own figures and picking a number that fired.
+  district's own figures and picking a number that fired. **Session 11 measured them and did
+  not review them**, which is the distinction this entry turns on: seven measurements fire on
+  effectively every page or on effectively none, and are recorded in `UNCALIBRATED` in
+  `app/src/ui/thresholds.test.ts`. Both numbers quoted above are among them. The question
+  stays open, and the list is now the shortest statement of it.
 - **Claims are matched one metric at a time, and the design document promised more.** The
   UI/UX doc describes an analytics layer that identifies *combinations* — low mastery plus
   absence during a key instruction window, an interruption plus a pacing slowdown — and
@@ -1294,6 +1428,10 @@ Raised during Phase 6:
   of plausible size. They are named in `THRESHOLDS` and printed on the page so the rule can be
   argued with, which is not the same as the numbers being right. This is the second surface in
   the product carrying that admission and the two are not coordinated with each other.
+  **Session 11 measured all seven.** Six divide this district; `tardyWatch: 8` does not — all
+  58 students it catches sit exactly on it and none above, so a threshold of nine would name
+  nobody. Recorded in `NO_HEADROOM` in `app/src/views/caseload/thresholds.test.ts`. The two
+  surfaces still are not coordinated, but they now fail loudly in the same shape.
 - **The caseload file is not a redaction boundary and the enforcement is client-side.** Every
   stream is written for every student in one file per building, and which of them a viewer may
   read is decided when the page is built. A nurse's browser holds behaviour data it never
@@ -1533,6 +1671,17 @@ Useful entry points:
 - `app/src/views/DesignView.tsx` — the style guide at `/design`, rendered from the tokens
 - `app/src/views/caseload/caseload.ts` — what a caseload is: streams as permissions, the
   thresholds, and the filter. Plain TypeScript so the stream boundary can be tested
+**The thresholds have been measured and still have not been reviewed, and the two registries
+are the shortest form of the to-do list.** `UNCALIBRATED` in `app/src/ui/thresholds.test.ts`
+holds seven trigger measurements that fire on effectively every page or on effectively none;
+`NO_HEADROOM` in `app/src/views/caseload/thresholds.test.ts` holds the one caseload threshold
+that catches only the students sitting exactly on it. Both assert their recorded counts, so an
+entry cannot quietly stop describing the thing it names — fixing a threshold and leaving its
+entry behind fails as loudly as the original problem. Nothing in either list should be changed
+to make a test green: they are waiting on a judgement about educational practice, which is a
+different act from the measurement, in exactly the way a sign-off is a different act from a
+source check.
+
 - `app/src/views/CaseloadView.tsx` — the page three roles land on
 - `generator/aggregates.py` — `build_caseload_index`, one file per building
 - `app/src/session/access.ts` — every access decision, as pure functions
@@ -1549,6 +1698,10 @@ Useful entry points:
 - `app/src/views/section/narrative.ts` — the analytics paragraph, as a pure function
 - `app/src/ui/ComparisonTable.tsx` — ranked rows with bars, shared by every zoom level
 - `app/src/views/admin/compare.ts` — the spread computation the district view argues from
+- `app/src/ui/thresholds.test.ts` — every trigger's firing rate over the shipped dataset,
+  and `UNCALIBRATED`: the ones this district does not exercise
+- `app/src/views/caseload/thresholds.test.ts` — the same for `THRESHOLDS`, calling the real
+  `concernsOf` rather than mirroring it, and `NO_HEADROOM`
 - `app/src/views/community/disclosure.ts` — every public-display rule, as pure functions
 - `app/src/views/CommunityView.tsx` — the board and public views, and what each withholds
 - `scripts/emit_types.py` — regenerate TypeScript types after any schema change
