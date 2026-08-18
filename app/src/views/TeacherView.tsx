@@ -27,6 +27,8 @@ import {
   percent,
 } from '../ui/primitives'
 import { ResearchContext } from '../ui/ResearchContext'
+import { groupMetrics } from '../ui/research'
+import { spreadOf } from './admin/compare'
 import { ClassroomCard } from './section/ClassroomCard'
 
 export function TeacherView() {
@@ -101,6 +103,12 @@ export function TeacherView() {
     0,
   )
   const attendance = weighted(sections.map((s) => [s.attendanceRate, s.studentCount]))
+  const evidenceAcrossSections = sections.reduce<Record<string, number>>((totals, section) => {
+    for (const [strength, count] of Object.entries(section.evidenceStrengthCounts)) {
+      totals[strength] = (totals[strength] ?? 0) + count
+    }
+    return totals
+  }, {})
   const homework = weighted(sections.map((s) => [s.homeworkCompletionRate, s.studentCount]))
 
   return (
@@ -176,11 +184,20 @@ export function TeacherView() {
 
       <ResearchContext
         role={session.role}
-        metrics={{
+        metrics={groupMetrics({
           attendanceRate: attendance,
-          completionRate: homework,
-          disciplineReferralCount: sections.reduce((t, s) => t + s.disciplineReferrals, 0),
-        }}
+          chronicAbsenteeismRate: weighted(
+            sections.map((s) => [s.chronicAbsenteeismRate, s.studentCount]),
+          ),
+          homeworkCompletionRate: homework,
+          masteryRate,
+          standardsTaughtToDate: taught,
+          studentCount: students,
+          disciplineReferrals: sections.reduce((t, s) => t + s.disciplineReferrals, 0),
+          evidenceStrengthCounts: evidenceAcrossSections,
+          totalMinutesLost: interruptionMinutes,
+          masterySpreadPoints: spreadOf(sections.map((s) => s.masteryRate)).range,
+        })}
       />
     </div>
   )

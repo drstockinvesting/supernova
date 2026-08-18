@@ -3,14 +3,14 @@
     {
       "applicableRoles": [
         "teacher",
+        "special_education_teacher",
+        "counselor",
         "building_administrator",
         "district_administrator",
-        "school_board_member",
-        "guardian",
-        "community_member"
+        "guardian"
       ],
       "claim": "Students who miss 10 percent or more of the school year are substantially less likely to read proficiently and to graduate on time.",
-      "confidenceNote": "Association, not causation. Chronic absence co-occurs with factors such as housing instability and chronic health conditions that independently affect achievement.",
+      "confidenceNote": "Association, not causation. Chronic absence co-occurs with factors such as housing instability and chronic health conditions that independently affect achievement. Read as context for support, never as a prediction about this student.",
       "id": "cite-attendance-01",
       "metadata": {
         "addedDate": "2026-08-16",
@@ -32,7 +32,11 @@
     },
     {
       "applicableRoles": [
+        "student",
+        "guardian",
         "teacher",
+        "special_education_teacher",
+        "counselor",
         "building_administrator",
         "district_administrator"
       ],
@@ -88,6 +92,97 @@
     {
       "applicableRoles": [
         "teacher",
+        "counselor",
+        "nurse",
+        "building_administrator",
+        "district_administrator",
+        "school_board_member",
+        "community_member"
+      ],
+      "claim": "Chronic absence, defined as missing a tenth or more of school days, tracks achievement and graduation more closely than a school's average daily attendance, which can sit in a healthy range while a substantial minority of students are chronically absent.",
+      "confidenceNote": "The arithmetic point, that an average is insensitive to a small group missing many days, is not in dispute. The strength of the link between chronic absence and outcomes is correlational and varies with the population studied.",
+      "id": "cite-attendance-04",
+      "metadata": {
+        "addedDate": "2026-08-17",
+        "reviewStatus": "needs_human_review"
+      },
+      "source": {
+        "authorOrOrganization": "Attendance Works",
+        "publicationYear": 2018,
+        "sourceType": "research_organization",
+        "title": "Chronic Absence: Research and Data",
+        "url": "https://www.attendanceworks.org/chronic-absence/the-problem/"
+      },
+      "topic": "attendance",
+      "triggerConditions": {
+        "comparator": "above",
+        "metric": "chronicAbsenteeismRate",
+        "threshold": 10
+      }
+    },
+    {
+      "applicableRoles": [
+        "counselor",
+        "building_administrator",
+        "district_administrator",
+        "school_board_member",
+        "community_member"
+      ],
+      "claim": "An average attendance rate in the low 90s is consistent with a large share of absence being concentrated in relatively few students, because a small number missing many days moves the average very little.",
+      "confidenceNote": "This is a statement about how averages behave, illustrated by the source rather than established by it. Whether it holds here is answerable directly from this district's own chronic absence figure, which is shown alongside.",
+      "id": "cite-attendance-05",
+      "metadata": {
+        "addedDate": "2026-08-17",
+        "reviewStatus": "needs_human_review"
+      },
+      "source": {
+        "authorOrOrganization": "Ginsburg, A., Jordan, P., & Chang, H.",
+        "publicationYear": 2014,
+        "sourceType": "research_organization",
+        "title": "Absences Add Up: How School Attendance Influences Student Success",
+        "url": "https://www.attendanceworks.org/absences-add-up/"
+      },
+      "topic": "attendance",
+      "triggerConditions": {
+        "comparator": "between",
+        "metric": "schoolAttendanceRate",
+        "threshold": 90,
+        "upperThreshold": 95
+      }
+    },
+    {
+      "applicableRoles": [
+        "nurse",
+        "counselor",
+        "building_administrator",
+        "district_administrator"
+      ],
+      "claim": "Health conditions such as asthma, vision and dental problems, and unaddressed mental health needs are consistently found to be among the more common causes of missed instruction, and are concentrated in the same populations as low achievement.",
+      "confidenceNote": "A synthesis arguing for attention to health as an educational lever, not an estimate of how much of this district's absence is health-driven. Nothing here identifies which students are affected.",
+      "id": "cite-health-01",
+      "metadata": {
+        "addedDate": "2026-08-17",
+        "reviewStatus": "needs_human_review"
+      },
+      "source": {
+        "authorOrOrganization": "Basch, C. E.",
+        "publicationYear": 2011,
+        "sourceType": "peer_reviewed",
+        "title": "Healthier Students Are Better Learners: A Missing Link in School Reforms to Close the Achievement Gap",
+        "url": "https://doi.org/10.1111/j.1746-1561.2011.00632.x"
+      },
+      "topic": "attendance",
+      "triggerConditions": {
+        "comparator": "above",
+        "metric": "chronicAbsenteeismRate",
+        "threshold": 10
+      }
+    },
+    {
+      "applicableRoles": [
+        "teacher",
+        "special_education_teacher",
+        "counselor",
         "building_administrator",
         "district_administrator"
       ],
@@ -114,12 +209,14 @@
     },
     {
       "applicableRoles": [
+        "counselor",
         "building_administrator",
         "district_administrator",
-        "school_board_member"
+        "school_board_member",
+        "community_member"
       ],
       "claim": "School-wide positive behavioral interventions and supports are associated with reduced office discipline referrals and improved school climate.",
-      "confidenceNote": "Effects vary considerably with implementation fidelity.",
+      "confidenceNote": "Effects vary considerably with implementation fidelity. The threshold is an editorial choice about when this is worth showing, not a rate the source identifies as high.",
       "id": "cite-behavior-02",
       "metadata": {
         "addedDate": "2026-08-16",
@@ -135,19 +232,20 @@
       "topic": "behavior",
       "triggerConditions": {
         "comparator": "above",
-        "metric": "disciplineReferralCount",
-        "threshold": 3
+        "metric": "disciplineReferralsPer100Students",
+        "threshold": 25
       }
     },
     {
       "applicableRoles": [
         "teacher",
+        "counselor",
         "building_administrator",
         "district_administrator",
         "guardian"
       ],
       "claim": "Family engagement in schooling is consistently associated with higher achievement, better attendance, and improved social outcomes across income levels and backgrounds.",
-      "confidenceNote": "Low measured engagement often reflects barriers -- work schedules, language access, transportation -- rather than lack of interest. Frame as an access question, not a judgment about a family.",
+      "confidenceNote": "Low measured engagement often reflects barriers such as work schedules, language access, and transportation, rather than lack of interest. Frame as an access question, not a judgment about a family.",
       "id": "cite-engagement-01",
       "metadata": {
         "addedDate": "2026-08-16",
@@ -171,10 +269,67 @@
       "applicableRoles": [
         "teacher",
         "building_administrator",
+        "district_administrator",
+        "guardian"
+      ],
+      "claim": "Homework completion correlates with achievement more strongly at secondary than at elementary level.",
+      "confidenceNote": "The elementary correlation is weak. Do not surface homework completion as an achievement signal in elementary dashboards without that caveat.",
+      "id": "cite-engagement-02",
+      "metadata": {
+        "addedDate": "2026-08-16",
+        "reviewStatus": "needs_human_review"
+      },
+      "source": {
+        "authorOrOrganization": "Cooper, H., Robinson, J. C., & Patall, E. A.",
+        "publicationYear": 2006,
+        "sourceType": "meta_analysis",
+        "title": "Does Homework Improve Academic Achievement? A Synthesis of Research",
+        "url": "https://doi.org/10.3102/00346543076001001"
+      },
+      "topic": "engagement",
+      "triggerConditions": {
+        "comparator": "below",
+        "metric": "completionRate",
+        "threshold": 70
+      }
+    },
+    {
+      "applicableRoles": [
+        "student",
+        "guardian",
+        "teacher",
+        "special_education_teacher"
+      ],
+      "claim": "Practice distributed over time and self-testing are among the better-supported study techniques across a wide range of subjects and ages; rereading and highlighting are among the weakest.",
+      "confidenceNote": "A review of technique effectiveness in general, not advice fitted to this student or this subject. It says nothing about why any particular work went uncompleted.",
+      "id": "cite-engagement-03",
+      "metadata": {
+        "addedDate": "2026-08-17",
+        "reviewStatus": "needs_human_review"
+      },
+      "source": {
+        "authorOrOrganization": "Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T.",
+        "publicationYear": 2013,
+        "sourceType": "peer_reviewed",
+        "title": "Improving Students' Learning With Effective Learning Techniques: Promising Directions From Cognitive and Educational Psychology",
+        "url": "https://doi.org/10.1177/1529100612453266"
+      },
+      "topic": "engagement",
+      "triggerConditions": {
+        "comparator": "below",
+        "metric": "completionRate",
+        "threshold": 70
+      }
+    },
+    {
+      "applicableRoles": [
+        "teacher",
+        "special_education_teacher",
+        "building_administrator",
         "district_administrator"
       ],
       "claim": "Frequent formative assessment with actionable feedback is among the more effective instructional practices for improving achievement.",
-      "confidenceNote": "Effect sizes from this literature have been debated and are likely smaller than the headline figures often quoted. Avoid citing a number.",
+      "confidenceNote": "Effect sizes from this literature have been debated and are likely smaller than the headline figures often quoted. Avoid citing a number. An unrecorded artifact is also not the same as an unassessed standard.",
       "id": "cite-mastery-01",
       "metadata": {
         "addedDate": "2026-08-16",
@@ -189,14 +344,16 @@
       },
       "topic": "mastery_progression",
       "triggerConditions": {
-        "comparator": "below",
-        "metric": "evidenceCount",
-        "threshold": 3
+        "comparator": "above",
+        "metric": "standardsWithoutEvidenceShare",
+        "threshold": 25
       }
     },
     {
       "applicableRoles": [
         "teacher",
+        "special_education_teacher",
+        "counselor",
         "building_administrator",
         "district_administrator",
         "guardian"
@@ -225,6 +382,65 @@
     {
       "applicableRoles": [
         "teacher",
+        "special_education_teacher",
+        "building_administrator",
+        "district_administrator",
+        "school_board_member",
+        "community_member"
+      ],
+      "claim": "An interpretation drawn from an assessment is only as defensible as the evidence documented to support it; documentation of that evidence is treated as part of the judgement rather than as a record-keeping afterthought.",
+      "confidenceNote": "A professional standard for defensible measurement, not an empirical finding about outcomes. It bears on how much weight a mastery rate can carry, not on whether the students learned.",
+      "id": "cite-evidence-01",
+      "metadata": {
+        "addedDate": "2026-08-17",
+        "reviewStatus": "needs_human_review"
+      },
+      "source": {
+        "authorOrOrganization": "American Educational Research Association, American Psychological Association, & National Council on Measurement in Education",
+        "publicationYear": 2014,
+        "sourceType": "peer_reviewed",
+        "title": "Standards for Educational and Psychological Testing",
+        "url": "https://www.testingstandards.net/"
+      },
+      "topic": "mastery_progression",
+      "triggerConditions": {
+        "comparator": "above",
+        "metric": "standardsWithoutEvidenceShare",
+        "threshold": 20
+      }
+    },
+    {
+      "applicableRoles": [
+        "building_administrator",
+        "district_administrator",
+        "school_board_member",
+        "community_member"
+      ],
+      "claim": "Differences in achievement between classrooms within the same school are typically larger than differences between schools, so schools with near-identical averages can contain substantially different classrooms.",
+      "confidenceNote": "Measured on test-score gains in one state, not on mastery of standards, and the within-school variation it decomposes is not solely a teacher effect. Read as a reason to look inside a building, not as a ranking of anything inside this one.",
+      "id": "cite-variation-01",
+      "metadata": {
+        "addedDate": "2026-08-17",
+        "reviewStatus": "needs_human_review"
+      },
+      "source": {
+        "authorOrOrganization": "Rivkin, S. G., Hanushek, E. A., & Kain, J. F.",
+        "publicationYear": 2005,
+        "sourceType": "peer_reviewed",
+        "title": "Teachers, Schools, and Academic Achievement",
+        "url": "https://doi.org/10.1111/j.1468-0262.2005.00584.x"
+      },
+      "topic": "mastery_progression",
+      "triggerConditions": {
+        "comparator": "above",
+        "metric": "masterySpreadPoints",
+        "threshold": 5
+      }
+    },
+    {
+      "applicableRoles": [
+        "teacher",
+        "special_education_teacher",
         "building_administrator",
         "district_administrator"
       ],
@@ -252,6 +468,8 @@
     {
       "applicableRoles": [
         "teacher",
+        "special_education_teacher",
+        "counselor",
         "building_administrator",
         "district_administrator"
       ],
@@ -278,10 +496,13 @@
     },
     {
       "applicableRoles": [
+        "student",
+        "guardian",
         "teacher",
+        "special_education_teacher",
+        "counselor",
         "building_administrator",
-        "district_administrator",
-        "guardian"
+        "district_administrator"
       ],
       "claim": "Mobility between schools is associated with short-term achievement disruption, with effects that typically diminish as students stabilize.",
       "confidenceNote": "Sparse records reflect data transfer limits, not necessarily gaps in what the student knows. Read alongside current evidence, not instead of it.",
@@ -302,33 +523,6 @@
         "comparator": "equals",
         "metric": "hasIncompletePriorHistory",
         "threshold": 1
-      }
-    },
-    {
-      "applicableRoles": [
-        "teacher",
-        "building_administrator",
-        "guardian"
-      ],
-      "claim": "Homework completion correlates with achievement more strongly at secondary than at elementary level.",
-      "confidenceNote": "The elementary correlation is weak. Do not surface homework completion as an achievement signal in elementary dashboards without that caveat.",
-      "id": "cite-engagement-02",
-      "metadata": {
-        "addedDate": "2026-08-16",
-        "reviewStatus": "needs_human_review"
-      },
-      "source": {
-        "authorOrOrganization": "Cooper, H., Robinson, J. C., & Patall, E. A.",
-        "publicationYear": 2006,
-        "sourceType": "meta_analysis",
-        "title": "Does Homework Improve Academic Achievement? A Synthesis of Research",
-        "url": "https://doi.org/10.3102/00346543076001001"
-      },
-      "topic": "engagement",
-      "triggerConditions": {
-        "comparator": "below",
-        "metric": "completionRate",
-        "threshold": 70
       }
     }
   ],

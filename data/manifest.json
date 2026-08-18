@@ -1,12 +1,12 @@
 {
-  "approximateBytes": 190661253,
+  "approximateBytes": 190669980,
   "counts": {
     "curriculumUnits": 1368,
     "evidenceArtifacts": 98288,
     "guardians": 1271,
     "interruptionRecords": 252,
     "masteryRecords": 111393,
-    "researchCitations": 12,
+    "researchCitations": 18,
     "schoolYears": 3,
     "schools": 3,
     "sections": 252,

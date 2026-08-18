@@ -34,6 +34,7 @@ import {
   percent,
 } from '../ui/primitives'
 import { ResearchContext } from '../ui/ResearchContext'
+import { studentMetrics } from '../ui/research'
 import { MasteryConstellation } from './student/MasteryConstellation'
 import { StandardDetail } from './student/StandardDetail'
 import {
@@ -137,6 +138,26 @@ export function StudentProfileScreen({
   const canSeeBehavior = session.can('view_behavior_detail') && audience === 'staff'
   const canSeeHealth = session.can('view_health_detail') && audience === 'staff'
   const canSeeEvidence = session.can('view_evidence_artifacts')
+  const canSeeServices = session.can('view_special_services_detail') && audience === 'staff'
+
+  // Metrics for the research layer, derived here because the layer reads
+  // quantities no panel on this page displays directly.
+  //
+  // A prior year with no mastery records is a year spent at another building,
+  // and its summary reads 0.0%. Passing that through would fire the
+  // prerequisite-gaps claim on every transfer in the district, on the strength
+  // of a number that means "not recorded here" rather than "not learned".
+  const priorYearName = profile.schoolYears[profile.schoolYears.indexOf(activeYear) - 1]
+  const priorYear = priorYearName ? profile.years[priorYearName] : undefined
+  const priorYearMasteryRate =
+    priorYear && priorYear.mastery.length > 0 ? priorYear.summary.masteryRate : null
+
+  const suspensionCount = year_.behavior.incidents.filter(
+    (incident) => incident.incidentType === 'suspension',
+  ).length
+  const missedKeyInstructionDays = year_.attendance.attendanceExceptions.filter(
+    (entry) => entry.status.endsWith('absent') && keyDates.has(entry.date),
+  ).length
 
   const artifacts: Evidence[] | null =
     selected && evidenceState.status === 'ready' && evidenceState.value
@@ -302,15 +323,29 @@ export function StudentProfileScreen({
       {canSeeHealth ? <HealthLayer year={year_} /> : null}
       {audience === 'staff' ? <FamilyEngagementLayer year={year_} /> : null}
 
+      {/* Gated the same way the panels above it are, and for the reason Phase 3
+          spent a whole phase on: the research layer is a second path to the same
+          facts. A citation fires *because* a metric crossed a threshold, so its
+          presence on the page discloses that it did — a guardian who cannot open
+          the behaviour panel would otherwise learn from a triggered claim that
+          their child had been suspended. The bag is built from what this account
+          may see, not from what the record holds. */}
       <ResearchContext
         role={session.role}
-        metrics={{
-          attendanceRate: summary.attendanceRate,
-          disciplineReferralCount: summary.disciplineReferralCount,
-          completionRate: summary.homeworkCompletionRate,
-          responseRate: year_.familyEngagement.metrics.responseRate,
+        metrics={studentMetrics({
+          attendanceRate: canSeeAttendance ? summary.attendanceRate : null,
+          missedKeyInstructionDays: canSeeAttendance ? missedKeyInstructionDays : null,
+          homeworkCompletionRate: summary.homeworkCompletionRate,
+          masteryRate: hasMasteryRecord ? summary.masteryRate : null,
+          priorYearMasteryRate,
+          standardsTaughtToDate: summary.standardsTaughtToDate,
+          standardsWithNoEvidence: summary.standardsWithNoEvidence,
+          disciplineReferralCount: canSeeBehavior ? summary.disciplineReferralCount : null,
+          suspensionCount: canSeeBehavior ? suspensionCount : null,
+          responseRate: audience === 'staff' ? year_.familyEngagement.metrics.responseRate : null,
+          hasActiveIEP: canSeeServices && Boolean(year_.specialServices?.iepStatus),
           hasIncompletePriorHistory: isTransfer,
-        }}
+        })}
       />
     </Page>
   )

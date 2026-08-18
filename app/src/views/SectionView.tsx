@@ -47,6 +47,7 @@ import {
 import { Constellation } from '../ui/Constellation'
 import { SHARE_LEGEND } from '../ui/stars'
 import { ResearchContext } from '../ui/ResearchContext'
+import { groupMetrics } from '../ui/research'
 import { buildNarrative } from './section/narrative'
 import { pacingLabel } from './section/ClassroomCard'
 import { classroomSky } from './constellations'
@@ -351,13 +352,17 @@ export function SectionView() {
 
       <RosterGrid roster={roster} unitId={unit?.unitId ?? null} />
 
+      {/* A classroom is the one level that loses instructional minutes to
+          something it can name, so it is the level that supplies them. The
+          interruptions claim has been in the library since Phase 1 and had never
+          once been handed the metric it triggers on. */}
       <ResearchContext
         role={session.role}
-        metrics={{
-          attendanceRate: section.attendanceRate,
-          completionRate: homework.rate,
-          disciplineReferralCount: section.disciplineReferrals,
-        }}
+        metrics={groupMetrics({
+          ...section,
+          homeworkCompletionRate: homework.rate,
+          totalMinutesLost: section.interruptions.totalMinutesLost,
+        })}
       />
     </div>
   )
