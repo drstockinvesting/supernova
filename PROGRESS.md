@@ -27,7 +27,7 @@ rewriting it, so the reasoning behind the build stays legible.
 - [x] The special education teacher had no dashboard at all, and nothing said so
 - [x] A star is a student here — the zoom level the fractal was missing, brightness unchanged
 - [x] Thresholds named in one place and printed on the page, with the same admission `/research` makes
-- [x] 24 new tests, 86 total; build clean, lint at the recorded baseline of 11
+- [x] 27 new tests, 89 total; build clean, lint at the recorded baseline of 11
 
 ---
 
@@ -1207,7 +1207,7 @@ npm --prefix app run build && npm --prefix app test && npm --prefix app run lint
 ```
 
 `test` is `node --test` over `src/**/*.test.ts`, using Node's own type stripping — there is
-no test framework and nothing to install. 86 tests, and everything covered is covered for
+no test framework and nothing to install. 89 tests, and everything covered is covered for
 the same reason: its failures are invisible on screen. A guard that wrongly allows renders
 a page indistinguishable from one the viewer was entitled to; a suppression rule that never
 fires looks identical to one that works; a sky lit on the wrong scale is still a sky, and
