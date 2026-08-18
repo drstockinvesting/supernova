@@ -32,3 +32,9 @@ app/public/data
 # Local scratch — not part of the dataset
 scratch/
 *.local.json
+
+# Agent worktrees — real git worktrees checked out inside the repo. Committing
+# them would commit a second copy of the tree, including the dataset.
+# `.claude/launch.json` is deliberately not ignored; settings.local.json is
+# already covered by *.local.json above.
+.claude/worktrees/
