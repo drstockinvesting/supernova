@@ -39,6 +39,7 @@ import { ComparisonTable, type ComparisonRow } from '../ui/ComparisonTable'
 import { Constellation, UnlitSky } from '../ui/Constellation'
 import { SHARE_LEGEND } from '../ui/stars'
 import { ResearchContext } from '../ui/ResearchContext'
+import { groupMetrics } from '../ui/research'
 import { ClassroomCard } from './section/ClassroomCard'
 import { spreadOf, subjectRows } from './admin/compare'
 import { buildingSky } from './constellations'
@@ -115,6 +116,7 @@ export function SchoolView() {
   // `view_aggregate_mastery`, which is every rollup, comparison, and classroom
   // card below. Phase 2 showed them all of it because no view asked.
   const seesAggregates = session.can('view_aggregate_mastery')
+  const seesAttendance = session.can('view_attendance_detail')
 
   const gradeRows: ComparisonRow[] = [...grades]
     .sort((a, b) => b.masteryRate - a.masteryRate)
@@ -175,6 +177,25 @@ export function SchoolView() {
             on it. The page does not pretend to have looked and found nothing.
           </p>
         </UnlitSky>
+
+        {/* The one thing this page can honestly give the account it belongs to.
+            A nurse holds attendance and health detail at this building and no
+            aggregate mastery, so the panels above are all somebody else's — but
+            the research library has claims about the stream they are responsible
+            for, and chronic absence is a figure their own permissions cover.
+
+            The bag is deliberately narrow. Everything the unlit sky withholds is
+            withheld here too: a claim that fired on this building's mastery rate
+            would disclose that the rate crossed a threshold, which is the same
+            entitlement question one step removed. */}
+        <ResearchContext
+          role={session.role}
+          metrics={groupMetrics({
+            attendanceRate: seesAttendance ? building.attendanceRate : null,
+            chronicAbsenteeismRate: seesAttendance ? building.chronicAbsenteeismRate : null,
+            studentCount: building.studentCount,
+          })}
+        />
       </div>
     )
   }
@@ -341,11 +362,10 @@ export function SchoolView() {
 
       <ResearchContext
         role={session.role}
-        metrics={{
-          attendanceRate: building.attendanceRate,
-          completionRate: building.homeworkCompletionRate,
-          disciplineReferralCount: building.disciplineReferrals,
-        }}
+        metrics={groupMetrics({
+          ...building,
+          masterySpreadPoints: Math.max(gradeSpread.range, sectionSpread.range),
+        })}
       />
     </div>
   )

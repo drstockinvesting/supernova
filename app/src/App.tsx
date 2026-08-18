@@ -11,6 +11,7 @@ import { SchoolView } from './views/SchoolView'
 import { DistrictView } from './views/DistrictView'
 import { CommunityView } from './views/CommunityView'
 import { DesignView } from './views/DesignView'
+import { ResearchView } from './views/ResearchView'
 import { AS_OF_LABEL } from './lib/dataset'
 import { Loading } from './ui/primitives'
 import { SupernovaMark, ThemeToggle } from './ui/ThemeToggle'
@@ -133,6 +134,12 @@ export default function App() {
               here to scope to an account, and a design system every role can open
               is one that gets looked at. */}
           <Route path="/design" element={<DesignView />} />
+          {/* Also outside the guard, and for a stronger reason than /design's.
+              The library is published research plus the rules for showing it, so
+              there is no district record in it to scope — and the addendum's
+              case for storing citations as records was that the sourcing would
+              be auditable, which is not true of an audit only insiders can open. */}
+          <Route path="/research" element={<ResearchView />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

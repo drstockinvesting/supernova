@@ -13,7 +13,22 @@ rewriting it, so the reasoning behind the build stays legible.
 | **2. UI / UX build** | Complete — student through board and community | 2026-08-17 |
 | **3. Permissions enforcement** | Complete — enforced at the route boundary | 2026-08-17 |
 | **4. Visual design system** | Complete — one constellation at every zoom level | 2026-08-17 |
-| 5. Research context layer | Not started | — |
+| **5. Research context layer** | Complete — the library is a checked contract | 2026-08-17 |
+
+---
+
+## Phase 5 Checklist
+
+- [x] Measured first — the firing matrix across ten roles and 1,102 students, before edits
+- [x] Metric vocabulary declared with scale — `ui/research.ts`, plain TypeScript
+- [x] `between` implemented, half-open, the comparator the addendum specified in Phase 1
+- [x] Count and rate triggers separated; aggregate claims keyed to rates that travel
+- [x] Library grown 12 → 18; every one of the ten roles now tagged
+- [x] Views supply metrics through builders, not by hand at six call sites
+- [x] Student bag gated by permission — the research layer was a second path to the record
+- [x] Three coverage states given three shapes; silence no longer means three things
+- [x] Library audit at `/research`, outside the guard, with a measured coverage table
+- [x] 21 research tests including the library-to-app contract; 62 total, build and lint clean
 
 ---
 
@@ -590,6 +605,164 @@ commit rather than being discovered on a student profile months later.
 
 ---
 
+### 2026-08-17 — Session 8 (Phase 5) — the research context layer
+
+**The phase began by measuring the thing it was meant to extend, and the measurement
+changed the work.** The brief carried forward from Stage 6 was that the citation library
+was admin-shaped and needed public-facing claims. That was true and it was the smaller
+half. Counted against the shipped dataset:
+
+| | Before |
+|---|---|
+| Roles with no claim tagged at all | 4 of 10 — student, sped teacher, counselor, nurse |
+| A student's own page | 0 claims, on 1,102 of 1,102 students |
+| A community member | 0, on every page, always |
+| A school board member | 1 |
+| Claims that could never fire anywhere | 6 of 12 |
+| Guardian or teacher on a student | nothing on 52.5% of students |
+
+The last row of that table is the one that reframed the phase. Six citations named a metric
+no view ever supplied — `totalMinutesLost`, `hasActiveIEP`, `priorYearMasteryRate`,
+`missedKeyInstructionDays`, `suspensionCount`, `evidenceCount`. They were spelled correctly,
+they meant something real, they had been written in Phase 1 and reviewed in prose twice
+since, and they were dead. The matching was a string lookup against a bag assembled by hand
+at six call sites, which makes a typo and an unimplemented metric the same event, and makes
+neither of them visible in a build, in a test, or on a screen.
+
+**So the vocabulary is now the contract.** `METRICS` in `ui/research.ts` declares every
+metric the layer knows. A citation may only trigger on a name in it; a view may only supply
+names in it, through `groupMetrics` and `studentMetrics` rather than an object literal; and
+the test suite asserts both directions, including that each metric is actually produced by a
+builder at the scale its claims need. Adding a citation with a new metric now means adding
+the metric first, and forgetting to wire it up fails `npm test` rather than rendering
+nothing forever.
+
+**A trigger has to survive a change of scale, and that is the load-bearing decision.** The
+board's single citation was `disciplineReferralCount above 3` — a sentence about a child,
+firing because the district logged 558 referrals. A threshold over a count is a threshold
+over the size of the thing counted, so aggregate claims are now keyed to rates: referrals
+per 100 students, the share of students chronically absent.
+
+Rates are not automatically safe either, which took longer to see. "Students who miss 10
+percent or more of the school year" is a claim about people, and a district averaging 93.4%
+attendance carries no information about how many people that is. A functioning district's
+average attendance is essentially never below 90, so a claim keyed to it is dead on every
+aggregate view *by construction* — the public page was silent partly because it was being
+asked a question it could not answer. The honest aggregate of that same fact is chronic
+absenteeism, 14.9% here, which the community page had been displaying in a metric card the
+whole time and had never once handed to the library. Metrics therefore declare a scale,
+bags declare a scale, and the selector refuses to match across them. There is a test that a
+group bag cannot satisfy an individual-scale metric *even when the number is present*.
+
+**`between` exists because a district lives in the middle.** The addendum specified four
+comparators in Phase 1 and the code implemented three, and the missing one turned out to be
+the one the public page needed: every attendance claim in the library triggered at an
+extreme, above 95 or below 90, and this district sits at 93.4 — squarely in the gap, which
+is where a school spends every ordinary day of its life. The band is half-open,
+`threshold ≤ v < upper`, so a value on a boundary belongs to one band rather than to a band
+and an `above` claim at once. That is asserted rather than assumed.
+
+**The research layer was a second, unguarded path to the record.** Phase 3 put every route
+behind one boundary and every panel behind a permission, and then `ResearchContext` was
+handed a metric bag built straight off the student's summary — including
+`disciplineReferralCount`, on a page rendered for a guardian who holds no
+`view_behavior_detail`. Nothing leaked, because no behaviour claim happened to be tagged for
+guardians; the protection was a coincidence of tagging rather than a rule. It matters
+because **a triggered citation is itself a disclosure**: a claim appears precisely when a
+metric crosses a threshold, so its presence on the page publishes that the threshold was
+crossed. The bag is now built from what the account may see, not from what the record holds
+— `canSeeBehavior ? summary.disciplineReferralCount : null` — which is the same rule the
+panels above it already follow.
+
+**Silence meant three different things and had one shape.** The component returned `null`
+when nothing fired, so "the library has claims for you and none of them bear on these
+figures" looked exactly like "the library has nothing for your role at all" looked exactly
+like "nobody put the layer on this page." The first is the ordinary case and the whole point
+of triggering; the second is the defect that survived four phases; the third is a missing
+feature. They now have three shapes — a card, a quiet line naming how many claims were
+considered, and a caution — on the same reasoning as the board's disclosure rules that carry
+*in force · never fired*: a thing that has never announced itself is not thereby absent.
+
+**A trigger threshold is not a finding, and the record makes them look like one.** `claim` is
+what the source says. `triggerConditions` is an editorial judgement about when the claim is
+worth showing and carries no authority from the source whatsoever — "above 25 referrals per
+100 students" is a decision made in this repository, not a rate the PBIS literature
+identifies as high. The two sit in one record and read as one statement, so `/research`
+separates them explicitly and `generator/research.py` opens by saying so.
+
+**What the student is shown was chosen, not defaulted.** The innermost ring had no research
+context at all, and the obvious fix — tag the existing attendance claim for students — is the
+wrong one. `cite-attendance-01` says students missing a tenth of the year are less likely to
+graduate on time, and putting that in front of the fourteen-year-old it describes is the
+punitive reading of a product whose first principle is the opposite. It stays tagged for the
+adults responsible for support. What the student gets instead is the actionable half of the
+same subject: `cite-attendance-02`, on which days carried the most new instruction, which the
+app can actually point at because units already carry key instruction dates; the mobility
+claim, which tells a transfer that a thin record is a fact about paperwork rather than about
+them; and study technique, which is about a method the reader controls. A claim attached to a
+child should be about something they can do, not about a probability attached to them.
+
+**One good citation was left out because it had no metric to key on.** NCES publishes
+statistical-disclosure guidance that is precisely the research behind the board's suppression
+panel, and there is no figure on that page it could trigger from — the honest trigger would
+be a small-cell count, and this district has none. Adding it with a contrived condition, or
+with none, would have been the first crack in *nothing is shown because its topic seemed
+relevant*, which is the rule the whole layer rests on. It stays out.
+
+**Two triggers were rejected for reasons the data supplied.** Mastery rate cannot be a
+trigger at all this year: the community and district pages spend paragraphs arguing that a
+mid-February rate of 39.4% is a year in progress rather than a level of achievement, so a
+claim firing on "mastery below 50" would have the product contradicting itself one panel
+apart. And `priorYearMasteryRate` is only passed when the prior year holds mastery records —
+a year spent at another building summarises as 0.0%, which would have fired the
+prerequisite-gaps claim on every transfer in the district on the strength of a number
+meaning "not recorded here."
+
+**`/research` is outside the guard, and for a stronger reason than `/design` was.** The
+addendum's case for storing citations as records rather than sentences was that the sourcing
+would be auditable. For four phases it was auditable in principle and unauditable in fact:
+the only way to see what the library held was to read the generator, and the only way to see
+what a role got from it was to sign in as that role and scroll. This phase opened by writing
+a script to answer "what does a community member see?" — the page now answers it without one,
+and a claim that auditability is a feature does not survive the audit being available only to
+people with accounts.
+
+Where it ended up, on the same figures:
+
+| | Before | After |
+|---|---|---|
+| Community member, district page | 0 | 5 |
+| School board member | 1 | 5 |
+| Nurse, on an otherwise unlit building page | 0 | 2 |
+| Roles with no claim tagged | 4 | 0 |
+| Claims that can never fire | 6 | 0 |
+| Student, on their own page | nothing for 100% | nothing for 21.6% |
+| Guardian, on a child | nothing for 52.5% | nothing for 12.7% |
+| Teacher, on a student | nothing for 52.5% | nothing for 7.5% |
+
+### Defects found while building Phase 5
+
+- **Half the library could not fire.** Six of twelve citations triggered on a metric name no
+  view supplied. Fixed by wiring the metrics up — the classroom now supplies the interruption
+  minutes its claim has wanted since Phase 1 — and by the contract test that makes it
+  impossible to reintroduce.
+- **A count threshold applied across scales.** `disciplineReferralCount above 3`, written for
+  one student, was the only research a school board ever saw, because 558 > 3.
+- **A per-standard threshold fed a per-year total.** `evidenceCount below 3` was written about
+  one standard's artifacts and the only page supplying `evidenceCount` handed it a year total
+  of 200. It is now a share of standards carrying no artifact, which means the same thing on
+  one student and on a district — and which finally gives the "what the rate rests on" panel
+  the claim it was arguing.
+- **The metric bag ignored permissions.** Built from the record rather than from entitlement,
+  on a page whose every other panel is gated. No leak in practice; no rule preventing one.
+- **An individual-scale metric was passed by five aggregate views.** `attendanceRate` was
+  handed over by the section, building, district, teacher, and community pages, where it
+  means the average of a group and the claims reading it mean one child.
+- **Double hyphens rendered as double hyphens.** The generator's prose convention leaked into
+  four strings that are displayed to stakeholders. Rephrased rather than re-punctuated.
+
+---
+
 ## Phase 1 Results
 
 - **593 standards** across CCSS Math, CCSS ELA, NGSS, C3, NCAS, and SHAPE America
@@ -620,7 +793,11 @@ Carried forward from `docs/lms-vision-document.md` and not resolved in Phase 1:
 - What role does student self-assessment play in validating mastery?
 - How does the system handle skill prerequisites and interdependencies?
 - What research sources are authoritative for the context layer? *(Phase 1 seeds a starter
-  citation library; it needs review before it appears in any stakeholder-facing view.)*
+  citation library; it needs review before it appears in any stakeholder-facing view.
+  Phase 5 grew it to 18 claims and built the page that makes review possible — `/research`
+  shows every claim, its source, and its status — but performed no review. All 18 remain
+  `needs_human_review`, and the question of who is entitled to clear that flag is still
+  open.)*
 
 Raised during Phase 1:
 
@@ -691,12 +868,13 @@ Raised during Stage 6:
   dimension — but all three are inert on this dataset. The rule has been reasoned about and
   tested; it has never actually run against real data. That is not the same as knowing it
   works, and a district with a 6-student grade would be the real test.
-- **The citation library is admin-shaped.** A community member gets no research context at
-  all: the only two citations tagged for the role trigger below 90% attendance and above
-  95% attendance, and the district sits at 93.4% — squarely in the gap between them. A board
-  member gets exactly one, on discipline referrals. The library was written for views that
-  describe a student or a classroom, and the outermost layer has almost nothing to say
-  through it. Phase 5 should add public-facing claims, or the role tags are decorative.
+- ~~**The citation library is admin-shaped.**~~ **Resolved in Phase 5**, and it was worse
+  than recorded here. The gap at 93.4% was real — that band is now covered, by the comparator
+  the addendum specified and the code never had — but a community member saw nothing for a
+  second reason this entry missed: the claims tagged for the role were keyed to an
+  individual's attendance rate, which no aggregate page can honestly supply. Four roles, not
+  one, had no claims at all, and half the library could not fire for anybody. Community and
+  board now read five claims each on the district's own figures.
 - **Should the board see the spread without the labels?** The board narrative states that
   schools sit within 1.1 points and grades vary 10.3, which is the shape of the variation
   with no identifiers attached. That felt right — a governing body needs to know the
@@ -766,32 +944,79 @@ Raised during Phase 4:
   build asserts that a swatch still resolves, so a deleted token is caught by a person or
   not at all.
 
+Raised during Phase 5:
+
+- **Nothing has been verified, and the phase made that more visible rather than less.** All
+  18 claims carry `needs_human_review`, the schema says nothing so marked should reach a
+  stakeholder-facing view, and they are now shown to more roles on more pages than before.
+  The machinery for review exists and no review has happened. Two questions sit under it:
+  who is entitled to move a claim to `verified`, and what that flag would license — because
+  a verified claim is one the product asserts without a hedge, and the hedge is currently
+  doing real work.
+- **A triggered citation discloses the figure that triggered it.** The student bag is now
+  gated on the viewer's permissions for exactly this reason, but the same property holds at
+  group scale and is not gated there: a nurse's building page shows a chronic-absence claim
+  and therefore reveals that the building is above 10%, which their permissions do cover, but
+  the reasoning was made case by case rather than by rule. A general form — *a claim may only
+  trigger on a metric the viewer could be shown directly* — is stateable and is not stated.
+- **Three claims are shown and the choice among them is arbitrary.** A teacher reading one
+  student can have nine claims fire; the layer shows the first three in library order and
+  reports the rest as a count. Library order is the order somebody typed them. Relevance,
+  severity, and recency are all defensible orderings and none is implemented.
+- **21.6% of students still see nothing on their own page.** Down from 100%, and the
+  remainder is not obviously a bug — a student attending well, completing their homework, and
+  holding a full prior record has genuinely triggered nothing. But three claims is a thin
+  library for the role the entire product is named after, and the constraint that a
+  student-facing claim be about a method rather than a probability is a real one that has not
+  been tried hard against.
+- **Every threshold is an editorial judgement and none was made by anyone qualified.**
+  `/research` says so plainly, which is better than the previous state of not saying it. It
+  is not the same as the numbers being right. "Above 25 referrals per 100 students" and
+  "above 20% of standards without evidence" were both chosen in this session by reading the
+  district's own figures and picking a number that fired.
+- **Claims are matched one metric at a time, and the design document promised more.** The
+  UI/UX doc describes an analytics layer that identifies *combinations* — low mastery plus
+  absence during a key instruction window, an interruption plus a pacing slowdown — and
+  surfaces the correlation. The layer built here matches a single claim to a single figure,
+  so two claims about the same student appear side by side with no relationship asserted
+  between them. That is honest, and it is less than was described.
+- **`masterySpreadPoints` is a slightly different quantity on every page.** Each view supplies
+  the widest spread among the breakdowns it happens to show — grades and schools on the public
+  page, plus classrooms on the district page — so the same claim fires against a different
+  measurement depending on where it is read. The alternative is a spread computed once at a
+  fixed level, which would then not describe the page it appears on.
+- **The nurse has two claims and still has no caseload view.** Phase 3 named this as the
+  clearest gap it uncovered, Phase 4 made the landing page honest about the absence, and
+  Phase 5 has now put the one thing on it the account is entitled to. None of that is *the
+  students at my building, filtered to the stream I am responsible for*, which remains
+  unbuilt.
+
 ---
 
 ## Notes for the Next Session
 
-**Phase 4 is complete.** The constellation is now one component rendering five zoom
-levels, dark is the base theme, the three enforcement states have shapes of their own, and
-`/design` renders the system from the tokens themselves. The two decisions most worth
-knowing before touching any of it are the continuous absolute ramp and where the star
-models live — both in the decision log above.
+**All five phases are complete.** The dataset, the dashboards, enforcement at the route
+boundary, one constellation at every zoom level, and a research layer whose claims are
+matched to the figures rather than to the topic. Phase 5's decision log above is worth
+reading before touching the research code; the shortest version is that a trigger has to
+survive a change of scale, and that the metric vocabulary is now a contract with a test
+behind it rather than a convention.
 
-**Phase 5 is the research context layer.** The clearest brief for it is already recorded
-as a Stage 6 open question: the citation library is admin-shaped. A community member gets
-no research context at all, because the only two citations tagged for the role trigger
-below 90% and above 95% attendance and the district sits at 93.4% — squarely in the gap. A
-board member gets exactly one. The library was written for views that describe a student
-or a classroom, and the outermost layer has almost nothing to say through it. Phase 5 either
-adds public-facing claims or the role tags are decorative.
+**The strongest remaining gap is the one Phase 3 named and no phase has closed.** A nurse
+and a counselor hold permissions describing a job the app has no view for. A caseload view —
+*the students at my building, filtered to the stream I am responsible for* — would give two
+of the ten roles a real home. Phase 4 made the nurse's landing page honest rather than
+empty; Phase 5 put the two research claims on it that the account is actually entitled to.
+Honest about an absence, with something in the corner, is still an absence.
 
-**If you would rather close a gap than start a phase**, the strongest candidate is still
-the first Phase 3 open question: a nurse and a counselor hold permissions describing a job
-the app has no view for. A caseload view — *the students at my building, filtered to the
-stream I am responsible for* — would give two of the ten roles a real home. Phase 4 made
-the nurse's landing page honest rather than empty, but honest about an absence is still an
-absence.
+**The other candidate is the review pass the library has never had.** 18 of 18 claims are
+`needs_human_review`, they are now shown on more pages to more roles than at any point in
+the project, and `/research` exists specifically to make checking them possible. Doing that
+work is not a coding task and should not be done by whoever writes the next commit without
+saying so — the flag is currently the only thing standing between a synthetic prototype and
+a product asserting educational research to a school board.
 
-Four things about the code that are easy to get wrong:
+Six things about the code that are easy to get wrong:
 
 - **Never resolve scope from the record being requested.** `scope.ts` expands the
   *viewer's* assignments — a teacher's rosters — precisely so that deciding access never
@@ -804,8 +1029,18 @@ Four things about the code that are easy to get wrong:
   read better and would turn the mastery map into a ranking; there is a test asserting a
   star is lit the same alone as among brighter neighbours.
 - **Anything a test touches cannot live in a `.tsx`.** `node --test` strips types but does
-  not transform JSX. That is why the star vocabulary is in `ui/stars.ts` and why
-  `views/constellations.ts` writes its runtime imports with explicit `.ts` extensions.
+  not transform JSX. That is why the star vocabulary is in `ui/stars.ts`, why the research
+  selector is in `ui/research.ts`, and why both write their runtime imports with explicit
+  `.ts` extensions.
+- **A metric name is not a string.** `METRICS` in `ui/research.ts` is the only place a metric
+  is declared, views supply them through `groupMetrics` / `studentMetrics` rather than object
+  literals, and `research.test.ts` reads the shipped dataset to assert the two agree. Adding a
+  citation with a new metric means declaring it and supplying it first; skipping either used
+  to produce a citation that rendered as nothing, forever, silently.
+- **Never hand the research layer a figure the viewer cannot be shown.** A claim appears
+  exactly when a metric crosses a threshold, so its presence publishes that the threshold was
+  crossed. `StudentView` builds its bag from `canSeeBehavior` and friends rather than from the
+  record. This is a permission boundary that does not look like one.
 
 Running the app:
 
@@ -824,15 +1059,25 @@ npm --prefix app run build && npm --prefix app test && npm --prefix app run lint
 ```
 
 `test` is `node --test` over `src/**/*.test.ts`, using Node's own type stripping — there is
-no test framework and nothing to install. 41 tests, and everything covered is covered for
+no test framework and nothing to install. 62 tests, and everything covered is covered for
 the same reason: its failures are invisible on screen. A guard that wrongly allows renders
 a page indistinguishable from one the viewer was entitled to; a suppression rule that never
 fires looks identical to one that works; a sky lit on the wrong scale is still a sky, and
-nobody ever sees two zoom levels at once. Lint reports 11 `only-export-components`
-warnings against a recorded baseline of 12; that count should not grow.
+nobody ever sees two zoom levels at once; a citation that can never fire renders exactly
+like one that fires correctly. That last one was not hypothetical — half the citation
+library was inert for four phases — which is why `research.test.ts` is the only suite that
+reads the shipped dataset rather than fixtures. It is asserting a contract between two files
+that are edited by different people at different times, and fixtures cannot do that. Lint
+reports 11 `only-export-components` warnings against a recorded baseline of 12; that count
+should not grow.
 
 Useful entry points:
 
+- `app/src/ui/research.ts` — the metric vocabulary, the scale rule, and the selector.
+  Plain TypeScript so the contract can be tested
+- `app/src/ui/ResearchContext.tsx` — the card, and the two shapes silence takes
+- `app/src/views/ResearchView.tsx` — the library audit at `/research`, outside the guard
+- `generator/research.py` — the claims themselves, and why each trigger is what it is
 - `app/src/ui/stars.ts` — what a star is, and the one function turning a rate into
   brightness. Plain TypeScript so the scale can be tested
 - `app/src/ui/Constellation.tsx` — the picture, at any scale, plus `UnlitSky`

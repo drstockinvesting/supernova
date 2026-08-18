@@ -468,9 +468,10 @@ ResearchCitation
 │                    research_organization, meta_analysis, other)
 ├── applicableRoles (array of roles this context is surfaced to)
 ├── triggerConditions (when the system should surface this citation)
-│   ├── metric (e.g., "attendanceRate")
+│   ├── metric (e.g., "chronicAbsenteeismRate" — must be a name the app declares)
 │   ├── comparator (enum: below, above, equals, between)
-│   └── threshold
+│   ├── threshold (the bound; the lower bound when comparator is "between")
+│   └── upperThreshold (required for "between" and meaningless otherwise)
 ├── confidenceNote (any caveat about strength or generalizability)
 └── metadata (added date, last reviewed date, review status)
 ```
@@ -480,6 +481,31 @@ ResearchCitation
 correlational findings as causal would undercut both. Every generated citation carries a review
 status, and none should reach a stakeholder-facing view until a human has verified the source
 says what the claim says.
+
+**On `triggerConditions`, added in Phase 5.** Three rules, each learned by measuring what the
+library actually showed:
+
+1. **A metric is part of a declared vocabulary, not a free string.** The app declares every
+   metric in `app/src/ui/research.ts`, and its tests fail if a citation names anything else or
+   if no view supplies it. Six of the original twelve citations named metrics no view ever
+   supplied and were therefore inert; a string lookup cannot distinguish a typo from an
+   unimplemented metric, and neither is visible on screen.
+2. **A metric declares the scale it is meaningful at** — one student, a group, or genuinely
+   both — and a trigger only matches a figure of that scale. A count threshold written about a
+   child (`disciplineReferralCount above 3`) fires on any district, and an individual's rate
+   ("students missing 10 percent of the year") has no aggregate meaning, because a district
+   averaging 93.4% attendance says nothing about how many students that describes. Aggregate
+   claims are keyed to quantities that survive the change: chronic absenteeism, referrals per
+   100 students, shares rather than counts.
+3. **`between` is half-open** — `threshold ≤ value < upperThreshold` — so a value on a boundary
+   belongs to exactly one band and cannot satisfy both a band and an adjacent `above`. It
+   exists because every attendance claim in the original library triggered at an extreme while
+   a functioning district spends its whole life in the middle.
+
+**A threshold is not a finding.** `claim` is what the source says; `triggerConditions` is an
+editorial judgement about when the claim is worth showing, and carries no authority from the
+source. The two live in one record and read as one statement, so any view rendering a trigger
+should label it as a separate kind of statement.
 
 ---
 

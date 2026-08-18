@@ -12,10 +12,11 @@ See [`docs/supernova-vision.md`](docs/supernova-vision.md) for the full vision.
 
 ## Current Phase
 
-**Phase 5 — Research Context Layer.** Phases 1 through 4 are complete: the synthetic
+**Phase 5 complete — the research context layer.** All five phases are done: the synthetic
 dataset, the dashboards described in
 [`docs/supernova-ui-ux-design.md`](docs/supernova-ui-ux-design.md) built on top of it,
-permissions enforced at the route boundary, and the visual design system.
+permissions enforced at the route boundary, the visual design system, and the research the
+figures are read against.
 
 The interface was built from the inside out — the student profile, then the family view,
 then teacher, administrator, and finally the board and community layer. The student profile
@@ -40,8 +41,22 @@ the public page. The sky gets coarser as entitlement narrows; it never gets repl
 something else. Brightness is absolute at every level, never shaded against the neighbouring
 stars, because the alternative turns a mastery map into a league table.
 
+Phase 5 turned the research library from a decoration into a checked contract. It began by
+measuring what the library actually showed and finding it near-silent: four of the ten roles
+had no claim tagged for them, a student got no research context on their own page 1,102 times
+out of 1,102, a community member got none ever, and half the library named a metric no view
+supplied and so could never fire at all. The rule that came out of it is that **a trigger has
+to survive a change of scale** — a referral count written about one child fired on 558
+district referrals, and a district's 93.4% average attendance is not a student who misses a
+tenth of the year. Metrics now declare the scale they mean something at, views declare what
+they supply, and the test suite fails if a claim names anything else.
+
 The design system renders itself at [`/design`](http://localhost:5173/design) — every swatch
-reads the same custom property the app reads, so it breaks when a token drifts.
+reads the same custom property the app reads, so it breaks when a token drifts. The research
+library does the same at [`/research`](http://localhost:5173/research): every claim, its
+source, the plain-language condition that shows it, and a table of what each role actually
+gets. Both are outside the permission guard, because an audit only insiders can open is not
+one.
 
 Track progress and decisions in [`PROGRESS.md`](PROGRESS.md).
 

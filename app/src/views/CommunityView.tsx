@@ -48,6 +48,7 @@ import { ComparisonTable, type ComparisonRow } from '../ui/ComparisonTable'
 import { Constellation } from '../ui/Constellation'
 import { SHARE_LEGEND } from '../ui/stars'
 import { ResearchContext } from '../ui/ResearchContext'
+import { groupMetrics } from '../ui/research'
 import { spreadOf, subjectRows } from './admin/compare'
 import { publicSky } from './constellations'
 import {
@@ -202,14 +203,16 @@ export function CommunityView() {
 
       {rule.explainsRules ? <DisclosureRules aggregates={aggregates} /> : null}
 
+      {/* The figures this page already publishes, handed to the library in the
+          shape it can act on. The two that were missing are the two that matter
+          most here: chronic absenteeism, which is what makes 93.4% attendance
+          legible, and the spread the narrative above spends a paragraph on. */}
       <ResearchContext
         role={session.role}
-        metrics={{
-          attendanceRate: district.attendanceRate,
-          schoolAttendanceRate: district.attendanceRate,
-          completionRate: district.homeworkCompletionRate,
-          disciplineReferralCount: district.disciplineReferrals,
-        }}
+        metrics={groupMetrics({
+          ...district,
+          masterySpreadPoints: Math.max(gradeSpread.range, schoolSpread.range),
+        })}
       />
     </div>
   )

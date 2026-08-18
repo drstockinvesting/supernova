@@ -1240,3 +1240,59 @@ a.star:hover {
   background: var(--text-subtle);
   border-radius: 1px;
 }
+
+/* --- The research library ------------------------------------------------ */
+
+/* The three states of the context layer are three shapes. Context is a card;
+   the other two are a single line, because a page that shouts about having
+   nothing to say is worse than one that quietly admits it. */
+.research-quiet {
+  font-size: var(--text-sm);
+  max-width: var(--measure);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+}
+
+.caution-text {
+  color: var(--status-caution);
+}
+
+.citation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.citation-facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-sm);
+}
+
+.citation-facts > div {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: baseline;
+}
+
+.citation-facts dt {
+  color: var(--text-subtle);
+}
+
+.citation-facts dd {
+  margin: 0;
+  color: var(--text-muted);
+  max-width: var(--measure);
+}
+
+@media (max-width: 640px) {
+  .citation-facts > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+}

@@ -35,6 +35,7 @@ import { ComparisonTable, type ComparisonRow } from '../ui/ComparisonTable'
 import { Constellation } from '../ui/Constellation'
 import { SHARE_LEGEND } from '../ui/stars'
 import { ResearchContext } from '../ui/ResearchContext'
+import { groupMetrics } from '../ui/research'
 import { spreadOf, subjectRows } from './admin/compare'
 import { districtSky } from './constellations'
 
@@ -244,11 +245,14 @@ export function DistrictView() {
 
       <ResearchContext
         role={session.role}
-        metrics={{
-          attendanceRate: district.attendanceRate,
-          completionRate: district.homeworkCompletionRate,
-          disciplineReferralCount: district.disciplineReferrals,
-        }}
+        metrics={groupMetrics({
+          ...district,
+          masterySpreadPoints: Math.max(
+            schoolSpread.range,
+            gradeSpread.range,
+            sectionSpread.range,
+          ),
+        })}
       />
     </div>
   )
