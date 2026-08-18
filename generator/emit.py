@@ -16,7 +16,7 @@ import json
 import shutil
 from pathlib import Path
 
-from .aggregates import build_aggregates, build_sections_context
+from .aggregates import build_aggregates, build_caseload_index, build_sections_context
 from .archetypes import summarize_population
 from .config import (
     CURRENT_SCHOOL_YEAR,
@@ -135,6 +135,15 @@ def emit(dataset, data_dir: Path = DATA_DIR) -> dict:
     for section_id, payload in sorted(sections_detail.items()):
         bytes_written += _write(
             data_dir / "aggregates" / "sections" / f"{section_id}.json", payload, compact=True
+        )
+
+    # The caseload index splits by building rather than by section, because the
+    # accounts that read it are scoped to a building and two of the three hold no
+    # aggregate mastery at all. One file per school is the whole grain: a nurse
+    # loads their own building and never the other two.
+    for school_id, payload in sorted(build_caseload_index(dataset).items()):
+        bytes_written += _write(
+            data_dir / "aggregates" / "caseload" / f"{school_id}.json", payload, compact=True
         )
 
     # --- Manifest -----------------------------------------------------------

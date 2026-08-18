@@ -442,6 +442,18 @@ nurse is the mirror: named students, attendance, and health at their building, a
 mastery, so the building's rollups are not theirs to read. An authorization check written as a
 role comparison gets both of these wrong.
 
+*Extended in Phase 6, which built the page the nurse's half of that rule implies.* A building
+has two readings and the permission set decides which one an account gets: `/school/{id}` is
+the rollups and `/caseload/{id}` is the same building as named students. They ask the identical
+scope question and require different permissions — the caseload requires
+`view_individual_students` and `view_student_names` and specifically *not*
+`view_aggregate_mastery` — so the two halves of the rule vary independently rather than moving
+together. Three roles land on the caseload and hold three different, non-nested subsets of the
+four gated context streams (attendance, health, behaviour, special services), so **a stream is
+a permission, never a role**. A stream an account does not hold is absent from the page: not
+greyed, not summarised, and not counted, because a count of what is being withheld discloses
+that there was something to withhold.
+
 ---
 
 ## Research Context Entities

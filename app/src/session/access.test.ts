@@ -75,6 +75,29 @@ const PERMISSIONS: Record<string, Permission[]> = {
     'view_attendance_detail',
     'view_health_detail',
   ],
+  counselor: [
+    'view_aggregate_mastery',
+    'view_individual_students',
+    'view_student_names',
+    'view_attendance_detail',
+    'view_behavior_detail',
+    'view_health_detail',
+    'view_special_services_detail',
+    'add_intervention_notes',
+  ],
+  // Scoped to a *building*, not to sections — the one thing about this role that
+  // is easy to assume wrong, and the reason it had no dashboard until Phase 6.
+  special_education_teacher: [
+    'view_aggregate_mastery',
+    'view_individual_students',
+    'view_student_names',
+    'view_attendance_detail',
+    'view_behavior_detail',
+    'view_special_services_detail',
+    'view_evidence_artifacts',
+    'record_mastery',
+    'add_intervention_notes',
+  ],
   school_board_member: ['view_aggregate_mastery'],
   community_member: ['view_aggregate_mastery'],
   guardian: [
@@ -136,6 +159,7 @@ const section = (sectionId: string, schoolId: string | null): Target => ({
   schoolId,
 })
 const school = (schoolId: string): Target => ({ kind: 'school', schoolId })
+const caseload = (schoolId: string): Target => ({ kind: 'caseload', schoolId })
 
 function allows(session: Session, resolved: ResolvedScope, target: Target): boolean {
   return decide(session, resolved, target).allowed
@@ -341,6 +365,70 @@ test('every account reaches the public page, including one holding nothing', () 
     ],
   })
   assert.equal(allows(empty, EMPTY_SCOPE, { kind: 'public' }), true)
+})
+
+// --- The caseload: the same scope, the opposite permissions --------------------
+
+test('a nurse opens their building\'s caseload, and the building page differently', () => {
+  const session = account('nurse', 'school', ['nova-elementary'])
+  const resolved = scope({ schoolIds: ['nova-elementary'] })
+
+  assert.equal(allows(session, resolved, caseload('nova-elementary')), true)
+
+  // The building route is open to them as well, and that is not an oversight:
+  // it requires `view_student_names`, which a nurse holds. What they lack is
+  // `view_aggregate_mastery` — every rollup, comparison, and classroom card on
+  // that page — which is what the page is *made of* rather than what the route
+  // asks for, so `SchoolView` renders it as an unlit sky. The caseload is the
+  // opposite arrangement: nothing on it needs the permission they do not hold.
+  assert.equal(allows(session, resolved, school('nova-elementary')), true)
+  assert.equal(session.can('view_aggregate_mastery'), false)
+  assert.equal(session.can('view_individual_students'), true)
+})
+
+test('a nurse cannot open another building\'s caseload', () => {
+  const session = account('nurse', 'school', ['nova-elementary'])
+  const resolved = scope({ schoolIds: ['nova-elementary'] })
+
+  assert.equal(refusalReason(session, resolved, caseload('meridian-middle')), 'scope')
+  assert.equal(refusalReason(session, resolved, caseload('')), 'scope')
+})
+
+test('a counselor and a special education teacher reach the caseload of their building', () => {
+  for (const role of ['counselor', 'special_education_teacher'] as const) {
+    const session = account(role, 'school', ['meridian-middle'])
+    const resolved = scope({ schoolIds: ['meridian-middle'] })
+    assert.equal(allows(session, resolved, caseload('meridian-middle')), true, role)
+    assert.equal(allows(session, resolved, caseload('nova-elementary')), false, role)
+  }
+})
+
+test('a board member holds every id in the district and no caseload', () => {
+  // The mirror of the nurse, and the reason the caseload requires two permissions
+  // rather than trusting scope: district scope contains every building.
+  const session = account('school_board_member', 'district', ['district-1'])
+  const resolved = scope({ district: true })
+
+  assert.equal(refusalReason(session, resolved, caseload('nova-elementary')), 'permission')
+})
+
+test('a teacher teaching in a building has no caseload there', () => {
+  // A teacher holds sections, and four classes at Meridian is not scope over
+  // Meridian. They hold the permissions the caseload asks for and fail on scope,
+  // which is the third combination and the one a role check would get wrong.
+  const session = account('teacher', 'section', ['sec-1', 'sec-2'])
+  const resolved = scope({ sectionIds: ['sec-1', 'sec-2'], studentIds: ['stu-a'] })
+
+  assert.equal(refusalReason(session, resolved, caseload('meridian-middle')), 'scope')
+})
+
+test('a guardian and a student reach no caseload at all', () => {
+  const guardian = account('guardian', 'student', ['stu-a'], 'guardian')
+  const learner = account('student', 'student', ['stu-a'], 'student')
+  const resolved = scope({ studentIds: ['stu-a'] })
+
+  assert.equal(allows(guardian, resolved, caseload('nova-elementary')), false)
+  assert.equal(allows(learner, resolved, caseload('nova-elementary')), false)
 })
 
 // --- The permission vocabulary -------------------------------------------------

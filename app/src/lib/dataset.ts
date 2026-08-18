@@ -30,6 +30,16 @@ export function gradeLabel(grade: string): string {
   return grade === 'K' ? 'Kindergarten' : `Grade ${grade}`
 }
 
+/**
+ * Sorts grades into school order, which is not the order a numeric string sort
+ * produces: `'K'.localeCompare('1', undefined, {numeric: true})` puts kindergarten
+ * *after* grade 5, so an elementary building reads 1, 2, 3, 4, 5, Kindergarten.
+ */
+export function byGradeOrder(a: string, b: string): number {
+  const rank = (grade: string) => (grade === 'K' ? -1 : Number.parseInt(grade, 10))
+  return rank(a) - rank(b)
+}
+
 /** Sorts subjects into a stable, curriculum-shaped order rather than alphabetical. */
 export function bySubjectOrder(a: string, b: string): number {
   const order = SUBJECT_ORDER as readonly string[]

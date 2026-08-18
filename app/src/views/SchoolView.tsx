@@ -12,7 +12,7 @@
  */
 
 import { useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import type { Aggregates, SectionContext } from '../types/profile'
 import {
   loadAggregates,
@@ -22,7 +22,7 @@ import {
 } from '../data/client'
 import { useAsync } from '../data/useAsync'
 import { useSession } from '../session/session'
-import { AS_OF_LABEL, formatSchoolYear, gradeLabel } from '../lib/dataset'
+import { AS_OF_LABEL, byGradeOrder, formatSchoolYear, gradeLabel } from '../lib/dataset'
 import {
   Breadcrumb,
   ErrorState,
@@ -64,7 +64,7 @@ export function SchoolView() {
         .filter((entry) => entry.schoolId === schoolId)
         .sort(
           (a, b) =>
-            a.gradeLevel.localeCompare(b.gradeLevel, undefined, { numeric: true }) ||
+            byGradeOrder(a.gradeLevel, b.gradeLevel) ||
             a.sectionName.localeCompare(b.sectionName),
         ),
     [sectionsState.value, schoolId],
@@ -102,7 +102,7 @@ export function SchoolView() {
   const district = aggregates.district
   const grades = aggregates.grades
     .filter((entry) => entry.schoolId === schoolId)
-    .sort((a, b) => a.gradeLevel.localeCompare(b.gradeLevel, undefined, { numeric: true }))
+    .sort((a, b) => byGradeOrder(a.gradeLevel, b.gradeLevel))
 
   // A district administrator reaches this view through the district; a building
   // administrator's own home is this page, so the crumb only appears when there
@@ -117,6 +117,13 @@ export function SchoolView() {
   // card below. Phase 2 showed them all of it because no view asked.
   const seesAggregates = session.can('view_aggregate_mastery')
   const seesAttendance = session.can('view_attendance_detail')
+
+  // The same pair `access.ts` requires of the caseload route. Computed rather
+  // than assumed, so the link is offered exactly when the page behind it would
+  // open — the integrity rule is that no view offers an affordance out of the
+  // viewer's scope, and a link that redirects is one.
+  const seesCaseload =
+    session.can('view_individual_students') && session.can('view_student_names')
 
   const gradeRows: ComparisonRow[] = [...grades]
     .sort((a, b) => b.masteryRate - a.masteryRate)
@@ -176,6 +183,14 @@ export function SchoolView() {
             and one that was never taught: there is a sky here, and this account has no claim
             on it. The page does not pretend to have looked and found nothing.
           </p>
+          {seesCaseload ? (
+            <p>
+              What this account does hold at {building.label} is its students.{' '}
+              <Link to={`/caseload/${schoolId}`}>Open the caseload</Link> — the same building,
+              as named children rather than as rollups, carrying the streams this account is
+              responsible for.
+            </p>
+          ) : null}
         </UnlitSky>
 
         {/* The one thing this page can honestly give the account it belongs to.
@@ -209,6 +224,17 @@ export function SchoolView() {
       ) : null}
 
       {head}
+
+      {/* The building has two readings and this page is one of them. An
+          administrator holds both, and the rollups above answer "how is this
+          building doing" while the caseload answers "which children here need
+          something" — neither is derivable from the other. */}
+      {seesCaseload ? (
+        <p className="subtle">
+          <Link to={`/caseload/${schoolId}`}>Open this building's caseload</Link> — its students
+          as students, with attendance, health, behaviour, and special services on each.
+        </p>
+      ) : null}
 
       <section className="grid">
         <MetricCard

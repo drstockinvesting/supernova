@@ -34,6 +34,7 @@
 
 import type { AggregateCell, Aggregates } from '../../types/profile'
 import type { Role } from '../../session/roles'
+import { byGradeOrder } from '../../lib/dataset.ts'
 
 export type Audience = 'board' | 'public'
 
@@ -96,7 +97,7 @@ export function gradesIdentifyingOneBuilding(grades: Aggregates['grades']): stri
   return [...schoolsByGrade(grades).entries()]
     .filter(([, schools]) => schools.size === 1)
     .map(([grade]) => grade)
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+    .sort(byGradeOrder)
 }
 
 /** True when *every* grade in the district sits in a single building. */

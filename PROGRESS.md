@@ -14,6 +14,20 @@ rewriting it, so the reasoning behind the build stays legible.
 | **3. Permissions enforcement** | Complete — enforced at the route boundary | 2026-08-17 |
 | **4. Visual design system** | Complete — one constellation at every zoom level | 2026-08-17 |
 | **5. Research context layer** | Complete — the library is a checked contract | 2026-08-17 |
+| **6. The caseload view** | Complete — three roles have a home | 2026-08-18 |
+
+---
+
+## Phase 6 Checklist
+
+- [x] Caseload index emitted per building — `aggregates/caseload/{schoolId}.json`, generator side
+- [x] A stream is a permission, not a role — four streams, and no role check anywhere in the view
+- [x] `/caseload/:schoolId` decided by the *opposite* permission pair to `/school/:schoolId`
+- [x] Nurse, counselor, and special education teacher all land on a page built for them
+- [x] The special education teacher had no dashboard at all, and nothing said so
+- [x] A star is a student here — the zoom level the fractal was missing, brightness unchanged
+- [x] Thresholds named in one place and printed on the page, with the same admission `/research` makes
+- [x] 24 new tests, 86 total; build clean, lint at the recorded baseline of 11
 
 ---
 
@@ -763,6 +777,83 @@ Where it ended up, on the same figures:
 
 ---
 
+### 2026-08-18 — Session 9 (Phase 6) — the caseload view
+
+The gap Phase 3 named, Phase 4 made honest about, and Phase 5 furnished with two research
+claims. None of those built *the students at my building, filtered to the stream I am
+responsible for*, which is the sentence this session implemented more or less literally.
+
+**The roles were not two, they were three, and the third was worse off in a way nothing
+reported.** Phase 3 recorded the gap as a nurse and a counselor. A special education teacher
+turns out to hold `school` scope — not sections, which is the natural assumption and the wrong
+one — so `/teacher` refused them for holding no sections, redirected them to their own home,
+which is `/teacher`, and landed on the branch in `Guard` that exists solely to stop a redirect
+loop. That branch prints *this account has no dashboard it can open*, and calls it a
+configuration gap. It was not a configuration gap. Three of the district's accounts had been
+reading an honest report of a missing view for three phases, and the wording made it sound
+like somebody had mis-provisioned them.
+
+**A stream is a permission, not a role.** The four streams — attendance, health, behaviour,
+special services — are each keyed to the permission that gates them, and `streamsFor` takes
+the permission predicate rather than the session. That is not tidiness: the three roles landing
+here hold three different subsets, and no two are nested. A nurse has attendance and health; a
+special education teacher has attendance, behaviour, and services and no health at all; a
+counselor has all four. Any role check would have to enumerate them and would be wrong the
+moment the district issued a fifth account.
+
+The property worth stating is what a lacked stream looks like: **absent**. Not greyed, not
+withheld, not counted. `concernsOf` filters per stream at the top of each block rather than
+filtering the assembled list, so a stream the viewer does not hold is never computed and cannot
+leak through a later change to the sort, the summary, or a timestamp. There is no "3 behaviour
+flags hidden" anywhere on the page, because a count of what is being kept from you is a
+disclosure of it — the same argument the public sky makes for drawing suppressed cells, run in
+the opposite direction, and the difference is that the public reader can count the row and this
+one cannot.
+
+**The route needs the opposite permissions to the building page, and that is the whole rule.**
+`/school/:schoolId` requires `view_student_names`; `/caseload/:schoolId` requires
+`view_individual_students` and `view_student_names` and deliberately *not*
+`view_aggregate_mastery`. Same scope question, same answer, different requirement — which is
+the addendum's rule (a role is a permission set, a scope is a set of ids, both must agree) with
+its two halves varying independently for the first time. The three counterexamples all now have
+a test: a board member holds every id in the district and fails on permission, a teacher holds
+the permissions and fails on scope, and a nurse passes both here and fails the *content* of the
+building page rather than its route.
+
+One correction to what Phase 3 recorded: a nurse is not refused `/school/:schoolId`. That route
+only ever required `view_student_names`, which they hold. What they lack is
+`view_aggregate_mastery`, which is what the page is *made of* — hence the unlit sky — and the
+distinction matters because it is exactly the gap the caseload fills rather than duplicates.
+
+**A star is a student, and this is the zoom level the fractal was missing.** Every other sky
+above a student is lit from a rollup. This one is lit from individuals: a star is one child and
+its brightness is that child's own share of standards mastered. That follows from the rule
+rather than bending it — *a star is the smallest thing this viewer is allowed to see* — and a
+nurse holding `view_individual_students` is allowed to see a student. Nothing on the page
+computes a mean of them, which is the line `view_aggregate_mastery` actually draws. Brightness
+is `intensityOfRate` like everywhere else, and there is a test asserting so, because this is
+the likeliest place in the app for a second brightness scale to appear unnoticed.
+
+Clustering is by concern rather than by subject, which is the one departure from the levels
+above. A caseload is already a selection, so the useful division inside a grade is how much is
+on record.
+
+**The index had to be generated, not assembled in the browser.** No existing file answers this
+question. `sections-context` is indexed by section, so a secondary student appears in six
+rosters and a nurse would fetch every roster in the building to build one list; health and
+special services are not in a roster at all and live only in the per-student profile, which is
+~370 fetches to draw one page. So `build_caseload_index` writes one file per building, carrying
+facts and no judgements — who is *on* a caseload depends on who is looking, and that decision
+belongs where the viewer is known and can be tested.
+
+**Kindergarten sorted after grade 5.** Found while writing the grade filter:
+`'K'.localeCompare('1', undefined, {numeric: true})` puts K last, so an elementary building
+reads 1, 2, 3, 4, 5, Kindergarten. `byGradeOrder` in `lib/dataset.ts` fixes it and the caseload
+uses it. The three older call sites still sort the old way and are listed under open questions
+rather than changed here.
+
+---
+
 ## Phase 1 Results
 
 - **593 standards** across CCSS Math, CCSS ELA, NGSS, C3, NCAS, and SHAPE America
@@ -884,14 +975,14 @@ Raised during Stage 6:
 
 Raised during Phase 3:
 
-- **A nurse has no view of the job the permissions describe.** The account holds named
-  students, attendance, and health detail at one building, and there is no view in the app
-  that indexes students. Their home is the building page, which is aggregate mastery end to
-  end — a permission they do not hold — so it now renders the header and an explanation of
-  what is absent. The same is nearly true of a counselor, who holds aggregate mastery and so
-  scrapes through on a page built for an administrator. The missing piece is a caseload view:
-  *the students at my building, filtered to the stream I am responsible for.* This is the
-  most concrete gap Phase 3 uncovered.
+- ~~**A nurse has no view of the job the permissions describe.**~~ **Resolved in Phase 6**,
+  and it was three roles rather than two. A special education teacher holds building scope,
+  not sections, so `/teacher` had been refusing them and landing them on the redirect-loop
+  branch that says *this account has no dashboard it can open* — an honest report of what
+  looked like a provisioning error and was actually a missing view. All three now land on
+  `/caseload/:schoolId`. One correction to this entry as written: a nurse was never refused
+  the building page. That route requires only `view_student_names`, which they hold; what
+  they lack is `view_aggregate_mastery`, which is what the page is made of.
 - **Should a refused request be recorded?** Nothing is logged. In a district system, a
   repeated attempt on records outside an account's scope is exactly the signal an
   administrator would want, and FERPA-adjacent audit expectations assume access to student
@@ -985,31 +1076,84 @@ Raised during Phase 5:
   page, plus classrooms on the district page — so the same claim fires against a different
   measurement depending on where it is read. The alternative is a spread computed once at a
   fixed level, which would then not describe the page it appears on.
-- **The nurse has two claims and still has no caseload view.** Phase 3 named this as the
-  clearest gap it uncovered, Phase 4 made the landing page honest about the absence, and
-  Phase 5 has now put the one thing on it the account is entitled to. None of that is *the
-  students at my building, filtered to the stream I am responsible for*, which remains
-  unbuilt.
+- ~~**The nurse has two claims and still has no caseload view.**~~ **Resolved in Phase 6.**
+  The claims stay where they are — the building page is still honest about what it withholds
+  — and it now links to the page that is theirs.
+
+Raised during Phase 6:
+
+- **Every threshold on this page is an editorial judgement, again.** Chronic absence arrives
+  computed against the federal definition and is the only line here anybody qualified chose.
+  The other six — attendance below 93%, eight late arrivals, two referrals to watch and three
+  to prioritise, five health-office visits, a formal plan ahead of other services — were picked
+  in this session by reading the district's figures and choosing numbers that produced a list
+  of plausible size. They are named in `THRESHOLDS` and printed on the page so the rule can be
+  argued with, which is not the same as the numbers being right. This is the second surface in
+  the product carrying that admission and the two are not coordinated with each other.
+- **The caseload file is not a redaction boundary and the enforcement is client-side.** Every
+  stream is written for every student in one file per building, and which of them a viewer may
+  read is decided when the page is built. A nurse's browser holds behaviour data it never
+  renders. That matches how the rest of this dataset is served — a student profile file is the
+  whole student and the family view renders a subset — so it is consistent rather than a new
+  hole, and it is worth writing down that a real deployment would filter server-side and this
+  prototype's `access.ts` would be the wrong shape for that: it decides what a *page* shows,
+  not what a *response* contains.
+- **A counselor's full caseload is 230 of 366 students.** Which may be true — a counselor at a
+  366-student elementary does carry most of the building in some sense — but a list that long
+  is a directory, and the priority filter defaulting on is the only thing standing between the
+  page and uselessness. The severity split is doing work the thresholds should probably do
+  instead, and nobody has asked a counselor whether the split matches how they triage.
+- **Nothing is ordered by urgency across streams.** A student with a suspension and a student
+  with an IEP are both priority, sorted by how many concerns they carry and then by name. That
+  is deliberate — ranking children by the severity of their situations is the thing the product
+  refuses to do with mastery and should probably refuse here too — but "how many things are on
+  record" is itself an ordering, and it was chosen rather than reasoned about.
+- ~~**Three call sites still sort kindergarten after grade 5.**~~ **Resolved**, and it was
+  seven rather than three. The survey behind this entry caught `buildingSky`, `districtSky`,
+  and `SchoolView`'s grade rollups; it missed `publicSky` (the community matrix, where Nova's
+  row read 1, 2, 3, 4, 5, Kindergarten in front of the board), the section lists on both
+  `SchoolView` and `TeacherView`, and `gradesIdentifyingOneBuilding` in `community/disclosure.ts`,
+  which prints a grade list on the board's disclosure panel. All seven now call `byGradeOrder`,
+  so the app has one grade ordering and `localeCompare(…, { numeric: true })` no longer appears
+  on any grade in the codebase. Three regression tests in `constellations.test.ts` pin the
+  building, district, and public skies to kindergarten-first; the caseload already had one.
+
+  The generated data needed no fix, and the reason is worth recording: `gradesCovered` is
+  copied straight from `config.grades`, which is written in school order — so the two views
+  that read `gradesCovered[0]`–`gradesCovered[last]` to print a grade span were always
+  correct. The rollup array `aggregates.grades`, by contrast, is emitted under Python's
+  string sort and arrives as 1, 2, 3, 4, 5, K and 10, 11, 12, 9. Every consumer re-sorts it,
+  which is why the high school's grades read correctly even before this change — the numeric
+  compare fixed the 9-after-12 half of that and not the K half. `byGradeOrder` fixes both.
+- **The caseload has no year switch.** Every other student-facing surface can move between the
+  three school years on record; this one is built from `CURRENT_SCHOOL_YEAR` in the generator
+  and has no notion of a prior year at all. A nurse asking "was this child like this last year"
+  has to open the profile.
+- **`add_intervention_notes` is held by three of these roles and does nothing.** A counselor, a
+  special education teacher, and a building administrator all carry it. The caseload is the
+  obvious place for it to mean something and this phase did not touch it, so the permission
+  remains issued and unimplemented — which is a smaller version of exactly the gap this phase
+  closed.
 
 ---
 
 ## Notes for the Next Session
 
-**All five phases are complete.** The dataset, the dashboards, enforcement at the route
-boundary, one constellation at every zoom level, and a research layer whose claims are
-matched to the figures rather than to the topic. Phase 5's decision log above is worth
-reading before touching the research code; the shortest version is that a trigger has to
-survive a change of scale, and that the metric vocabulary is now a contract with a test
-behind it rather than a convention.
+**All six phases are complete.** The dataset, the dashboards, enforcement at the route
+boundary, one constellation at every zoom level, a research layer whose claims are matched to
+the figures rather than to the topic, and the caseload the first three phases kept pointing at.
+Phase 5's decision log is worth reading before touching the research code; the shortest version
+is that a trigger has to survive a change of scale, and that the metric vocabulary is now a
+contract with a test behind it rather than a convention.
 
-**The strongest remaining gap is the one Phase 3 named and no phase has closed.** A nurse
-and a counselor hold permissions describing a job the app has no view for. A caseload view —
-*the students at my building, filtered to the stream I am responsible for* — would give two
-of the ten roles a real home. Phase 4 made the nurse's landing page honest rather than
-empty; Phase 5 put the two research claims on it that the account is actually entitled to.
-Honest about an absence, with something in the corner, is still an absence.
+**Every one of the ten roles now lands on a page built for it.** That was not true before
+Phase 6 and it was not true in the way anybody had written down: a special education teacher
+reached the branch in `Guard` that reports an account with no dashboard, and the report read
+as a provisioning error rather than as the missing view it was. Worth remembering as a general
+shape — the honest error message was accurate, unremarkable, and hid a real gap for three
+phases.
 
-**The other candidate is the review pass the library has never had.** 18 of 18 claims are
+**The strongest remaining gap is the review pass the library has never had.** 18 of 18 claims are
 `needs_human_review`, they are now shown on more pages to more roles than at any point in
 the project, and `/research` exists specifically to make checking them possible. Doing that
 work is not a coding task and should not be done by whoever writes the next commit without
@@ -1037,6 +1181,10 @@ Six things about the code that are easy to get wrong:
   literals, and `research.test.ts` reads the shipped dataset to assert the two agree. Adding a
   citation with a new metric means declaring it and supplying it first; skipping either used
   to produce a citation that rendered as nothing, forever, silently.
+- **A caseload stream is filtered before it is computed, not after.** `concernsOf` checks the
+  permission at the top of each stream's block rather than filtering the assembled list. Same
+  output today; the difference is that a later change to the sort, the summary, or a "last
+  contact" timestamp cannot reintroduce a stream the viewer never held.
 - **Never hand the research layer a figure the viewer cannot be shown.** A claim appears
   exactly when a metric crosses a threshold, so its presence publishes that the threshold was
   crossed. `StudentView` builds its bag from `canSeeBehavior` and friends rather than from the
@@ -1059,12 +1207,13 @@ npm --prefix app run build && npm --prefix app test && npm --prefix app run lint
 ```
 
 `test` is `node --test` over `src/**/*.test.ts`, using Node's own type stripping — there is
-no test framework and nothing to install. 62 tests, and everything covered is covered for
+no test framework and nothing to install. 86 tests, and everything covered is covered for
 the same reason: its failures are invisible on screen. A guard that wrongly allows renders
 a page indistinguishable from one the viewer was entitled to; a suppression rule that never
 fires looks identical to one that works; a sky lit on the wrong scale is still a sky, and
 nobody ever sees two zoom levels at once; a citation that can never fire renders exactly
-like one that fires correctly. That last one was not hypothetical — half the citation
+like one that fires correctly; a caseload leaking a stream the viewer may not read looks
+completely normal, because the leak *is* a student on a list with a chip on them. That last one was not hypothetical — half the citation
 library was inert for four phases — which is why `research.test.ts` is the only suite that
 reads the shipped dataset rather than fixtures. It is asserting a contract between two files
 that are edited by different people at different times, and fixtures cannot do that. Lint
@@ -1081,10 +1230,14 @@ Useful entry points:
 - `app/src/ui/stars.ts` — what a star is, and the one function turning a rate into
   brightness. Plain TypeScript so the scale can be tested
 - `app/src/ui/Constellation.tsx` — the picture, at any scale, plus `UnlitSky`
-- `app/src/views/constellations.ts` — what a star *is* at the classroom, building,
-  district, and public levels, as pure functions
+- `app/src/views/constellations.ts` — what a star *is* at the classroom, caseload,
+  building, district, and public levels, as pure functions
 - `app/src/ui/theme.css` — every token; dark is the base, light is the single override
 - `app/src/views/DesignView.tsx` — the style guide at `/design`, rendered from the tokens
+- `app/src/views/caseload/caseload.ts` — what a caseload is: streams as permissions, the
+  thresholds, and the filter. Plain TypeScript so the stream boundary can be tested
+- `app/src/views/CaseloadView.tsx` — the page three roles land on
+- `generator/aggregates.py` — `build_caseload_index`, one file per building
 - `app/src/session/access.ts` — every access decision, as pure functions
 - `app/src/session/scope.ts` — expanding an account's scope into concrete ids
 - `app/src/session/Guard.tsx` — the route boundary, and the redirect notice

@@ -12,16 +12,17 @@ See [`docs/supernova-vision.md`](docs/supernova-vision.md) for the full vision.
 
 ## Current Phase
 
-**Phase 5 complete — the research context layer.** All five phases are done: the synthetic
+**Phase 6 complete — the caseload view.** All six phases are done: the synthetic
 dataset, the dashboards described in
 [`docs/supernova-ui-ux-design.md`](docs/supernova-ui-ux-design.md) built on top of it,
-permissions enforced at the route boundary, the visual design system, and the research the
-figures are read against.
+permissions enforced at the route boundary, the visual design system, the research the
+figures are read against, and the caseload the first three phases kept pointing at.
 
 The interface was built from the inside out — the student profile, then the family view,
 then teacher, administrator, and finally the board and community layer. The student profile
 is the atom every other view aggregates, so each rollup above it summarises something
-already proven. All ten roles land on a built view.
+already proven. All ten roles land on a page built for them — which became true in Phase 6,
+not Phase 2, and the three phases in between did not know it was false.
 
 Through Phase 2, permissions **shaped** views without enforcing them: a view rendered only
 what the viewer's scope contained, but a typed URL still reached data outside it. Phase 3
@@ -33,11 +34,11 @@ refused address returns the viewer to their own dashboard with one neutral line,
 about what was on the other side.
 
 Phase 4 made the fractal real. Until then one view had the constellation and everything
-above it was cards and tables; now the same picture is drawn at five zoom levels, under one
+above it was cards and tables; now the same picture is drawn at every zoom level, under one
 rule — **a star is the smallest thing this viewer is allowed to see, and its brightness is
 the share of mastery demonstrated inside it.** So a star is a standard on a student, a
 student's unit on a classroom, a classroom on a building and on the district, and a grade on
-the public page. The sky gets coarser as entitlement narrows; it never gets replaced by
+the public page — and, since Phase 6, a whole student on a caseload. The sky gets coarser as entitlement narrows; it never gets replaced by
 something else. Brightness is absolute at every level, never shaded against the neighbouring
 stars, because the alternative turns a mastery map into a league table.
 
@@ -50,6 +51,28 @@ to survive a change of scale** — a referral count written about one child fire
 district referrals, and a district's 93.4% average attendance is not a student who misses a
 tenth of the year. Metrics now declare the scale they mean something at, views declare what
 they supply, and the test suite fails if a claim names anything else.
+
+Phase 6 built the view the earlier phases kept naming and not making: *the students at my
+building, filtered to the stream I am responsible for.* Three roles land on it, and they are
+not the same account — a nurse holds attendance and health, a special education teacher holds
+attendance, behaviour, and special services and no health at all, a counselor holds all four —
+so the page is assembled from the viewer's permissions rather than their role. **A stream is a
+permission**, and a stream the account does not hold is *absent*: not greyed, not withheld, not
+counted, because a count of what is being kept from you is a disclosure of it.
+
+The route is decided by the opposite permission pair to the building page above it. `/school`
+requires `view_student_names`; `/caseload` requires that plus `view_individual_students` and
+deliberately not `view_aggregate_mastery` — which is the rule the addendum states, with its two
+halves varying independently for the first time. And the sky follows the same rule it always
+did: a star is the smallest thing this viewer is allowed to see, so here a star is one child
+and its brightness is that child's own share of standards mastered. Nothing on the page
+averages them.
+
+The phase also found something nothing had reported. A special education teacher holds *building*
+scope rather than sections, so the teacher's classroom index had been refusing them, redirecting
+them to their own home, and landing on the branch that reports an account with no dashboard it
+can open. Three accounts had been reading an accurate error message that hid a missing view for
+three phases.
 
 The design system renders itself at [`/design`](http://localhost:5173/design) — every swatch
 reads the same custom property the app reads, so it breaks when a token drifts. The research

@@ -350,6 +350,97 @@ export interface SectionDetail {
   roster: SectionRosterRow[]
 }
 
+// --- Caseload ---------------------------------------------------------------
+
+/**
+ * One student on a building's caseload index.
+ *
+ * The index exists because the accounts that read it — a nurse, a counselor, a
+ * special education teacher — are scoped to a building and hold named students,
+ * and no other file answers "the students here, with the stream I am responsible
+ * for on them". `sections-context` is indexed by section, so a secondary student
+ * appears in six rosters; health and special services are not in a roster at all.
+ *
+ * Every stream is present on every row. Which of them a viewer may read is
+ * decided in `views/caseload/caseload.ts` against their permissions, not here.
+ */
+export interface CaseloadRow {
+  studentId: string
+  firstName: string
+  lastName: string
+  gradeLevel: string
+  sectionCount: number
+  mastery: {
+    masteryRate: number
+    standardsTaughtToDate: number
+    standardsMastered: number
+    standardsWithNoEvidence: number
+    homeworkCompletionRate: number | null
+  }
+  attendance: {
+    attendanceRate: number | null
+    daysAbsent: number
+    daysEnrolled: number
+    daysExcusedAbsent: number
+    tardyCount: number
+    chronicAbsenteeismFlag: boolean
+  }
+  behavior: {
+    disciplineReferralCount: number
+    suspensionCount: number
+    suspensionDays: number
+    totalIncidents: number
+    positiveRecognitionCount: number
+    lastIncidentDate: string | null
+  }
+  /**
+   * Counts and flags, never the events. The events are the confidential part and
+   * are also the bulk of the record; they stay in the profile, one click away,
+   * where the permission is checked again.
+   */
+  health: {
+    flags: {
+      chronicHealthCondition: boolean
+      foodInsecurityRisk: boolean
+      housingInstability: boolean
+      mentalHealthConcern: boolean
+      otherWellnessFactors: string[]
+    }
+    eventCounts: Partial<Record<HealthEventType, number>>
+    totalEvents: number
+    lastEventDate: string | null
+  }
+  services: {
+    status: string | null
+    startDate: string | null
+    serviceTypes: string[]
+    eligibilityCategories: string[]
+    serviceCount: number
+  } | null
+  engagement: {
+    responseRate: number | null
+    outreachAttempts: number
+    conferenceAttendance: number
+    engagementLevel: string
+  }
+}
+
+export type HealthEventType =
+  | 'nurse_visit'
+  | 'counselor_referral'
+  | 'mental_health_flag'
+  | 'chronic_condition'
+  | 'medication_flag'
+  | 'immunization_status'
+
+export interface CaseloadIndex {
+  schoolId: string
+  schoolYear: string
+  label: string
+  /** Already sorted by name in the generator, so the default list needs no sort. */
+  students: CaseloadRow[]
+}
+
 export interface Manifest {
   datasetVersion: string
   generator: string

@@ -24,6 +24,7 @@ import type {
 } from '../types/supernova'
 import type {
   Aggregates,
+  CaseloadIndex,
   EvidenceFile,
   Manifest,
   School,
@@ -114,6 +115,19 @@ export const loadSectionsContext = () =>
  */
 export const loadSectionDetail = (sectionId: string) =>
   loadJson<SectionDetail>(`/aggregates/sections/${sectionId}.json`)
+
+// --- Caseload ---------------------------------------------------------------
+
+/**
+ * One building's students as students, with every context stream on each row.
+ *
+ * Fetched per building and never district-wide: the accounts that read it are
+ * scoped to one building, and the three files together are about a megabyte.
+ * A district administrator opening a second building pays for a second file,
+ * which is the right shape — nobody needs all three at once.
+ */
+export const loadCaseload = (schoolId: string) =>
+  loadJson<CaseloadIndex>(`/aggregates/caseload/${schoolId}.json`)
 
 // --- Students ---------------------------------------------------------------
 

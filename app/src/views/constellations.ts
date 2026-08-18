@@ -44,8 +44,9 @@ import type {
 // does. `allowImportingTsExtensions` is already on, so TypeScript is content and
 // Vite resolves them unchanged.
 import { intensityOfRate, type Star, type StarGroup } from '../ui/stars.ts'
-import { bySubjectOrder, gradeLabel } from '../lib/dataset.ts'
+import { byGradeOrder, bySubjectOrder, gradeLabel } from '../lib/dataset.ts'
 import { discloseCells } from './community/disclosure.ts'
+import type { CaseloadEntry } from './caseload/caseload.ts'
 
 /** A rate over a denominator of zero is not a rate. Nothing taught yet is dark. */
 function starOf(
@@ -148,7 +149,7 @@ export function buildingSky(sections: SectionContext[]): StarGroup[] {
   }
 
   return [...byGrade.entries()]
-    .sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))
+    .sort((a, b) => byGradeOrder(a[0], b[0]))
     .map(([grade, gradeSections]) => ({
       id: grade,
       label: gradeLabel(grade),
@@ -177,7 +178,7 @@ export function districtSky(
         label: school.label,
         meta: `${own.length} classrooms`,
         clusters: [...byGrade.entries()]
-          .sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))
+          .sort((a, b) => byGradeOrder(a[0], b[0]))
           .map(([grade, gradeSections]) => ({
             id: `${school.schoolId}-${grade}`,
             label: gradeLabel(grade),
@@ -225,6 +226,84 @@ function sectionStars(sections: SectionContext[]): Star[] {
     )
 }
 
+// --- Caseload ----------------------------------------------------------------
+
+/**
+ * Grade, then level of concern, then one star per student.
+ *
+ * The zoom level the fractal was missing. Every other sky above a student is
+ * lit from an aggregate, and this one is not: a star here is *one child's own*
+ * mastery rate, which is exactly what the rule predicts — a star is the smallest
+ * thing this viewer is allowed to see, and a nurse is allowed to see a student.
+ * They hold `view_individual_students` and no `view_aggregate_mastery`, so the
+ * building's rollups are closed to them and each individual figure on this page
+ * is one they could open the profile and read directly.
+ *
+ * That is the whole argument for drawing it. A caseload list answers *who* needs
+ * attention; this answers what the answer is costing them, which is the question
+ * the product exists to make askable — and it is not an aggregate by another
+ * name, because no mean of these students is computed anywhere on the page.
+ *
+ * Clustering by concern rather than by subject is the one departure from the
+ * levels above, and it is what the second grouping is for at this zoom: a
+ * caseload is already a selection, so the useful division inside a grade is how
+ * much is on record, not which subject a self-contained class was teaching.
+ */
+export function caseloadSky(
+  entries: CaseloadEntry[],
+  { canOpenStudents }: { canOpenStudents: boolean },
+): StarGroup[] {
+  const byGrade = new Map<string, CaseloadEntry[]>()
+  for (const entry of entries) {
+    const bucket = byGrade.get(entry.row.gradeLevel) ?? []
+    bucket.push(entry)
+    byGrade.set(entry.row.gradeLevel, bucket)
+  }
+
+  return [...byGrade.entries()]
+    .sort((a, b) => byGradeOrder(a[0], b[0]))
+    .map(([grade, gradeEntries]) => {
+      const buckets: { id: string; label: string; entries: CaseloadEntry[] }[] = [
+        {
+          id: 'priority',
+          label: 'Priority',
+          entries: gradeEntries.filter((entry) => entry.priority),
+        },
+        {
+          id: 'watch',
+          label: 'Watch',
+          entries: gradeEntries.filter((entry) => !entry.priority && entry.concerns.length > 0),
+        },
+        {
+          id: 'clear',
+          label: 'Nothing on record',
+          entries: gradeEntries.filter((entry) => entry.concerns.length === 0),
+        },
+      ]
+
+      return {
+        id: grade,
+        label: gradeLabel(grade),
+        meta: `${gradeEntries.length} ${gradeEntries.length === 1 ? 'student' : 'students'}`,
+        clusters: buckets
+          .filter((bucket) => bucket.entries.length > 0)
+          .map((bucket) => ({
+            id: `${grade}-${bucket.id}`,
+            label: bucket.label,
+            stars: bucket.entries.map((entry) =>
+              starOf(
+                `${grade}-${bucket.id}-${entry.row.studentId}`,
+                `${entry.row.firstName} ${entry.row.lastName} — ${percentLabel(entry.row.mastery.masteryRate)} of ${entry.row.mastery.standardsTaughtToDate} standards taught`,
+                entry.row.mastery.standardsTaughtToDate,
+                entry.row.mastery.masteryRate,
+                canOpenStudents ? `/student/${entry.row.studentId}` : undefined,
+              ),
+            ),
+          })),
+      }
+    })
+}
+
 // --- Public ------------------------------------------------------------------
 
 export interface PublicGradeCell extends AggregateCell {
@@ -267,7 +346,7 @@ export function publicSky(grades: PublicGradeCell[], schools: { schoolId: string
           label: school.label,
           stars: grades
             .filter((grade) => grade.schoolId === school.schoolId)
-            .sort((a, b) => a.gradeLevel.localeCompare(b.gradeLevel, undefined, { numeric: true }))
+            .sort((a, b) => byGradeOrder(a.gradeLevel, b.gradeLevel))
             .map((grade) => {
               const key = `${grade.schoolId}-${grade.gradeLevel}`
               const cell = grade.masteryBySubject[subject]

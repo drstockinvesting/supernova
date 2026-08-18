@@ -60,6 +60,13 @@ export type Target =
   | { kind: 'student'; studentId: string; schoolId: string | null }
   | { kind: 'section'; sectionId: string; schoolId: string | null }
   | { kind: 'school'; schoolId: string }
+  /**
+   * A building's students as students, rather than as a rollup. Distinct from
+   * `school` because it needs the opposite pair of permissions: a building page
+   * is aggregate mastery and this is named individuals, and the district issues
+   * an account holding each without the other.
+   */
+  | { kind: 'caseload'; schoolId: string }
   | { kind: 'district' }
   /** A teacher's index of their own classrooms. */
   | { kind: 'classrooms' }
@@ -90,10 +97,19 @@ const deny = (reason: DenialReason): Decision => ({ allowed: false, reason })
  * who has district scope over every id in the district, out of a page ranking
  * named teachers. The district view requires it for the same reason.
  */
-const REQUIRED: Record<'student' | 'section' | 'school' | 'district', Permission[]> = {
+const REQUIRED: Record<
+  'student' | 'section' | 'school' | 'caseload' | 'district',
+  Permission[]
+> = {
   student: ['view_individual_students'],
   section: ['view_aggregate_mastery', 'view_student_names'],
   school: ['view_student_names'],
+  // Deliberately not `view_aggregate_mastery`. That is the one requirement a
+  // nurse fails, and it is what kept them off every page in the app for five
+  // phases — a caseload is a list of children, and asking for a rollup
+  // permission to read a list of children would be asking for the wrong thing.
+  // What it does require is the pair that makes a named list what it is.
+  caseload: ['view_individual_students', 'view_student_names'],
   district: ['view_student_names'],
 }
 
@@ -125,6 +141,14 @@ export function decide(session: Session, scope: ResolvedScope, target: Target): 
     case 'school':
       if (!containsSchool(scope, target.schoolId)) return deny('scope')
       return holdsAll(session, REQUIRED.school) ? ALLOW : deny('permission')
+
+    // Scope is the same question as for the building page and the answer is the
+    // same; only the required permissions differ. That is the whole shape of the
+    // rule the addendum states — a role is a permission set, a scope is a set of
+    // ids, and both must agree — with the two halves varying independently.
+    case 'caseload':
+      if (!containsSchool(scope, target.schoolId)) return deny('scope')
+      return holdsAll(session, REQUIRED.caseload) ? ALLOW : deny('permission')
 
     case 'section':
       if (!containsSection(scope, target)) return deny('scope')

@@ -8,6 +8,7 @@ import { FamilyView } from './views/FamilyView'
 import { TeacherView } from './views/TeacherView'
 import { SectionView } from './views/SectionView'
 import { SchoolView } from './views/SchoolView'
+import { CaseloadView } from './views/CaseloadView'
 import { DistrictView } from './views/DistrictView'
 import { CommunityView } from './views/CommunityView'
 import { DesignView } from './views/DesignView'
@@ -110,6 +111,17 @@ export default function App() {
             element={
               <Guard route="school">
                 <SchoolView />
+              </Guard>
+            }
+          />
+          {/* The building, as students rather than as rollups. A separate route
+              from /school and not a tab on it, because it is decided by the
+              opposite pair of permissions — see `REQUIRED` in access.ts. */}
+          <Route
+            path="/caseload/:schoolId"
+            element={
+              <Guard route="caseload">
+                <CaseloadView />
               </Guard>
             }
           />

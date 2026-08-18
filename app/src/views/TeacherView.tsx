@@ -15,7 +15,7 @@ import { useMemo } from 'react'
 import { loadSectionsContext, loadStaffIndex } from '../data/client'
 import { useAsync } from '../data/useAsync'
 import { useSession } from '../session/session'
-import { AS_OF_LABEL, CURRENT_SCHOOL_YEAR, formatSchoolYear } from '../lib/dataset'
+import { AS_OF_LABEL, CURRENT_SCHOOL_YEAR, byGradeOrder, formatSchoolYear } from '../lib/dataset'
 import {
   ErrorState,
   Loading,
@@ -47,7 +47,7 @@ export function TeacherView() {
       .filter((section) => scoped.has(section.sectionId))
       .sort(
         (a, b) =>
-          a.gradeLevel.localeCompare(b.gradeLevel, undefined, { numeric: true }) ||
+          byGradeOrder(a.gradeLevel, b.gradeLevel) ||
           (a.period ?? '').localeCompare(b.period ?? '', undefined, { numeric: true }) ||
           a.sectionName.localeCompare(b.sectionName),
       )

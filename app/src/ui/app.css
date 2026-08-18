@@ -1114,6 +1114,73 @@ a.star:hover {
   margin-top: var(--space-1);
 }
 
+/* --- The caseload ------------------------------------------------------- */
+/*
+ * A caseload card is a roster card carrying more: the same name, rate, and flags,
+ * plus however many concern chips the viewer's streams produced. Roster cards are
+ * a grid of small tiles because a class is twenty children and a teacher scans
+ * them; a caseload is read down, one student at a time, and a student with five
+ * chips must not be able to make the tile beside it three lines taller. So this
+ * is a single column of wider cards rather than `.roster-grid` with a different
+ * minimum, and it inherits `.roster-card` rather than restating it.
+ */
+
+.caseload-list {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: 1fr;
+}
+
+.caseload-card {
+  display: grid;
+  gap: var(--space-1) var(--space-4);
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.caseload-card-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.caseload-card-figures {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: right;
+}
+
+/* The chips span both columns and wrap, which is what keeps a student with one
+   concern and a student with six the same shape at the top. */
+.caseload-card .roster-flags,
+.caseload-card-last,
+.caseload-card > .subtle:last-child {
+  grid-column: 1 / -1;
+}
+
+/*
+ * Priority is marked by weight of border rather than by colour. The left border
+ * already carries mastery tone on every roster card in the app, and overloading
+ * it would mean a student's academic standing and the urgency of their situation
+ * competing for the same channel — which is exactly the conflation the product
+ * spends the rest of its surface refusing.
+ */
+.caseload-card[data-priority='true'] {
+  border-left-width: 6px;
+}
+
+@media (max-width: 640px) {
+  .caseload-card {
+    grid-template-columns: 1fr;
+  }
+
+  .caseload-card-figures {
+    text-align: left;
+  }
+}
+
 /* --- The style guide ---------------------------------------------------- */
 /*
  * Styles that exist only on /design. Kept in one block and named for it, so it is

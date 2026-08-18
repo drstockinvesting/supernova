@@ -21,7 +21,8 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import type { Aggregates, SectionContext, SectionRosterRow, SectionUnit } from '../types/profile.ts'
 import { intensityOfRate } from '../ui/stars.ts'
-import { buildingSky, classroomSky, districtSky, publicSky } from './constellations.ts'
+import { buildingSky, caseloadSky, classroomSky, districtSky, publicSky } from './constellations.ts'
+import type { CaseloadEntry } from './caseload/caseload.ts'
 
 // --- Fixtures ----------------------------------------------------------------
 
@@ -278,6 +279,55 @@ test('the district sky groups by building and drops buildings with no classrooms
   assert.deepEqual(groups[0].clusters.map((cluster) => cluster.label), ['Grade 9', 'Grade 10'])
 })
 
+/**
+ * Every sky sorts grades through `byGradeOrder`, and the reason is one building:
+ * Nova is K-5, and a numeric string sort ranks 'K' after '5', so the elementary
+ * sky read 1, 2, 3, 4, 5, Kindergarten. It is the kind of failure this file
+ * exists for — the page renders perfectly and the order is simply wrong.
+ */
+test('a building sky puts kindergarten first, not after grade 5', () => {
+  const groups = buildingSky([
+    section({ sectionId: 'sec-1', gradeLevel: '5' }),
+    section({ sectionId: 'sec-2', gradeLevel: 'K' }),
+    section({ sectionId: 'sec-3', gradeLevel: '1' }),
+  ])
+  assert.deepEqual(
+    groups.map((group) => group.label),
+    ['Kindergarten', 'Grade 1', 'Grade 5'],
+  )
+})
+
+test('a district sky puts kindergarten first within a building', () => {
+  const groups = districtSky(
+    [
+      section({ sectionId: 'sec-1', schoolId: 'school-a', gradeLevel: '5' }),
+      section({ sectionId: 'sec-2', schoolId: 'school-a', gradeLevel: 'K' }),
+      section({ sectionId: 'sec-3', schoolId: 'school-a', gradeLevel: '1' }),
+    ],
+    SCHOOLS,
+  )
+  assert.deepEqual(
+    groups[0].clusters.map((cluster) => cluster.label),
+    ['Kindergarten', 'Grade 1', 'Grade 5'],
+  )
+})
+
+test('a public sky puts kindergarten first within a building', () => {
+  const subject = { Math: { standardsTaughtToDate: 100, standardsMastered: 40, masteryRate: 40 } }
+  const groups = publicSky(
+    [
+      gradeCell('school-a', '5', subject),
+      gradeCell('school-a', 'K', subject),
+      gradeCell('school-a', '1', subject),
+    ],
+    SCHOOLS,
+  )
+  assert.deepEqual(
+    groups[0].clusters[0].stars.map((star) => star.id),
+    ['Math-school-a-K', 'Math-school-a-1', 'Math-school-a-5'],
+  )
+})
+
 // --- Public suppression ------------------------------------------------------
 
 test('a suppressed grade is drawn as withheld rather than removed from the row', () => {
@@ -318,4 +368,123 @@ test('nothing on the public sky is clickable', () => {
       }
     }
   }
+})
+
+// --- The caseload sky ---------------------------------------------------------
+
+function entry(
+  studentId: string,
+  gradeLevel: string,
+  masteryRate: number,
+  { priority = false, concerns = 0 } = {},
+): CaseloadEntry {
+  return {
+    priority,
+    concerns: Array.from({ length: concerns }, () => ({
+      stream: 'attendance' as const,
+      level: priority ? ('priority' as const) : ('watch' as const),
+      tone: 'concern' as const,
+      label: 'concern',
+    })),
+    row: {
+      studentId,
+      firstName: studentId,
+      lastName: studentId,
+      gradeLevel,
+      sectionCount: 1,
+      mastery: {
+        masteryRate,
+        standardsTaughtToDate: 40,
+        standardsMastered: Math.round((masteryRate / 100) * 40),
+        standardsWithNoEvidence: 0,
+        homeworkCompletionRate: 80,
+      },
+      attendance: {
+        attendanceRate: 96,
+        daysAbsent: 4,
+        daysEnrolled: 108,
+        daysExcusedAbsent: 2,
+        tardyCount: 0,
+        chronicAbsenteeismFlag: false,
+      },
+      behavior: {
+        disciplineReferralCount: 0,
+        suspensionCount: 0,
+        suspensionDays: 0,
+        totalIncidents: 0,
+        positiveRecognitionCount: 0,
+        lastIncidentDate: null,
+      },
+      health: {
+        flags: {
+          chronicHealthCondition: false,
+          foodInsecurityRisk: false,
+          housingInstability: false,
+          mentalHealthConcern: false,
+          otherWellnessFactors: [],
+        },
+        eventCounts: {},
+        totalEvents: 0,
+        lastEventDate: null,
+      },
+      services: null,
+      engagement: {
+        responseRate: 100,
+        outreachAttempts: 1,
+        conferenceAttendance: 1,
+        engagementLevel: 'highly_engaged',
+      },
+    },
+  }
+}
+
+test('a caseload star is lit on the same scale as every aggregate above it', () => {
+  // The one that would be easy to get wrong and impossible to see: this is the
+  // only sky whose stars come from individual students rather than from a
+  // rollup, so it is the likeliest place for a second brightness scale to appear.
+  const [group] = caseloadSky([entry('a', '3', 40)], { canOpenStudents: true })
+  const star = group.clusters[0].stars[0]
+  assert.equal(star.intensity, intensityOfRate(40))
+})
+
+test('a caseload groups by grade with kindergarten first, not after grade 5', () => {
+  const groups = caseloadSky(
+    [entry('a', '5', 50), entry('b', 'K', 50), entry('c', '1', 50)],
+    { canOpenStudents: true },
+  )
+  assert.deepEqual(
+    groups.map((group) => group.label),
+    ['Kindergarten', 'Grade 1', 'Grade 5'],
+  )
+})
+
+test('a caseload clusters by what is on record, and drops empty clusters', () => {
+  const groups = caseloadSky(
+    [
+      entry('a', '3', 50, { priority: true, concerns: 2 }),
+      entry('b', '3', 50, { concerns: 1 }),
+    ],
+    { canOpenStudents: true },
+  )
+  assert.deepEqual(
+    groups[0].clusters.map((cluster) => cluster.label),
+    ['Priority', 'Watch'],
+  )
+})
+
+test('a student with nothing taught is dark rather than a zero rate', () => {
+  const blank = entry('a', '3', 0)
+  blank.row.mastery.standardsTaughtToDate = 0
+  const [group] = caseloadSky([blank], { canOpenStudents: true })
+  const star = group.clusters[0].stars[0]
+  assert.equal(star.state, 'not_taught')
+  assert.equal(star.intensity, undefined)
+})
+
+test('a caseload star opens the student only when the viewer may see names', () => {
+  const open = caseloadSky([entry('a', '3', 50)], { canOpenStudents: true })
+  assert.equal(open[0].clusters[0].stars[0].to, '/student/a')
+
+  const closed = caseloadSky([entry('a', '3', 50)], { canOpenStudents: false })
+  assert.equal(closed[0].clusters[0].stars[0].to, undefined)
 })

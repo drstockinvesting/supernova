@@ -165,6 +165,8 @@ async function resolveTarget(
     }
     case 'school':
       return { kind: 'school', schoolId: params.schoolId ?? '' }
+    case 'caseload':
+      return { kind: 'caseload', schoolId: params.schoolId ?? '' }
     default:
       return { kind: route }
   }

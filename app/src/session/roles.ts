@@ -83,10 +83,23 @@ export function homePathFor(session: Session): string {
     // Most teachers hold four or five sections. Landing on the first one would
     // silently drop the rest, so the teacher's home is the index over all of them.
     case 'teacher':
-    case 'special_education_teacher':
       return '/teacher'
+    // A nurse, a counselor, and a special education teacher are all scoped to a
+    // building and all hold named students, and their home is that list rather
+    // than the building's rollups.
+    //
+    // For two of them this replaces a page they could not read. A nurse holds no
+    // `view_aggregate_mastery`, so the building page was an unlit frame and an
+    // explanation of what was missing. A special education teacher was worse off
+    // and it did not show: their scope is a *building*, not sections, so the
+    // teacher's classroom index refused them for holding no sections, redirected
+    // them to their own home, and landed on the one branch in `Guard` that exists
+    // to stop a redirect loop — an account with no dashboard it can open. That
+    // was the honest report of a real gap. This is the gap being closed.
+    case 'special_education_teacher':
     case 'counselor':
     case 'nurse':
+      return assignment.scopeIds[0] ? `/caseload/${assignment.scopeIds[0]}` : '/district'
     case 'building_administrator':
       return assignment.scopeIds[0] ? `/school/${assignment.scopeIds[0]}` : '/district'
     case 'district_administrator':

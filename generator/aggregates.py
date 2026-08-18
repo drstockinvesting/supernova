@@ -516,3 +516,147 @@ def build_sections_context(dataset, school_year: str = CURRENT_SCHOOL_YEAR) -> t
         },
         detail,
     )
+
+
+# ---------------------------------------------------------------------------
+# Caseload index
+# ---------------------------------------------------------------------------
+#
+# A nurse, a counselor, and a special education teacher are scoped to a building
+# and hold named students -- and every rollup above them is aggregate mastery,
+# which two of the three do not hold at all. What their job actually needs is the
+# building's students as *students*, carrying the stream each is responsible for.
+#
+# No existing file answers that. `sections-context` is indexed by section, so a
+# secondary student appears in six of them and a nurse would have to fetch every
+# roster in the building to assemble one list. Health and special services are not
+# in a roster at all -- they live only in the per-student profile, which would mean
+# ~370 fetches to draw one page. So the index is built here, once, per building.
+#
+# It carries facts and no judgements. Which of these students is *on* a caseload
+# is a question about who is looking -- a nurse's and a counselor's lists overlap
+# and are not the same list -- and that decision belongs where the viewer is
+# known, in the app, where it can be tested against a permission set. What this
+# file guarantees is only that the facts are there to decide from.
+#
+# One thing it is not: a redaction boundary. Every stream is written for every
+# student, and which of them a viewer may read is enforced when the page is built.
+# That matches how the rest of this dataset is served -- a student profile file is
+# the whole student, and the family view renders a subset of it -- and it is worth
+# saying plainly that a real deployment would have to filter server-side instead.
+
+
+def _health_summary(record: dict) -> dict:
+    """Counts and flags, not the events themselves.
+
+    A health record's events are the sensitive part and are also the bulk of it;
+    an index that reproduced them would be a second copy of the confidential
+    record in a file loaded to draw a list. Counts answer what a caseload list
+    asks -- who has something open -- and the events themselves stay one click
+    away in the profile, where the permission is checked again.
+    """
+    events = record.get("healthEvents", []) if record else []
+    counts: dict[str, int] = defaultdict(int)
+    for event in events:
+        counts[event["eventType"]] += 1
+
+    flags = (record or {}).get("flags", {}) or {}
+    return {
+        "flags": {
+            "chronicHealthCondition": bool(flags.get("chronicHealthCondition")),
+            "foodInsecurityRisk": bool(flags.get("foodInsecurityRisk")),
+            "housingInstability": bool(flags.get("housingInstability")),
+            "mentalHealthConcern": bool(flags.get("mentalHealthConcern")),
+            "otherWellnessFactors": list(flags.get("otherWellnessFactors") or []),
+        },
+        "eventCounts": dict(sorted(counts.items())),
+        "totalEvents": len(events),
+        "lastEventDate": max((e["date"] for e in events), default=None),
+    }
+
+
+def _services_summary(record: dict | None) -> dict | None:
+    """The shape of a services record, without the notes inside it."""
+    if not record:
+        return None
+    services = record.get("services") or []
+    return {
+        "status": record.get("status"),
+        "startDate": record.get("startDate"),
+        "serviceTypes": sorted({s["serviceType"] for s in services if s.get("serviceType")}),
+        "eligibilityCategories": sorted(record.get("eligibilityCategories") or []),
+        "serviceCount": len(services),
+    }
+
+
+def build_caseload_index(dataset, school_year: str = CURRENT_SCHOOL_YEAR) -> dict:
+    """One row per student, keyed by building. Returns {schoolId: payload}."""
+    students_by_id = {s["id"]: s for s in dataset.students}
+    schools_by_id = {s["id"]: s for s in dataset.schools}
+
+    rows_by_school: dict[str, list[dict]] = defaultdict(list)
+
+    for student_id, profile in sorted(dataset.profiles.items()):
+        year = profile["years"].get(school_year)
+        student = students_by_id.get(student_id)
+        if not year or not student:
+            continue
+
+        summary = year["summary"]
+        attendance = year["attendance"]["metrics"]
+        behavior = year["behavior"]
+        engagement = year["familyEngagement"]["metrics"]
+        incidents = behavior.get("incidents", [])
+
+        rows_by_school[student["schoolId"]].append(
+            {
+                "studentId": student_id,
+                "firstName": student["firstName"],
+                "lastName": student["lastName"],
+                "gradeLevel": year["gradeLevel"],
+                "sectionCount": len(year.get("sectionIds", [])),
+                "mastery": {
+                    "masteryRate": summary["masteryRate"],
+                    "standardsTaughtToDate": summary["standardsTaughtToDate"],
+                    "standardsMastered": summary["standardsMastered"],
+                    "standardsWithNoEvidence": summary["standardsWithNoEvidence"],
+                    "homeworkCompletionRate": summary["homeworkCompletionRate"],
+                },
+                "attendance": {
+                    "attendanceRate": attendance["attendanceRate"],
+                    "daysAbsent": attendance["daysAbsent"],
+                    "daysEnrolled": attendance["daysEnrolled"],
+                    "daysExcusedAbsent": attendance["daysExcusedAbsent"],
+                    "tardyCount": attendance["tardyCount"],
+                    "chronicAbsenteeismFlag": attendance["chronicAbsenteeismFlag"],
+                },
+                "behavior": {
+                    "disciplineReferralCount": behavior["metrics"]["disciplineReferralCount"],
+                    "suspensionCount": behavior["metrics"]["suspensionCount"],
+                    "suspensionDays": behavior["metrics"]["suspensionDays"],
+                    "totalIncidents": behavior["metrics"]["totalIncidents"],
+                    "positiveRecognitionCount": behavior["metrics"]["positiveRecognitionCount"],
+                    "lastIncidentDate": max((i["date"] for i in incidents), default=None),
+                },
+                "health": _health_summary(year["health"]),
+                "services": _services_summary(year.get("specialServices")),
+                "engagement": {
+                    "responseRate": engagement["responseRate"],
+                    "outreachAttempts": engagement["outreachAttempts"],
+                    "conferenceAttendance": engagement["conferenceAttendance"],
+                    "engagementLevel": engagement["engagementLevel"],
+                },
+            }
+        )
+
+    return {
+        school_id: {
+            "schoolId": school_id,
+            "schoolYear": school_year,
+            "label": schools_by_id.get(school_id, {}).get("name", school_id),
+            # Sorted by name so the file is stable and the app never has to sort
+            # 370 rows to draw the default list.
+            "students": sorted(rows, key=lambda r: (r["lastName"], r["firstName"], r["studentId"])),
+        }
+        for school_id, rows in sorted(rows_by_school.items())
+    }
