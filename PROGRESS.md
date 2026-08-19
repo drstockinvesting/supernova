@@ -16,6 +16,27 @@ rewriting it, so the reasoning behind the build stays legible.
 | **5. Research context layer** | Complete — the library is a checked contract | 2026-08-17 |
 | **6. The caseload view** | Complete — three roles have a home | 2026-08-18 |
 | **7. The research review** | Checked, revised, and the sign-off rule decided | 2026-08-18 |
+| **The thresholds, measured** | Measured, not reviewed — 8 recorded as uncalibrated | 2026-08-18 |
+
+---
+
+## Session 11 Checklist — the thresholds, measured
+
+Not a phase. The other kind of check: not *is this number right*, which needs somebody with
+standing, but *does this number distinguish anything in the data it is applied to*.
+
+- [x] Every trigger measured over the cells that **supply** the metric, not the cells that fail it
+- [x] Two surfaces, two files — the research triggers, and the caseload thresholds
+- [x] Permission sets read off the accounts the district issues, not written into the test
+- [x] 7 measurements recorded in `UNCALIBRATED` with counts and a reason
+- [x] `tardyWatch: 8` catches 58 students and not one is above it — the sole `NO_HEADROOM` entry
+- [x] Two claims found to be one claim: `cite-attendance-04` and `cite-health-01` share a trigger
+- [x] `cite-evidence-01` strictly implies `cite-mastery-01`, so two of three panel slots go to one figure
+- [x] Registries assert their recorded counts, so a stale exemption fails as loudly as a new one
+- [x] Every assertion mutation-tested; nothing was checked by a green run
+- [x] 18 new tests, 120 total; build clean, lint at the recorded baseline of 11
+- [ ] **No threshold was changed.** Every number is still waiting on a review by people this
+      repository does not have
 
 ---
 
@@ -1636,7 +1657,7 @@ npm --prefix app run build && npm --prefix app test && npm --prefix app run lint
 ```
 
 `test` is `node --test` over `src/**/*.test.ts`, using Node's own type stripping — there is
-no test framework and nothing to install. 102 tests, and everything covered is covered for
+no test framework and nothing to install. 120 tests, and everything covered is covered for
 the same reason: its failures are invisible on screen. A guard that wrongly allows renders
 a page indistinguishable from one the viewer was entitled to; a suppression rule that never
 fires looks identical to one that works; a sky lit on the wrong scale is still a sky, and
