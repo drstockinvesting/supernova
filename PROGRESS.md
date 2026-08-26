@@ -1203,6 +1203,59 @@ sign-off rule exists to prevent.
   cells, and it was described in the walkthrough's first draft as constant on the strength of
   three buildings and one district.
 
+### 2026-08-26 — Session 12 — the refusal that nobody asked for
+
+Ran the app as it stands and walked all ten roles through the persona picker. Everything
+Phase 7 claims is true on screen: every role lands on a page built for it, the constellation
+is drawn at every zoom level, and enforcement holds against a typed address — including the
+case the README singles out, a board member refused `/district` while holding district scope
+over every id in it. 120 tests pass, the build is clean, and the console is silent on all
+thirteen pages.
+
+One defect, in the narration rather than the decision.
+
+**Switching accounts showed a refusal notice on a page the new account was fully entitled to.**
+A teacher on `/teacher` picks a district administrator; they land on `/district` — correctly,
+it is that account's home — and are told *"That page belongs to a different kind of account."*
+Nothing was refused to them. They clicked their own name in the switcher.
+
+The cause is a seam one layer out from the one `Guard` already documents. `signInAs` and the
+picker's `navigate` do not land in the same render: the session update flushes first, so this
+guard re-renders under the **new** account while the address is still the **old** one. It then
+does exactly its job — a district administrator holds no sections, so `/teacher` is genuinely
+not theirs — and redirects to `/district`, stamping the arrival with a denial. That stamp
+overwrites the entry the picker had just pushed. The decision was right every time; only the
+explanation was addressed to the wrong person.
+
+It matters because of what the line is for. It is the only thing distinguishing an enforced
+boundary from a bug, and it can only do that job while it is rare. A notice that also fires on
+an ordinary account switch teaches the viewer to read past it, and the next time it means
+something they will.
+
+Fixed by asking what moved. `switching.ts` holds one pure predicate — a refusal is explained
+when the address and the account arrived together, and passed over in silence when the account
+changed beneath an address that stayed put. Kept out of `Guard.tsx` for the reason `access.ts`
+is: this is the one file where a wrong answer is invisible on screen.
+
+### Defects found while building Session 12
+
+- **The first fix was verified green by unit tests and was still broken in the browser.** The
+  predicate was right; where it read from was not. The ref recording "where this route last
+  acted" updated on every render, including the loading pass that the switch itself causes — so
+  by the time the refusal arrived the mark already agreed with the new account, and the
+  comparison had nothing left to notice. Six unit tests passed against a fix that changed
+  nothing on screen. The ref update is now gated on a decision having been reached, which is
+  what "settled" was supposed to mean.
+- **The second version would have silenced the refusal it exists for.** Reading `null -> someone`
+  as an account switch is wrong: that is the app signing in on first load, and the address it
+  lands on is the one the viewer typed. A typed refusal on a cold load — the exact case Phase 3
+  built the notice for — would have gone quiet, and the browser walkthrough that caught it is
+  the only check that would have. Both accounts must be real for a switch to count.
+- **Both false starts share a shape worth naming.** A test that exercises the predicate cannot
+  see whether the caller feeds it the right two values, and every check in this repo that runs
+  without a browser has that blind spot. The unit tests are still worth having, but the thing
+  that found both defects was signing in and clicking.
+
 ---
 
 ## Phase 1 Results
