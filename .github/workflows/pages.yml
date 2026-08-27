@@ -1,0 +1,68 @@
+# Publishes the app to GitHub Pages, dataset and all.
+#
+# `vite.config.ts` keeps the dataset out of the bundle and says a deploy decides
+# separately which slice of it ships. This is that decision, and it ships all of
+# it: 188MB across 2,464 files, which is inside the 1GB a Pages site is allowed
+# and tars down to a fraction of it for the upload. Shipping a slice instead
+# would mean every account the persona picker offers outside that slice opens a
+# broken page, and the picker offers all 2,101.
+#
+# The visitor does not pay for that size. `client.ts` shards the reads
+# deliberately -- one file per student profile, fetched on demand -- so opening a
+# student costs that student, not the district.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time, and never cancel one halfway: a cancelled deploy can
+# leave the published site mid-swap.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - run: npm --prefix app ci
+
+      # The suite is 127 tests and a few seconds. A deploy that publishes a build
+      # its own tests reject is worse than a deploy that does not happen.
+      - run: npm --prefix app test
+
+      - run: npm --prefix app run build
+
+      - name: Ship the dataset beside the bundle
+        run: cp -R data app/dist/data
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

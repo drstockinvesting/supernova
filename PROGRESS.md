@@ -1237,6 +1237,17 @@ when the address and the account arrived together, and passed over in silence wh
 changed beneath an address that stayed put. Kept out of `Guard.tsx` for the reason `access.ts`
 is: this is the one file where a wrong answer is invisible on screen.
 
+Also deployed. The app is static, so it goes to GitHub Pages whole — build, dataset, and all
+188MB, which is inside the 1GB a Pages site is allowed and costs the visitor nothing because
+profiles are fetched one student at a time. Two things a static host does not do that the dev
+server does: a project site is served from a subdirectory, so the build takes a base that dev
+does not and `DATA_ROOT` and the router's `basename` both read `BASE_URL`; and Pages has no SPA
+rewrite, so the build writes `index.html` to `404.html` and every pasted deep link boots the app
+from there. Verified by serving the real build through a stand-in that mimics Pages exactly —
+file if one exists, `404.html` with a 404 status otherwise — and driving all ten roles and four
+cold deep links through it. The only 404s the browser saw were the documents themselves, which
+is the trick working.
+
 ### Defects found while building Session 12
 
 - **The first fix was verified green by unit tests and was still broken in the browser.** The

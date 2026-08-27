@@ -35,7 +35,14 @@ import type {
   StudentProfile,
 } from '../types/profile'
 
-const DATA_ROOT = '/data'
+/**
+ * The dataset sits beside the bundle, so it moves with it. On the dev server that
+ * is the domain root; on a project Pages site the whole app lives under a
+ * subdirectory, and an absolute `/data` would resolve past it to a host that
+ * serves nothing there. `BASE_URL` is `/` in dev and the deploy's base in a
+ * build, which makes this one expression correct in both.
+ */
+const DATA_ROOT = `${import.meta.env.BASE_URL}data`
 
 const cache = new Map<string, Promise<unknown>>()
 

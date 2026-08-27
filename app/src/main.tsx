@@ -6,7 +6,9 @@ import { SessionProvider } from './session/session.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    {/* Every route the app owns hangs off the deploy's base, which is `/` in dev
+        and the repository subdirectory on a project Pages site. */}
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <SessionProvider>
         <App />
       </SessionProvider>
