@@ -1,0 +1,341 @@
+/*
+ * The chrome around the canvas.
+ *
+ * Everything here is a HUD: it floats over the sky rather than sitting in a page,
+ * because the sky is the content and any layout that reserves space beside it
+ * makes the map smaller for no gain. The app header stays above it — this view
+ * is a page inside the LMS, not a takeover — so the canvas fills what is left.
+ *
+ * Colours come from the design system's tokens, and the ones this file uses are
+ * the deep-surface set: the constellation panel is dark in both themes by the
+ * decision recorded at the top of `theme.css`, and this is the same surface at
+ * full size. Nothing here changes when the theme toggle does, deliberately.
+ */
+
+.galaxy-view {
+  position: relative;
+  /* Everything below the app header, whatever height the header turns out to be:
+     `--galaxy-top` is measured from this element's own position on mount and on
+     resize. Filling the rest of the viewport rather than taking a fixed height
+     means a projector in a school hall gets the whole wall. */
+  height: calc(100dvh - var(--galaxy-top, 72px));
+  min-height: 460px;
+  overflow: hidden;
+  background: var(--surface-deep);
+  color: var(--text-on-deep);
+}
+
+.galaxy-canvas-host {
+  position: absolute;
+  inset: 0;
+}
+
+.galaxy-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.galaxy-canvas:active {
+  cursor: grabbing;
+}
+
+.galaxy-canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
+}
+
+/* --- HUD ----------------------------------------------------------------- */
+
+.galaxy-hud {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  gap: var(--space-3);
+  /* The HUD is a frame around the map, not a lid on it: only the controls
+     themselves take the pointer, so a drag that starts on empty chrome still
+     scrolls the row underneath. */
+  pointer-events: none;
+}
+
+.galaxy-hud > * {
+  pointer-events: none;
+}
+
+.galaxy-hud button,
+.galaxy-hud a,
+.galaxy-hud label,
+.galaxy-hud .galaxy-detail {
+  pointer-events: auto;
+}
+
+.galaxy-hud-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.galaxy-titles h1 {
+  font-size: var(--text-xl);
+  margin: 2px 0 var(--space-2);
+}
+
+.galaxy-eyebrow {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  font-weight: 600;
+  color: var(--text-on-deep-subtle);
+}
+
+.galaxy-crumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-on-deep-muted);
+}
+
+.galaxy-crumb {
+  border: none;
+  background: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.galaxy-crumb[data-active='true'] {
+  color: var(--lit-substantial);
+  font-weight: 600;
+  cursor: default;
+}
+
+.galaxy-hud-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* --- Buttons on the sky --------------------------------------------------- */
+
+.galaxy-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid rgba(233, 237, 246, 0.2);
+  border-radius: var(--radius-sm);
+  /* Translucent rather than solid, so the sky reads through the chrome and the
+     controls stay visibly on top of the map instead of beside it. */
+  background: rgba(12, 15, 22, 0.66);
+  backdrop-filter: blur(6px);
+  color: var(--text-on-deep);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease),
+    background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
+}
+
+.galaxy-button:hover {
+  border-color: var(--lit-substantial);
+  color: var(--lit-substantial);
+}
+
+.galaxy-button-primary {
+  border-color: rgba(255, 233, 168, 0.55);
+  color: var(--lit-substantial);
+  background: rgba(255, 233, 168, 0.12);
+}
+
+.galaxy-button-primary:hover {
+  background: rgba(255, 233, 168, 0.2);
+}
+
+/* --- Focused skill -------------------------------------------------------- */
+
+.galaxy-detail {
+  align-self: flex-start;
+  max-width: 340px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid rgba(233, 237, 246, 0.14);
+  border-radius: var(--radius);
+  background: rgba(12, 15, 22, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.galaxy-detail-name {
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+}
+
+.galaxy-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-on-deep-muted);
+}
+
+/*
+ * The state, said in words next to the body that says it in light.
+ * Nothing in this view communicates by colour alone.
+ */
+.galaxy-state {
+  padding: 1px var(--space-2);
+  border-radius: 999px;
+  font-weight: 600;
+  border: 1px solid currentColor;
+}
+
+.galaxy-state[data-state='lit'] {
+  color: var(--lit-substantial);
+}
+
+.galaxy-state[data-state='emerging'] {
+  color: var(--lit-moderate);
+}
+
+/* Unexplored, not failed: the same neutral the rest of the app gives an unlit
+   star, and pointedly not a red or a grey-dead. */
+.galaxy-state[data-state='unlit'] {
+  color: var(--text-on-deep-subtle);
+}
+
+/* --- Bottom bar ----------------------------------------------------------- */
+
+.galaxy-hud-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.galaxy-count {
+  font-size: var(--text-sm);
+  color: var(--text-on-deep-muted);
+}
+
+.galaxy-count strong {
+  color: var(--lit-substantial);
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+}
+
+.galaxy-count-sub {
+  color: var(--text-on-deep-subtle);
+}
+
+.galaxy-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.galaxy-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(233, 237, 246, 0.18);
+}
+
+.galaxy-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-on-deep-muted);
+  cursor: pointer;
+}
+
+.galaxy-hint {
+  font-size: var(--text-xs);
+  color: var(--text-on-deep-subtle);
+  text-align: center;
+}
+
+/* --- Live region ---------------------------------------------------------- */
+
+/*
+ * Visually hidden, not display:none — a hidden element is not announced. This is
+ * the whole of what a screen reader gets from a canvas, so it has to be reachable
+ * by the accessibility tree while taking no space.
+ */
+.galaxy-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Entry gate ----------------------------------------------------------- */
+
+.galaxy-gate {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  background: radial-gradient(60% 60% at 50% 45%, rgba(12, 16, 26, 0.86), rgba(6, 8, 13, 0.96));
+  backdrop-filter: blur(2px);
+  z-index: 2;
+}
+
+.galaxy-gate-panel {
+  max-width: 460px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.galaxy-gate-panel h2 {
+  font-size: var(--text-2xl);
+}
+
+.galaxy-gate-panel p {
+  color: var(--text-on-deep-muted);
+  font-size: var(--text-sm);
+}
+
+.galaxy-enter {
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-base);
+  letter-spacing: 0.04em;
+}
+
+.galaxy-gate-note {
+  font-size: var(--text-xs) !important;
+  color: var(--text-on-deep-subtle) !important;
+}
+
+@media (max-width: 720px) {
+  .galaxy-hud {
+    padding: var(--space-3);
+  }
+
+  .galaxy-hud-top {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .galaxy-titles h1 {
+    font-size: var(--text-lg);
+  }
+}

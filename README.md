@@ -178,6 +178,60 @@ silently doubled the standards catalog once already.
 
 ---
 
+## The Mastery Map — an alternative student view
+
+**`/galaxy`** is a second student dashboard, built to
+[`docs/supernova-dashboard-spec-v1.md`](docs/supernova-dashboard-spec-v1.md). It renders a K–12
+career as a field of galaxies: one galaxy per grade, the stars inside a galaxy are its
+subjects, and the planets orbiting a subject star are its skills. Mastery is light, and the
+light arrives with a bang — a stadium fixture striking on, thump and bloom, synthesised per
+event so the fiftieth one still lands.
+
+**The existing student profile at `/student/:id` is untouched and remains the record.** That
+view holds the evidence, the context a mastery rate has to be read against, and the permission
+rules deciding who sees which part of it. This one makes a single argument at high volume:
+*your work is light, and here is all of it at once.* Different moments; neither is a better
+version of the other.
+
+It is a prototype, so it is driven by hand rather than by data. `Master` and `Unmaster` move
+one skill at a time in career order, flying the camera to each and igniting it on arrival;
+`Reset` empties the career; `Fill` lights all thirteen years as a sweep, a grade at a time,
+pitched up as it goes. The map itself is generated in `app/src/views/galaxy/mock.ts`, which is
+the entire surface a real data source has to replace — nothing downstream of it knows a
+generator exists.
+
+The build answers the spec's open questions, reversibly:
+
+| Spec | Answer |
+|---|---|
+| §2 Entry audio | **Option A.** A browser plays no sound until the page is clicked, so an `Enter` button gates the sweep. The alternative is a silent first run of the best moment in the product. |
+| §3 The `emerging` state | **Carried and rendered** as a dim ember at about a third of full light, still marked unconfirmed. A binary lit/unlit draws every mid-progress skill as failure. |
+| §4 The update queue | **Not built against data** — the demo has no "since last session" to derive from. The mechanism it would use is here and driven by the controls: one ignition at a time, camera flying to each, fly-to defeatable. |
+| §6 Renderer | **Canvas 2D with a hand-rolled bloom**, not PixiJS. The spec's own §6 says defer to the LMS's stack, and this app ships React and a router and nothing else. Emissive bodies are drawn again into a quarter-resolution buffer, blurred at two radii and composited additively. Zero added dependencies. |
+
+Non-negotiables, all present: a mute toggle remembered across sessions; `prefers-reduced-motion`
+honoured by cutting camera moves and particles while keeping every illumination; keyboard
+navigation at all three zoom levels with a live region that says each state in words, because
+brightness is the one encoding that reaches nobody who cannot see it; labels legible on unlit
+bodies; and no counter anywhere that emphasises what is missing — an unlit galaxy reads
+*unexplored*, never *failed*.
+
+The arithmetic underneath — brightness derivation, the career ordering the controls walk, the
+zoom levels and the reveal thresholds that have to agree with them — is in plain `.ts` modules
+with 25 tests over it, for the usual reason: a map lit on the wrong scale is still a map, and
+nobody catches that by looking. Two of those tests exist because they already caught something:
+the reveal thresholds started out as absolute zoom values and silently lost a level of the zoom
+on any window shorter than a desktop's, and the glow radius started out uncapped and swallowed
+a star system in its own halo.
+
+**On frame rate.** The bloom is blurred at the reduced buffer's resolution, not the canvas's.
+Blurring full-size cost more than the entire rest of the frame put together — thirteen
+galaxies, every body, every particle — and took a software-rendered 1600×900 canvas from 60fps
+to 18. At buffer size the same picture runs at 47–60fps *without* a GPU, which is the floor,
+not the target.
+
+---
+
 ## The Published Site
 
 The app is static — no server, no API, no build-time secrets — so it deploys whole to GitHub
