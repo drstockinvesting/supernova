@@ -21,6 +21,20 @@
  *     flying to each in turn, with the fly-to defeatable.
  *   - **§3, the emerging state.** Carried and rendered, marked as unconfirmed.
  *     See `model.ts`.
+ *   - **§3, "planets orbiting it".** Drawn as a system, held still. The spec asks
+ *     for orbiting skills and the first build gave them to it; watching somebody
+ *     use it settled the question. A skill is the one thing in this view a reader
+ *     is asked to click, and a click target that drifts away from the cursor —
+ *     taking its label with it — turns reading your own record into a game of
+ *     catch. The orbit rings stay, the positions are fixed, and the motion the
+ *     spec wanted moved to the one place it costs nothing: the galaxy discs, which
+ *     turn slowly and are never clicked anywhere but at their centre. See the top
+ *     of `scene.ts`.
+ *   - **§5, how loud.** Well under what the first build shipped. Measured on the
+ *     way out, one ignition peaked past full scale and `Fill` reached three times
+ *     it — clipping, on every event that mattered. Every sound is the same sound,
+ *     mixed with headroom, softened at the attack, and ducked when events stack.
+ *     See the top of `galaxy/audio.ts`.
  *
  * The demo controls are the point of this build. Mastery here is attached to
  * nothing: `Master` and `Unmaster` move one skill at a time, `Reset` empties the

@@ -28,7 +28,7 @@ import type { GalaxyAudio } from './audio'
 import type { GalaxyMap, SkillAddress } from './model'
 import { skillAt } from './model.ts'
 import type { Scene } from './scene'
-import { findPlanet, planetPosition } from './scene.ts'
+import { findPlanet } from './scene.ts'
 import type { Camera, ViewState, Viewport } from './camera.ts'
 import { cameraFor, clampRowX, durationFor, nearestGalaxy, tweenCamera, zoomFor } from './camera.ts'
 import type { Focus, Ignition, Palette, SpritePair } from './render.ts'
@@ -289,7 +289,6 @@ export const GalaxyCanvas = forwardRef<GalaxyHandle, Props>(function GalaxyCanva
         palette,
         sprites: spritesRef.current,
         dust,
-        orbitTime: reducedRef.current ? 0 : time,
         time,
         focus: focusOf(viewRef.current),
         ignitions: ignitionsRef.current,
@@ -318,15 +317,7 @@ export const GalaxyCanvas = forwardRef<GalaxyHandle, Props>(function GalaxyCanva
   }, [audio, dust])
 
   // --- Imperative surface --------------------------------------------------
-  const worldOf = useCallback(
-    (address: SkillAddress) => {
-      const planet = findPlanet(sceneRef.current, address)
-      if (!planet) return null
-      const now = performance.now() / 1000 - startedAtRef.current
-      return planetPosition(planet, reducedRef.current ? 0 : now)
-    },
-    [],
-  )
+  const worldOf = useCallback((address: SkillAddress) => findPlanet(sceneRef.current, address) ?? null, [])
 
   const timeToRest = useCallback(() => {
     const tween = tweenRef.current
@@ -454,7 +445,7 @@ export const GalaxyCanvas = forwardRef<GalaxyHandle, Props>(function GalaxyCanva
       event.clientX - rect.left,
       event.clientY - rect.top,
     )
-    const next = pick(sceneRef.current, viewRef.current, point, reducedRef.current ? 0 : performance.now() / 1000 - startedAtRef.current)
+    const next = pick(sceneRef.current, viewRef.current, point)
     if (next) {
       audio.tick(next.level === 'system' ? 1.3 : next.level === 'galaxy' ? 1.1 : 0.9)
       onViewChange(next)
@@ -562,16 +553,21 @@ function levelOfZoom(zoom: number, viewport: Viewport): 'row' | 'galaxy' | 'syst
   return 'row'
 }
 
-/** What a click at this world point selects, or null if it selects nothing. */
-function pick(scene: Scene, view: ViewState, point: { x: number; y: number }, time: number): ViewState | null {
+/**
+ * What a click at this world point selects, or null if it selects nothing.
+ *
+ * Hit-tested against the scene's own coordinates, with no clock involved. That is
+ * a property of the layout rather than of this function: bodies do not move, so
+ * where a thing is drawn and where it can be clicked cannot come apart.
+ */
+function pick(scene: Scene, view: ViewState, point: { x: number; y: number }): ViewState | null {
   if (view.level === 'system') {
     const star = scene.galaxies[view.galaxy]?.stars[view.star]
     if (!star) return null
     let best: number | null = null
     let bestDistance = Infinity
     star.planets.forEach((planet, index) => {
-      const position = planetPosition(planet, time)
-      const distance = Math.hypot(position.x - point.x, position.y - point.y)
+      const distance = Math.hypot(planet.x - point.x, planet.y - point.y)
       if (distance < bestDistance && distance < planet.radius * 4) {
         bestDistance = distance
         best = index
