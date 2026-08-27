@@ -232,6 +232,28 @@ not the target.
 
 ---
 
+## Checks
+
+`.github/workflows/ci.yml` runs lint, typecheck, the test suite, and the build on every pull
+request. It exists because the deploy workflow already ran the suite — but on `push` to `main`,
+as the gate on publishing, which is *after* the decision to merge. A branch that broke the
+tests went green-by-absence on its pull request and failed at deploy time, with `main` already
+carrying the commit. Same checks, moved to where they can still change an outcome.
+
+Four named steps rather than one, because the check name in a pull request should say which one
+failed before anyone opens a log. Node 22 is not incidental: the suite runs on `node --test`
+with no framework, reading the `.ts` modules through Node's own type stripping, and an older
+runtime fails to parse every test file.
+
+```bash
+npm --prefix app run lint
+npm --prefix app exec tsc -- -b app
+npm --prefix app test
+npm --prefix app run build
+```
+
+---
+
 ## The Published Site
 
 The app is static — no server, no API, no build-time secrets — so it deploys whole to GitHub
