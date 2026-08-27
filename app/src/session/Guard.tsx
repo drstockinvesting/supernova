@@ -13,9 +13,16 @@
  * address, and a silent redirect there is indistinguishable from a bug. So the
  * viewer lands where they belong and is told once, in a line, without being told
  * what was on the other side.
+ *
+ * Told once, and only if they asked. The same redirect fires when the account
+ * changes underneath a route the viewer is already on — the switcher re-renders
+ * this guard under the new session before its own navigation lands — and there
+ * the refusal is real but unrequested. A line that explains a refusal nobody
+ * asked for spends the credibility of the one that explains a real one, so that
+ * case redirects in silence. See `switching.ts`.
  */
 
-import type { ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { Navigate, useLocation, useParams } from 'react-router-dom'
 import { loadSectionContextIndex, loadStudentIndex } from '../data/client'
 import { useAsync } from '../data/useAsync'
@@ -24,6 +31,7 @@ import { decide, denialMessage, type DenialReason, type Target } from './access'
 import { homePathFor } from './roles'
 import { resolveScope } from './scope'
 import { useSession } from './session'
+import { isInheritedRefusal, type Landing } from './switching'
 
 export type RouteKind = Target['kind']
 
@@ -36,6 +44,16 @@ export function Guard({ route, children }: { route: RouteKind; children: ReactNo
   const { session, loading } = useSession()
   const params = useParams()
   const location = useLocation()
+
+  // A refusal is explained only to the viewer who asked for it. Switching
+  // accounts renders this route under the new session while the address is still
+  // the old one, and the guard refuses it — correctly, and for a page the new
+  // account never requested. `isInheritedRefusal` separates that from a typed
+  // address, by comparing where this route last *acted* against where it stands
+  // now.
+  const here: Landing = { pathname: location.pathname, userId: session?.user.id ?? null }
+  const settled = useRef<Landing>(here)
+  const inherited = isInheritedRefusal(settled.current, here)
 
   // Who is asking for what, as one value. Both halves of the decision are
   // fetched, and a decision assembled from a resolved half and an unresolved one
@@ -66,7 +84,17 @@ export function Guard({ route, children }: { route: RouteKind; children: ReactNo
   }, [key])
 
   const check = checkState.value
-  if (loading || !session || !check || check.key !== key) {
+  const decided = check?.key === key
+
+  // Only a decision settles this route. Updating on every render would move the
+  // mark during the loading pass that a switch itself causes — the ref would
+  // already agree with the new account by the time the refusal arrived, and the
+  // comparison above would have nothing left to notice.
+  useEffect(() => {
+    if (decided) settled.current = { pathname: location.pathname, userId: session?.user.id ?? null }
+  }, [decided, location.pathname, session?.user.id])
+
+  if (loading || !session || !check || !decided) {
     return (
       <div className="page">
         <Loading what="your view" />
@@ -94,6 +122,11 @@ export function Guard({ route, children }: { route: RouteKind; children: ReactNo
       </div>
     )
   }
+
+  // The picker is already sending them here, so this redirect only agrees with
+  // it; what it must not do is stamp the arrival with a refusal they never asked
+  // for. Same destination either way.
+  if (inherited) return <Navigate to={home} replace />
 
   return <Navigate to={home} replace state={{ denied: decision.reason } satisfies DeniedState} />
 }

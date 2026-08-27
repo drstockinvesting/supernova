@@ -178,6 +178,38 @@ silently doubled the standards catalog once already.
 
 ---
 
+## The Published Site
+
+The app is static — no server, no API, no build-time secrets — so it deploys whole to GitHub
+Pages, dataset included. `.github/workflows/pages.yml` builds on every push to `main`, runs the
+test suite, copies `data/` in beside the bundle, and publishes:
+
+**https://drstockinvesting.github.io/supernova/**
+
+Two things a static host does not do that the dev server does, both handled in
+`app/vite.config.ts`:
+
+- **A project Pages site is served from a subdirectory**, not the domain root, so the build
+  takes `base: '/supernova/'`. Dev does not — it would move the dev server to
+  `localhost:5173/supernova/` for nothing. `DATA_ROOT` and the router's `basename` both read
+  `import.meta.env.BASE_URL`, which is the one expression correct in both.
+- **Pages has no SPA rewrite.** It serves `404.html` for any address without a file, so the
+  build writes a copy of `index.html` there. Every route the router owns is a hard load when
+  it arrives as a pasted link, and this is what makes those links work. The document comes
+  back with a 404 status, which the browser logs and the reader never sees.
+
+Shipping all 188MB is deliberate. The picker offers all 2,101 accounts, so a slice would mean
+every account outside it opens a broken page. A visitor does not pay for the size — profiles
+are one file per student, fetched on demand — and the site is well inside the 1GB a Pages site
+is allowed.
+
+Enabling it, once: **Settings → General** to make the repository public, then
+**Settings → Pages → Source: GitHub Actions**. Pages on a private repository needs a paid plan
+and publishes a public URL anyway, so public is the honest and cheaper option. Every student in
+this dataset is synthetic; see [A Note on the Data](#a-note-on-the-data).
+
+---
+
 ## Regenerating the Dataset
 
 Requires Python 3.9+. No dependencies to install.
