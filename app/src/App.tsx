@@ -12,6 +12,7 @@ import { CaseloadView } from './views/CaseloadView'
 import { DistrictView } from './views/DistrictView'
 import { CommunityView } from './views/CommunityView'
 import { DesignView } from './views/DesignView'
+import { GalaxyView } from './views/GalaxyView'
 import { ResearchView } from './views/ResearchView'
 import { AS_OF_LABEL } from './lib/dataset'
 import { Loading } from './ui/primitives'
@@ -146,6 +147,17 @@ export default function App() {
               here to scope to an account, and a design system every role can open
               is one that gets looked at. */}
           <Route path="/design" element={<DesignView />} />
+          {/* An alternative student dashboard, and a prototype rather than a
+              second front door: the K-12 mastery map from the audiovisual spec.
+              The dashboard at /student/:id is untouched and remains the record.
+
+              Outside the guard for the same reason /design is. This view holds no
+              district record — its map is generated in `views/galaxy/mock.ts`,
+              and the demonstration controls light it by hand rather than from
+              evidence. When it is wired to a real student (phase 3 of the spec)
+              it becomes a route under /student and moves inside the guard with
+              every other view that names a child. */}
+          <Route path="/galaxy" element={<GalaxyView />} />
           {/* Also outside the guard, and for a stronger reason than /design's.
               The library is published research plus the rules for showing it, so
               there is no district record in it to scope — and the addendum's

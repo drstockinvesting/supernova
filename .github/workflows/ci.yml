@@ -1,0 +1,64 @@
+# The checks a pull request has to pass, run on the pull request.
+#
+# `pages.yml` already runs the test suite -- but it runs on `push` to `main`, as
+# the gate on a deploy, which means it runs *after* the decision to merge has
+# been made. A branch that broke the suite went green-by-absence on its pull
+# request and failed at deploy time instead, with `main` already carrying the
+# commit. This is the same checks, moved to where they can still change an
+# outcome.
+#
+# Deliberately four named steps rather than one `npm run ci`. The check name in
+# the pull request tells you which one failed before you open a log, and
+# "Typecheck" failing is a different afternoon from "Test" failing.
+name: CI
+
+on:
+  pull_request:
+  # A push to `main` still goes through `pages.yml`, which runs the suite before
+  # it publishes; running this workflow there too would mean two identical test
+  # runs per merge and two green ticks that mean the same thing.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Unlike the deploy, a superseded run here is safe to cancel: a new push to the
+# branch makes the previous run's answer irrelevant, and there is nothing
+# half-swapped to leave behind.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # 22 is not incidental. The test suite runs on `node --test` with no
+          # framework, relying on Node's own type stripping to read the `.ts`
+          # modules directly; an older runtime does not strip types and every
+          # test file fails to parse.
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - run: npm --prefix app ci
+
+      - name: Lint
+        run: npm --prefix app run lint
+
+      # `npm run build` ends up doing this too, but running it on its own first
+      # means a type error is reported as a type error, in seconds, instead of as
+      # a failed build after Vite has been invoked. The second run is a no-op
+      # against the build info the first one wrote.
+      - name: Typecheck
+        run: npm --prefix app exec tsc -- -b app
+
+      - name: Test
+        run: npm --prefix app test
+
+      - name: Build
+        run: npm --prefix app run build
