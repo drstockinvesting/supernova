@@ -8,6 +8,15 @@
  * classroom does is to be able to assert on the numbers. `node --test` strips
  * types but will not transform JSX, so anything a test touches lives in a `.ts`.
  *
+ * **Nothing a reader can click moves.** The first pass had every planet orbiting
+ * its subject star, which looked like a solar system and behaved like a fairground
+ * game: the skill you wanted had drifted by the time you reached it, a label
+ * swung out from under the cursor, and hit-testing had to be done against a
+ * position derived from the clock, so a click could legitimately land on the
+ * planet next door. Planets now have a position, not a phase. The sky still moves
+ * — the galaxy discs turn, slowly, in `render.ts` — but only where the motion is
+ * scenery and the click target underneath it is fixed.
+ *
  * One world, one coordinate system, three zoom levels. There is no nested
  * transform stack and no per-level scene: a planet's position is absolute world
  * space, and "zooming into eighth grade" is the camera moving, not the scene
@@ -29,18 +38,25 @@ export const SUBJECT_STAR_RADIUS = 8
 export const PLANET_ORBIT_BASE = 34
 export const PLANET_ORBIT_STEP = 11
 export const PLANET_RADIUS = 3
+/**
+ * How far an orbit is flattened vertically. A star system is drawn as a system
+ * seen at an angle rather than as a target with concentric rings.
+ */
+export const ORBIT_TILT = 0.46
 
 export interface ScenePlanet {
   id: string
   name: string
   standardCode?: string
   address: SkillAddress
-  /** Where on its orbit it starts. Motion is added by the renderer, per frame. */
-  baseAngle: number
-  angularSpeed: number
+  /** Where it sits on its orbit. Fixed: a planet is a click target, not an animation. */
+  angle: number
   orbit: number
   radius: number
-  /** The star it belongs to, in world space — planet position is derived per frame. */
+  /** Its world position, which is where it stays. */
+  x: number
+  y: number
+  /** The star it belongs to, in world space. The orbit ring is drawn around this. */
   starX: number
   starY: number
 }
@@ -101,29 +117,27 @@ export function buildScene(map: GalaxyMap): Scene {
       const starX = x + Math.cos(angle) * SUBJECT_ORBIT
       const starY = y + Math.sin(angle) * SUBJECT_ORBIT
 
-      const planets: ScenePlanet[] = subject.skills.map((skill, skillIndex) => ({
-        id: skill.id,
-        name: skill.name,
-        standardCode: skill.standardCode,
-        address: { grade: index, subject: subjectIndex, skill: skillIndex },
-        // The golden angle, not an even division of the circle.
-        //
-        // Evenly spaced starting angles under differing orbital speeds converge:
-        // the first pass spaced them evenly and gave the inner orbits a much
-        // faster rate, and about ten seconds in the inner three planets bunched
-        // into one corner with their labels stacked on top of each other. The
-        // golden angle is the arrangement that resists exactly that, which is why
-        // sunflowers use it.
-        baseAngle: skillIndex * 2.39996 + subjectIndex,
-        // Inner orbits still run faster — the one thing everybody already knows
-        // about orbits, and so the thing that makes this read as a system rather
-        // than a diagram — but by a gentler ratio, so the spread survives.
-        angularSpeed: 0.22 / (1 + skillIndex * 0.18),
-        orbit: PLANET_ORBIT_BASE + skillIndex * PLANET_ORBIT_STEP,
-        radius: PLANET_RADIUS,
-        starX,
-        starY,
-      }))
+      const planets: ScenePlanet[] = subject.skills.map((skill, skillIndex) => {
+        // The golden angle, not an even division of the circle: it is the
+        // arrangement that keeps successive planets from lining up radially, and
+        // so the one that keeps their labels off each other. Sunflowers use it
+        // for the same reason.
+        const angle = skillIndex * 2.39996 + subjectIndex
+        const orbit = PLANET_ORBIT_BASE + skillIndex * PLANET_ORBIT_STEP
+        return {
+          id: skill.id,
+          name: skill.name,
+          standardCode: skill.standardCode,
+          address: { grade: index, subject: subjectIndex, skill: skillIndex },
+          angle,
+          orbit,
+          radius: PLANET_RADIUS,
+          x: starX + Math.cos(angle) * orbit,
+          y: starY + Math.sin(angle) * orbit * ORBIT_TILT,
+          starX,
+          starY,
+        }
+      })
 
       return {
         id: subject.id,
@@ -156,17 +170,6 @@ export function buildScene(map: GalaxyMap): Scene {
     galaxies,
     minX: 0 - GALAXY_RADIUS,
     maxX: (galaxies.length - 1) * GALAXY_SPACING + GALAXY_RADIUS,
-  }
-}
-
-/** A planet's position at time `t` seconds. `t` of 0 freezes every orbit. */
-export function planetPosition(planet: ScenePlanet, t: number): { x: number; y: number } {
-  const angle = planet.baseAngle + t * planet.angularSpeed
-  return {
-    x: planet.starX + Math.cos(angle) * planet.orbit,
-    // Orbits are drawn on a tilted plane so a star system reads as a system seen
-    // at an angle rather than as a target with rings.
-    y: planet.starY + Math.sin(angle) * planet.orbit * 0.46,
   }
 }
 

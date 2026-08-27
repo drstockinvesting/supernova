@@ -26,7 +26,7 @@ import { STATE_BRIGHTNESS, gradeBrightness, subjectBrightness } from './model.ts
 import type { Camera } from './camera.ts'
 import { revealFor } from './camera.ts'
 import type { Scene, SceneGalaxy } from './scene.ts'
-import { planetPosition, smoothstep } from './scene.ts'
+import { ORBIT_TILT, smoothstep } from './scene.ts'
 import { seededRandom } from './mock.ts'
 
 /** What the keyboard and the mouse are pointed at. Null fields mean "not that deep". */
@@ -120,6 +120,25 @@ const FONT = "system-ui, -apple-system, 'Segoe UI', sans-serif"
 const SPRITE_SIZE = 320
 
 /**
+ * How fast a galaxy disc turns, in radians per second.
+ *
+ * A full revolution takes about six minutes, which is slow enough that nobody
+ * watches it happen and fast enough that the sky is not a photograph. This is the
+ * only continuous motion left in the scene, and it is allowed precisely because a
+ * galaxy's dust is scenery: the disc turns about its own centre, so the thing a
+ * reader clicks — the galaxy, at that centre, within that radius — does not move
+ * a pixel while it does. Held at zero for reduced motion.
+ */
+const GALAXY_SPIN = 0.017
+
+/**
+ * How far a galaxy disc is flattened, as the sprite is placed. The viewing angle
+ * of the whole row, and the reason a galaxy reads as a disc lying in space rather
+ * than as a circle painted on the sky.
+ */
+const DISC_TILT = 0.62
+
+/**
  * A galaxy, baked once.
  *
  * Two sprites per grade over the same dust: one cold, one gold. Brightness
@@ -154,8 +173,11 @@ export function bakeGalaxySprite(galaxy: SceneGalaxy, color: RGB): HTMLCanvasEle
       t * 4.4 +
       (random() - 0.5) * spread
     const radius = t * centre * 0.92
+    // Baked as a round disc, flattened to its viewing angle when drawn. Baking the
+    // squash in would mean rotating an ellipse in screen space, which reads as a
+    // disc wobbling rather than one turning.
     const x = centre + Math.cos(angle) * radius
-    const y = centre + Math.sin(angle) * radius * 0.62
+    const y = centre + Math.sin(angle) * radius
     const size = 0.5 + random() * 1.5
     const alpha = (1 - t * 0.72) * (0.16 + random() * 0.34)
     ctx.fillStyle = rgba(color, alpha)
@@ -164,8 +186,9 @@ export function bakeGalaxySprite(galaxy: SceneGalaxy, color: RGB): HTMLCanvasEle
     ctx.fill()
   }
 
-  // The bulge.
-  const bulge = ctx.createRadialGradient(centre, centre, 0, centre, centre, centre * 0.42)
+  // The bulge. Round here, like the arms, and flattened with them at draw time —
+  // which is why it is wider than the 0.42 it was when only the arms were squashed.
+  const bulge = ctx.createRadialGradient(centre, centre, 0, centre, centre, centre * 0.5)
   bulge.addColorStop(0, rgba(color, 0.5))
   bulge.addColorStop(0.45, rgba(color, 0.14))
   bulge.addColorStop(1, rgba(color, 0))
@@ -232,8 +255,6 @@ export interface Frame {
   palette: Palette
   sprites: Map<string, SpritePair>
   dust: DustMote[]
-  /** Seconds since the view opened. Drives orbits; held at 0 for reduced motion. */
-  orbitTime: number
   /** Seconds since the view opened, always advancing. Drives effect envelopes. */
   time: number
   focus: Focus
@@ -332,35 +353,44 @@ export function drawFrame(frame: Frame): void {
       for (const planet of star.planets) {
         const skill = subject.skills[planet.address.skill]
         if (!skill) continue
-        const position = planetPosition(planet, frame.orbitTime)
         const planetFocused =
           focused && frame.focus.planet === planet.address.skill
         drawOrbit(frame, planet.starX, planet.starY, planet.orbit, planetReveal)
         drawPlanet(
           frame,
-          position.x,
-          position.y,
+          planet.x,
+          planet.y,
           planet.radius,
           STATE_BRIGHTNESS[skill.masteryState],
           planetReveal,
           planetFocused,
         )
         if (planetFocused || planetReveal > 0.85) {
-          // Pushed outward along the planet's own radius rather than straight up.
-          // Straight up stacks every label in a system into one column the moment
-          // two planets share a vertical, which at eight planets is always.
-          const dx = position.x - planet.starX
-          const dy = position.y - planet.starY
+          // Fanned outward along the planet's own radius rather than stacked
+          // straight up: straight up puts every label in a system into one column
+          // the moment two planets share a vertical, which at eight planets is
+          // always. Vertically it clears its own body — above when the planet sits
+          // above its star, below when it sits below — so the name is never
+          // written across the thing it names. That mattered less when planets
+          // drifted and an overlap lasted a second; on a body that stays put, an
+          // overlap stays put with it.
+          const dx = planet.x - planet.starX
+          const dy = planet.y - planet.starY
           const length = Math.hypot(dx, dy) || 1
+          const size = planetFocused ? 14 : 12
           const push = planet.radius * (planetFocused ? 5 : 3.2)
+          const clear = planet.radius * 1.9
+          // The type is drawn at a fixed pixel size, so its height in world units
+          // is that size divided by the zoom it will be seen at.
+          const line = size / camera.zoom
           labels.push(() =>
             drawBodyLabel(
               frame,
-              position.x + (dx / length) * push,
-              position.y + (dy / length) * push - planet.radius * 1.6,
+              planet.x + (dx / length) * push,
+              dy > 0 ? planet.y + clear + line : planet.y - clear,
               skill.name,
               planetReveal * (planetFocused ? 1 : 0.72),
-              planetFocused ? 14 : 12,
+              size,
             ),
           )
         }
@@ -461,13 +491,24 @@ function drawGalaxy(
   // sprite and shows nothing. Both sprites are skipped once they stop mattering,
   // which is most of the time the camera spends inside a galaxy.
   if (discAlpha > 0.02) {
+    // Rotate, then flatten, then place: the disc turns in its own plane and is
+    // seen at an angle, rather than an ellipse being spun around on the screen.
+    // Two galaxies never turn at quite the same rate, so the row does not pulse
+    // in unison — but they all turn the same way, because their arms all trail
+    // the same way and one running backwards would read as a mistake.
+    const spin = frame.reducedMotion
+      ? 0
+      : frame.time * GALAXY_SPIN * (0.72 + ((galaxy.index * 37) % 11) / 22)
     ctx.save()
     ctx.globalCompositeOperation = 'lighter'
+    ctx.translate(screen.x, screen.y)
+    ctx.scale(1, DISC_TILT)
+    ctx.rotate(spin)
     ctx.globalAlpha = discAlpha * (0.85 - brightness * 0.35)
-    ctx.drawImage(sprite.cold, screen.x - size / 2, screen.y - size / 2, size, size)
+    ctx.drawImage(sprite.cold, -size / 2, -size / 2, size, size)
     if (brightness > 0.02) {
       ctx.globalAlpha = discAlpha * brightness
-      ctx.drawImage(sprite.hot, screen.x - size / 2, screen.y - size / 2, size, size)
+      ctx.drawImage(sprite.hot, -size / 2, -size / 2, size, size)
     }
     ctx.restore()
   }
@@ -479,7 +520,15 @@ function drawGalaxy(
   ctx.strokeStyle = palette.outline
   ctx.lineWidth = 1
   ctx.beginPath()
-  ctx.ellipse(screen.x, screen.y, galaxy.radius * camera.zoom * 0.98, galaxy.radius * camera.zoom * 0.62, 0, 0, Math.PI * 2)
+  ctx.ellipse(
+    screen.x,
+    screen.y,
+    galaxy.radius * camera.zoom * 0.98,
+    galaxy.radius * camera.zoom * DISC_TILT,
+    0,
+    0,
+    Math.PI * 2,
+  )
   ctx.stroke()
   ctx.restore()
 
@@ -672,7 +721,7 @@ function drawOrbit(
   ctx.strokeStyle = palette.outline
   ctx.lineWidth = 1
   ctx.beginPath()
-  ctx.ellipse(screen.x, screen.y, orbit * camera.zoom, orbit * camera.zoom * 0.46, 0, 0, Math.PI * 2)
+  ctx.ellipse(screen.x, screen.y, orbit * camera.zoom, orbit * camera.zoom * ORBIT_TILT, 0, 0, Math.PI * 2)
   ctx.stroke()
   ctx.restore()
 }

@@ -47,7 +47,6 @@ import {
   SUBJECT_ORBIT,
   buildScene,
   findPlanet,
-  planetPosition,
 } from './scene.ts'
 
 const VIEWPORT = { width: 1440, height: 760 }
@@ -215,7 +214,7 @@ test('subject stars stay inside their own galaxy', () => {
   }
 })
 
-test('a planet orbits its own star and can be found from its address', () => {
+test('a planet sits on its own orbit and can be found from its address', () => {
   const map = empty()
   const scene = buildScene(map)
   const address = { grade: 7, subject: 2, skill: 1 }
@@ -224,10 +223,43 @@ test('a planet orbits its own star and can be found from its address', () => {
   assert.deepEqual(planet!.address, address)
 
   const star = scene.galaxies[7].stars[2]
-  for (const t of [0, 1.7, 9.3]) {
-    const position = planetPosition(planet!, t)
-    const distance = Math.hypot(position.x - star.x, position.y - star.y)
-    assert.ok(distance <= planet!.orbit + 0.001, 'never further out than its own orbit')
+  const distance = Math.hypot(planet!.x - star.x, planet!.y - star.y)
+  assert.ok(distance <= planet!.orbit + 0.001, 'never further out than its own orbit')
+  assert.equal(planet!.starX, star.x)
+  assert.equal(planet!.starY, star.y)
+})
+
+test('a planet does not move, because a planet is a click target', () => {
+  // The whole hit-test rests on this: the renderer draws a planet where the scene
+  // says it is, and a click is resolved against the same number. If a position
+  // ever became a function of the clock again, the two could disagree by a whole
+  // body and the only symptom would be clicks landing on the neighbouring skill.
+  const scene = buildScene(empty())
+  const planet = findPlanet(scene, { grade: 3, subject: 1, skill: 4 })
+  assert.ok(planet)
+  const before = { x: planet!.x, y: planet!.y }
+  const again = findPlanet(buildScene(empty()), { grade: 3, subject: 1, skill: 4 })
+  assert.deepEqual({ x: again!.x, y: again!.y }, before, 'the same map lays out identically')
+  assert.ok(
+    !('angularSpeed' in planet!),
+    'no orbital rate: a body a reader is asked to click stays where it is drawn',
+  )
+})
+
+test('the skills of one subject do not sit on top of each other', () => {
+  // Fixed angles make this checkable once and for all, which is the other thing
+  // static positions buy: overlap is a property of the layout, not of the moment
+  // you happened to look at it.
+  const scene = buildScene(empty())
+  const planets = scene.galaxies[4].stars[0].planets
+  for (let i = 0; i < planets.length; i += 1) {
+    for (let j = i + 1; j < planets.length; j += 1) {
+      const distance = Math.hypot(planets[i].x - planets[j].x, planets[i].y - planets[j].y)
+      assert.ok(
+        distance > planets[i].radius * 2.6,
+        `skills ${i} and ${j} are ${distance.toFixed(1)} apart`,
+      )
+    }
   }
 })
 

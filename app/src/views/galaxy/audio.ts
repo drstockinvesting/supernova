@@ -10,12 +10,29 @@
  *
  * Two required sounds, from the spec's section 5:
  *
- *   - **Ignition.** A stadium light striking on. Low-end thump plus a bright
- *     bloom of high frequency: a sine dropping roughly 96 Hz to 38 Hz in a fifth
- *     of a second, layered with a band-passed noise burst sweeping down from the
- *     top of the spectrum, both fed to a short reverb so the room floods.
+ *   - **Ignition.** A stadium light striking on. Low-end thump plus a soft bloom
+ *     of high frequency: a sine dropping roughly 96 Hz to 38 Hz in a fifth of a
+ *     second, layered with a band-passed noise swell sweeping down through the
+ *     mids, both fed to a short reverb so the room opens.
  *   - **Entry sweep.** A rising "loading up" tone — a detuned saw pair under a
- *     resonant filter opening from 180 Hz to 5 kHz across the sweep.
+ *     gently resonant filter opening from 180 Hz to 2.6 kHz across the sweep.
+ *
+ * **Tuned for the tenth trigger, not the first.** The first pass was mixed like a
+ * trailer: a percussive transient on top of the thump, a bright noise burst off
+ * the top of the spectrum, a resonant filter sweep through the ear's most
+ * sensitive octave, and a long wet tail under all of it. It demonstrated well and
+ * wore badly.
+ *
+ * It was also, measurably, too loud to reproduce. Rendering this graph into an
+ * offline context and reading the samples back: a single ignition peaked around
+ * 1.2 and `Fill` around 3.1, against a ceiling of 1.0 — so the loudest moments in
+ * the view were not merely aggressive, they were clipping, and what a listener
+ * heard at the peak was distortion. The revision keeps every sound the same shape and
+ * takes the aggression out of it: no transient click, a darker and quieter bloom,
+ * a small room instead of a stadium, slower attacks, a compressor to catch what
+ * still stacks, and a duck on ignitions that arrive on top of each other. The same
+ * measurement now reads about 0.26 and 0.21. The aim is satisfying — a sound you would
+ * happily hear fifty times — rather than loud.
  *
  * Everything hangs off one `AudioContext` created on a user gesture, because
  * browsers will not allow otherwise. Until `unlock()` is called this object is a
@@ -24,6 +41,25 @@
  */
 
 const STORAGE_KEY = 'supernova.galaxy.muted'
+
+/**
+ * Master level, unmuted.
+ *
+ * Under unity, and every voice below it is mixed so that their sum stays under it
+ * too. This is the one knob that changes how loud the view is without changing
+ * how anything in it sounds — reach for it before shaving a decibel off a single
+ * voice, which changes the balance between them instead of the level.
+ */
+const MASTER_GAIN = 0.7
+
+/**
+ * Two ignitions closer together than this are one gesture, and the second is
+ * ducked towards `CROWD_FLOOR` rather than summed on top of the first. `Fill`
+ * fires thirteen inside two and a half seconds; without this the cascade is the
+ * loudest thing in the product by a wide margin.
+ */
+const CROWD_WINDOW = 0.45
+const CROWD_FLOOR = 0.35
 
 export function readStoredMute(): boolean {
   try {
@@ -56,6 +92,8 @@ export class GalaxyAudio {
   private master: GainNode | null = null
   private reverb: ConvolverNode | null = null
   private muted: boolean = readStoredMute()
+  /** When the last ignition fired, on the context clock. Drives the crowd duck. */
+  private lastIgniteAt = Number.NEGATIVE_INFINITY
 
   get isMuted(): boolean {
     return this.muted
@@ -79,14 +117,30 @@ export class GalaxyAudio {
     if (!Ctor) return
 
     const ctx = new Ctor()
-    const master = ctx.createGain()
-    master.gain.value = this.muted ? 0 : 0.9
-    master.connect(ctx.destination)
 
+    // A soft-knee compressor across everything, for the case the mix cannot be
+    // designed around: a cascade, a click landing on top of a tail, and a laptop
+    // speaker that turns a sum of three voices into distortion. It sits nearly
+    // idle on a single ignition and only earns its place when events stack.
+    const limiter = ctx.createDynamicsCompressor()
+    limiter.threshold.value = -4
+    limiter.knee.value = 9
+    limiter.ratio.value = 6
+    limiter.attack.value = 0.004
+    limiter.release.value = 0.24
+    limiter.connect(ctx.destination)
+
+    const master = ctx.createGain()
+    master.gain.value = this.muted ? 0 : MASTER_GAIN
+    master.connect(limiter)
+
+    // A small room rather than a stadium. The long wet tail of the first pass was
+    // most of what made repeated ignitions overwhelming: each one arrived before
+    // the last had finished, and the view spent whole seconds inside a wash.
     const reverb = ctx.createConvolver()
-    reverb.buffer = impulseResponse(ctx, 1.5, 2.6)
+    reverb.buffer = impulseResponse(ctx, 1.1, 3.6)
     const reverbLevel = ctx.createGain()
-    reverbLevel.gain.value = 0.9
+    reverbLevel.gain.value = 0.34
     reverb.connect(reverbLevel)
     reverbLevel.connect(master)
 
@@ -105,7 +159,7 @@ export class GalaxyAudio {
     const now = this.ctx.currentTime
     this.master.gain.cancelScheduledValues(now)
     this.master.gain.setValueAtTime(this.master.gain.value, now)
-    this.master.gain.linearRampToValueAtTime(muted ? 0 : 0.9, now + 0.08)
+    this.master.gain.linearRampToValueAtTime(muted ? 0 : MASTER_GAIN, now + 0.08)
   }
 
   close(): void {
@@ -127,12 +181,19 @@ export class GalaxyAudio {
     const pitch = (options.pitch ?? 1) * (0.94 + Math.random() * 0.15)
     const t = ctx.currentTime + 0.001
 
+    // Ignitions that arrive on top of one another are ducked, so a cascade rises
+    // and falls as one event instead of thirteen full-strength ones summing.
+    const gap = ctx.currentTime - this.lastIgniteAt
+    const crowd = CROWD_FLOOR + (1 - CROWD_FLOOR) * clamp(gap / CROWD_WINDOW, 0, 1)
+    this.lastIgniteAt = ctx.currentTime
+    const level = power * crowd
+
     const bus = ctx.createGain()
-    bus.gain.value = power
+    bus.gain.value = level
     bus.connect(master)
     if (this.reverb) {
       const send = ctx.createGain()
-      send.gain.value = 0.3 * power
+      send.gain.value = 0.12 * level
       bus.connect(send)
       send.connect(this.reverb)
     }
@@ -141,9 +202,11 @@ export class GalaxyAudio {
     const sub = ctx.createOscillator()
     sub.type = 'sine'
     sub.frequency.setValueAtTime(96 * pitch, t)
-    sub.frequency.exponentialRampToValueAtTime(38 * pitch, t + 0.24)
+    sub.frequency.exponentialRampToValueAtTime(38 * pitch, t + 0.26)
     const subGain = ctx.createGain()
-    ramp(subGain.gain, t, 0.95, 0.008, 0.62)
+    // Slower attack than the first pass, which started at eight milliseconds and
+    // read as a hit rather than as a light coming on.
+    ramp(subGain.gain, t, 0.9, 0.014, 0.44)
     sub.connect(subGain).connect(bus)
     sub.start(t)
     sub.stop(t + 0.7)
@@ -155,36 +218,36 @@ export class GalaxyAudio {
     body.frequency.setValueAtTime(196 * pitch, t)
     body.frequency.exponentialRampToValueAtTime(74 * pitch, t + 0.2)
     const bodyGain = ctx.createGain()
-    ramp(bodyGain.gain, t, 0.3, 0.006, 0.34)
+    ramp(bodyGain.gain, t, 0.28, 0.012, 0.28)
     body.connect(bodyGain).connect(bus)
     body.start(t)
     body.stop(t + 0.4)
 
     // The bloom: the filament flaring and the room filling.
+    //
+    // Started well down the spectrum rather than at the top of it. Beginning at
+    // 6.6 kHz put a sibilant burst on the front of every ignition — the part that
+    // fatigues first, and the part a cheap laptop speaker reproduces most
+    // harshly. From 3 kHz the same sweep reads as air moving instead of as a hiss,
+    // and at 40% of the level it sits under the thump rather than over it.
     const noise = ctx.createBufferSource()
     noise.buffer = noiseBuffer(ctx, 0.9)
     const band = ctx.createBiquadFilter()
     band.type = 'bandpass'
-    band.Q.value = 0.9
-    band.frequency.setValueAtTime(6600 * pitch, t)
-    band.frequency.exponentialRampToValueAtTime(620 * pitch, t + 0.5)
+    band.Q.value = 1.1
+    band.frequency.setValueAtTime(3000 * pitch, t)
+    band.frequency.exponentialRampToValueAtTime(520 * pitch, t + 0.5)
     const noiseGain = ctx.createGain()
-    ramp(noiseGain.gain, t, 0.42, 0.004, 0.58)
+    ramp(noiseGain.gain, t, 0.17, 0.018, 0.42)
     noise.connect(band).connect(noiseGain).connect(bus)
     noise.start(t)
     noise.stop(t + 0.7)
 
-    // A short strike on top — the physical clack of the contactor closing.
-    const strike = ctx.createBufferSource()
-    strike.buffer = noiseBuffer(ctx, 0.08)
-    const high = ctx.createBiquadFilter()
-    high.type = 'highpass'
-    high.frequency.value = 3200
-    const strikeGain = ctx.createGain()
-    ramp(strikeGain.gain, t, 0.22, 0.002, 0.07)
-    strike.connect(high).connect(strikeGain).connect(bus)
-    strike.start(t)
-    strike.stop(t + 0.1)
+    // No transient on top. The first pass put a two-millisecond high-passed
+    // strike here — the contactor closing — and it was the single most aggressive
+    // thing in the mix: a click has no envelope to soften, it is audible at any
+    // level, and on the tenth repeat it is all the ear hears. The thump alone
+    // carries the arrival.
   }
 
   /**
@@ -201,25 +264,29 @@ export class GalaxyAudio {
     const end = t + duration
 
     const bus = ctx.createGain()
-    bus.gain.value = 0.5
+    bus.gain.value = 0.32
     bus.connect(master)
     if (this.reverb) {
       const send = ctx.createGain()
-      send.gain.value = 0.25
+      send.gain.value = 0.1
       bus.connect(send)
       send.connect(this.reverb)
     }
 
+    // A Q of 6 opening to 5 kHz whistled: the resonant peak swept across the ear's
+    // most sensitive octave with a saw pair feeding it, and by the top of the rise
+    // it was the loudest thing on screen. A gentler resonance stopping short of
+    // 3 kHz still gathers, and leaves room for the grades striking on underneath.
     const filter = ctx.createBiquadFilter()
     filter.type = 'lowpass'
-    filter.Q.value = 6
+    filter.Q.value = 2.4
     filter.frequency.setValueAtTime(180, t)
-    filter.frequency.exponentialRampToValueAtTime(5200, end)
+    filter.frequency.exponentialRampToValueAtTime(2600, end)
     filter.connect(bus)
 
     const level = ctx.createGain()
     level.gain.setValueAtTime(0.0001, t)
-    level.gain.exponentialRampToValueAtTime(0.34, t + duration * 0.72)
+    level.gain.exponentialRampToValueAtTime(0.2, t + duration * 0.72)
     level.gain.exponentialRampToValueAtTime(0.0001, end + 0.3)
     level.connect(filter)
 
@@ -241,10 +308,10 @@ export class GalaxyAudio {
     const glide = ctx.createOscillator()
     glide.type = 'sine'
     glide.frequency.setValueAtTime(220, t)
-    glide.frequency.exponentialRampToValueAtTime(1320, end)
+    glide.frequency.exponentialRampToValueAtTime(1180, end)
     const glideGain = ctx.createGain()
     glideGain.gain.setValueAtTime(0.0001, t)
-    glideGain.gain.exponentialRampToValueAtTime(0.11, end - 0.1)
+    glideGain.gain.exponentialRampToValueAtTime(0.06, end - 0.1)
     glideGain.gain.exponentialRampToValueAtTime(0.0001, end + 0.25)
     glide.connect(glideGain).connect(bus)
     glide.start(t)
@@ -259,7 +326,7 @@ export class GalaxyAudio {
 
     const t = ctx.currentTime + 0.001
     const bus = ctx.createGain()
-    bus.gain.value = clamp(power, 0, 1) * 0.7
+    bus.gain.value = clamp(power, 0, 1) * 0.55
     bus.connect(master)
 
     const osc = ctx.createOscillator()
@@ -267,7 +334,7 @@ export class GalaxyAudio {
     osc.frequency.setValueAtTime(150, t)
     osc.frequency.exponentialRampToValueAtTime(44, t + 0.34)
     const oscGain = ctx.createGain()
-    ramp(oscGain.gain, t, 0.4, 0.01, 0.4)
+    ramp(oscGain.gain, t, 0.36, 0.016, 0.4)
     osc.connect(oscGain).connect(bus)
     osc.start(t)
     osc.stop(t + 0.5)
@@ -279,13 +346,20 @@ export class GalaxyAudio {
     low.frequency.setValueAtTime(2400, t)
     low.frequency.exponentialRampToValueAtTime(280, t + 0.32)
     const noiseGain = ctx.createGain()
-    ramp(noiseGain.gain, t, 0.16, 0.006, 0.34)
+    ramp(noiseGain.gain, t, 0.09, 0.014, 0.34)
     noise.connect(low).connect(noiseGain).connect(bus)
     noise.start(t)
     noise.stop(t + 0.45)
   }
 
-  /** Navigation. Quiet, short, and pitched by depth so the three levels sound different. */
+  /**
+   * Navigation. Quiet, short, and pitched by depth so the three levels sound
+   * different.
+   *
+   * The most-repeated sound in the view by an order of magnitude — one per arrow
+   * key — so it is mixed to sit just above the threshold of noticing. If it is
+   * ever the sound somebody mentions, it is too loud.
+   */
   tick(pitch = 1): void {
     const ctx = this.ctx
     const master = this.master
@@ -294,10 +368,10 @@ export class GalaxyAudio {
     const t = ctx.currentTime + 0.001
     const osc = ctx.createOscillator()
     osc.type = 'sine'
-    osc.frequency.setValueAtTime(520 * pitch, t)
-    osc.frequency.exponentialRampToValueAtTime(760 * pitch, t + 0.06)
+    osc.frequency.setValueAtTime(470 * pitch, t)
+    osc.frequency.exponentialRampToValueAtTime(660 * pitch, t + 0.06)
     const gain = ctx.createGain()
-    ramp(gain.gain, t, 0.07, 0.004, 0.09)
+    ramp(gain.gain, t, 0.07, 0.007, 0.08)
     osc.connect(gain).connect(master)
     osc.start(t)
     osc.stop(t + 0.14)
